@@ -15,6 +15,23 @@ public class ActiveRecordBase {
         records.add(this);
     }
 	
+    public static List<ActiveRecordBase> where(Function<ActiveRecordBase, Boolean> pred) {
+        List<ActiveRecordBase> result = new ArrayList<ActiveRecordBase>();
+        for (ActiveRecordBase record : records) {
+            if (pred.apply(record))
+                result.add(record);
+        }
+        return result;
+    }
+    
+    public static ActiveRecordBase find(Function<ActiveRecordBase, Boolean> pred) throws RecordNotFoundException {
+        for (ActiveRecordBase record : records) {
+            if (pred.apply(record))
+                return record;
+        }
+        throw new RecordNotFoundException();
+    }
+    
     public static boolean save() {
         return true;
     }
