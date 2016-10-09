@@ -5,7 +5,16 @@ import java.util.function.*;
 import seedu.todo.commons.exceptions.*;
 
 public class ActiveRecordLibrary<E extends ActiveRecordBase> {
+    private Class<E> type;
     private Set<E> records = new HashSet<E>();
+    
+    /**
+     * Type-safe workaround to using reflection >_<
+     * @param type
+     */
+    public ActiveRecordLibrary(Class<E> type) {
+        this.type = type;
+    }
     
     public boolean add(E record) {
         return records.add(record);

@@ -5,7 +5,7 @@ import java.util.Date;
 import seedu.todo.commons.exceptions.RecordInvalidException;
 
 public class Task extends CalendarRecord {
-    public static ActiveRecordLibrary<Task> library = new ActiveRecordLibrary<Task>();
+    public static ActiveRecordLibrary<Task> library = new ActiveRecordLibrary<Task>(Task.class);
     
     public boolean completed = false;
     
