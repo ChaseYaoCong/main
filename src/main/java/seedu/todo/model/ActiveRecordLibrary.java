@@ -1,8 +1,10 @@
 package seedu.todo.model;
 
+import java.io.*;
 import java.util.*;
 import java.util.function.*;
 import seedu.todo.commons.exceptions.*;
+import seedu.todo.commons.util.*;
 
 public class ActiveRecordLibrary<E extends ActiveRecordBase> {
     private Class<E> type;
@@ -45,6 +47,28 @@ public class ActiveRecordLibrary<E extends ActiveRecordBase> {
         if (record.validate())
             return true; // TODO
         throw new RecordInvalidException();
+    }
+    
+    private File getStorageFile() {
+        return new File(type.getSimpleName() + ".json");
+    }
+    
+    public boolean save() {
+        try {
+            FileUtil.writeToFile(getStorageFile(), JsonUtil.toJsonString(records));
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+    
+    public boolean load() {
+        try {
+            records = JsonUtil.fromJsonString(FileUtil.readFromFile(getStorageFile()), records.getClass());
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
     
     public boolean destroy(E record) {
