@@ -94,9 +94,10 @@ public class TaskList extends Component {
             LocalDateTime itemDate = DateUtil.floorDate(item.getCalendarDT());
             
             // Handle tasks without a date
-            if (itemDate == null)
+            if (itemDate == null) {
                 itemDate = NO_DATE_VALUE;
-
+            }
+            
             // Creates ArrayList if not already exists.
             if (!itemsByDate.containsKey(itemDate)) {
                 itemsByDate.put(itemDate, new ArrayList<T>());

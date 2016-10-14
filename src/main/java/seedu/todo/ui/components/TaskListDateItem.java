@@ -57,7 +57,7 @@ public class TaskListDateItem extends MultiComponent {
         dateHeader.setText(dateHeaderString);
         
         // Set date label except for floating task
-        if (!dateTime.equals(LocalDateTime.MIN)) {
+        if (!dateTime.equals(TaskList.NO_DATE_VALUE)) {
             String dateLabelString = DateUtil.formatShortDate(dateTime);
             dateLabel.setText(dateLabelString);
         }

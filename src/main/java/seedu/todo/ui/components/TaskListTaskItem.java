@@ -39,6 +39,7 @@ public class TaskListTaskItem extends MultiComponent {
     @Override
     public void componentDidMount() {
         taskText.setText(task.getName());
+        //guard against null dates
         if (task.getCalendarDT() != null) {
             taskTime.setText(DateUtil.formatTime(task.getCalendarDT()));
         }
