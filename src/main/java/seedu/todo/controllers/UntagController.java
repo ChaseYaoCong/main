@@ -8,13 +8,13 @@ import seedu.todo.models.TodoListDB;
 import seedu.todo.ui.UiManager;
 import seedu.todo.ui.views.IndexView;
 
-public class DestroyController implements Controller {
+public class UntagController implements Controller {
     
     private static String NAME = "Untag";
     private static String DESCRIPTION = "Untag a task/event by listed index";
     private static String COMMAND_SYNTAX = "untag <index>";
     
-    private static String MESSAGE_DELETE_SUCCESS = "Tag has been removed!\n" + "To undo, type \"undo\".";
+    private static String MESSAGE_UNTAG_SUCCESS = "Tag has been removed!\n" + "To undo, type \"undo\".";
     private static String MESSAGE_INVALID_CALENDARITEM = "Could not untag task/event: invalid index provided!";
     
     private static CommandDefinition commandDefinition =
@@ -27,7 +27,7 @@ public class DestroyController implements Controller {
     @Override
     public float inputConfidence(String input) {
         // TODO
-        return (input.startsWith("untag") ? 1 : 0;
+        return (input.startsWith("untag")) ? 1 : 0;
     }
 
     @Override
@@ -49,11 +49,7 @@ public class DestroyController implements Controller {
         
         assert calendarItem != null;
         
-//        if (calendarItem instanceof Task) {
-//            
-//        } else {
-//            db.destroyEvent((Event) calendarItem);
-//        }
+        calendarItem.setTag(null);
         
         // Re-render
         IndexView view = UiManager.loadView(IndexView.class);
@@ -62,7 +58,7 @@ public class DestroyController implements Controller {
         UiManager.renderView(view);
         
         // Show console message
-        UiManager.updateConsoleMessage(MESSAGE_DELETE_SUCCESS);
+        UiManager.updateConsoleMessage(MESSAGE_UNTAG_SUCCESS);
     }
 
 }
