@@ -44,6 +44,7 @@ public class AddController implements Controller {
         tokenDefinitions.put("time", new String[] { "at", "by", "on", "before", "time" });
         tokenDefinitions.put("timeFrom", new String[] { "from" });
         tokenDefinitions.put("timeTo", new String[] { "to" });
+        tokenDefinitions.put("tag", new String[] { "tag" });
         return tokenDefinitions;
     }
 
@@ -60,18 +61,25 @@ public class AddController implements Controller {
         
         // Task or event?
         boolean isTask = true;
-        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[0].equals("event"))
+        String tagName = null;
+        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[0].equals("event")) {
             isTask = false;
-        
+        }
         // Name - Disambiguate if null.
         String name = null;
-        if (parsedResult.get("default") != null && parsedResult.get("default")[1] != null)
+        if (parsedResult.get("default") != null && parsedResult.get("default")[1] != null) {
             name = parsedResult.get("default")[1];
-        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[1] != null)
+        }
+        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[1] != null) {
             name = parsedResult.get("eventType")[1];
+        }
         if (name == null) {
             renderDisambiguation(parsedResult);
             return;
+        }
+        if (parsedResult.get("tag") != null) {
+            //TODO : if we support more than 1 tag
+            tagName = parsedResult.get("tag")[1];
         }
         
         // Time - Disambiguate if "to" without "from" OR "task" and two timings.
@@ -102,11 +110,13 @@ public class AddController implements Controller {
             Task newTask = db.createTask();
             newTask.setName(name);
             newTask.setDueDate(dateFrom);
+            newTask.setTag(tagName);
         } else {
             Event newEvent = db.createEvent();
             newEvent.setName(name);
             newEvent.setStartDate(dateFrom);
             newEvent.setEndDate(dateTo);
+            newEvent.setTag(tagName);
         }
         db.save();
         
