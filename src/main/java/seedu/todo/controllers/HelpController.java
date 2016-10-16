@@ -40,6 +40,7 @@ public class HelpController implements Controller {
                                          ListController.getCommandDefinition(),
                                          UpdateController.getCommandDefinition(),
                                          DestroyController.getCommandDefinition(),
+                                         UntagController.getCommandDefinition(),
                                          ExitController.getCommandDefinition() };
     }
 }
