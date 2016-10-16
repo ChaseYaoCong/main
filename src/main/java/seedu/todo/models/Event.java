@@ -7,6 +7,7 @@ public class Event implements CalendarItem {
     private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private String tag;
     
     public LocalDateTime getStartDate() {
         return startDate;
@@ -51,6 +52,14 @@ public class Event implements CalendarItem {
         } else {
             return endDate.isBefore(LocalDateTime.now());
         }
+    }
+    
+    public void setTag(String tagName) {
+        this.tag = tagName;
+    }
+    
+    public String getTag() {
+        return this.tag;
     }
 
 }
