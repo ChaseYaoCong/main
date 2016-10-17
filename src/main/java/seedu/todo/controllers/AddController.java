@@ -77,6 +77,7 @@ public class AddController implements Controller {
         
         // Name
         String name = parseName(parsedResult);
+        String tagName = parseTagName(parsedResult);
         
         // Time
         String[] naturalDates = parseDates(parsedResult);
@@ -95,10 +96,20 @@ public class AddController implements Controller {
         
         // Create and persist task / event.
         TodoListDB db = TodoListDB.getInstance();
-        createCalendarItem(db, isTask, name, dateFrom, dateTo);
+        createCalendarItem(db, isTask, name, dateFrom, dateTo, tagName);
         
         // Re-render
         renderIndex(db);
+    }
+
+    private String parseTagName(Map<String, String[]> parsedResult) {
+        if (parsedResult.get("tag") != null) {
+            //TODO : if we support more than 1 tag
+            return parsedResult.get("tag")[1];
+        } else {
+            return null;
+        }
+
     }
 
     /**
@@ -127,9 +138,11 @@ public class AddController implements Controller {
      *            Due date for Task or start date for Event
      * @param dateTo
      *            End date for Event
+     * @param tagName
+     *            Display name of tag for CalendarItem object          
      */
     private void createCalendarItem(TodoListDB db, 
-            boolean isTask, String name, LocalDateTime dateFrom, LocalDateTime dateTo) {
+            boolean isTask, String name, LocalDateTime dateFrom, LocalDateTime dateTo, String tagName) {
         if (isTask) {
             Task newTask = db.createTask();
             newTask.setName(name);
