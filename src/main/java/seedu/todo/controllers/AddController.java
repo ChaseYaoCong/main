@@ -9,12 +9,14 @@ import java.util.Map;
 
 import com.joestelmach.natty.*;
 
+import seedu.todo.commons.exceptions.InvalidNaturalDateException;
 import seedu.todo.commons.exceptions.UnmatchedQuotesException;
+import seedu.todo.commons.util.StringUtil;
+import seedu.todo.controllers.concerns.Tokenizer;
+import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
-import seedu.todo.ui.UiManager;
-import seedu.todo.ui.views.IndexView;
 
 /**
  * Controller to add an event or task.
@@ -24,9 +26,9 @@ import seedu.todo.ui.views.IndexView;
  */
 public class AddController implements Controller {
     
-    private static String NAME = "Add";
-    private static String DESCRIPTION = "Adds a task / event to the to-do list.";
-    private static String COMMAND_SYNTAX = "add <task> by <deadline> || add <event> at <time>";
+    private static final String NAME = "Add";
+    private static final String DESCRIPTION = "Adds a task / event to the to-do list.";
+    private static final String COMMAND_SYNTAX = "add <task> by <deadline> || add <event> at <time>";
     
     private static final String MESSAGE_ADD_SUCCESS = "Item successfully added!";
     
@@ -40,7 +42,7 @@ public class AddController implements Controller {
     @Override
     public float inputConfidence(String input) {
         // TODO
-        return (input.startsWith("add")) ? 1 : 0;
+        return (input.toLowerCase().startsWith("add")) ? 1 : 0;
     }
     
     /**
@@ -86,22 +88,35 @@ public class AddController implements Controller {
         
         // Validate isTask, name and times.
         if (validateParams(isTask, name, naturalFrom, naturalTo)) {
-            renderDisambiguation(parsedResult);
+            renderDisambiguation(isTask, name, naturalFrom, naturalTo);
             return;
         }
         
         // Parse natural date using Natty.
-        LocalDateTime dateFrom = naturalFrom == null ? null : parseNatural(naturalFrom); 
-        LocalDateTime dateTo = naturalTo == null ? null : parseNatural(naturalTo);
+        LocalDateTime dateFrom;
+        LocalDateTime dateTo;
+        try {
+            dateFrom = naturalFrom == null ? null : parseNatural(naturalFrom);
+            dateTo = naturalTo == null ? null : parseNatural(naturalTo);
+        } catch (InvalidNaturalDateException e) {
+            renderDisambiguation(isTask, name, naturalFrom, naturalTo);
+            return;
+        }
         
         // Create and persist task / event.
         TodoListDB db = TodoListDB.getInstance();
         createCalendarItem(db, isTask, name, dateFrom, dateTo, tagName);
         
         // Re-render
-        renderIndex(db);
+        Renderer.renderIndex(db, MESSAGE_ADD_SUCCESS);
     }
-
+    
+    /**
+     * Extracts the intended tagName from parsedResult.
+     * 
+     * @param parsedResult
+     * @return null if not tagName specified, else tagName
+     */
     private String parseTagName(Map<String, String[]> parsedResult) {
         if (parsedResult.get("tag") != null) {
             //TODO : if we support more than 1 tag
@@ -111,20 +126,6 @@ public class AddController implements Controller {
         }
 
     }
-
-    /**
-     * Renders the indexView.
-     * 
-     * @param db
-     */
-    private void renderIndex(TodoListDB db) {
-        IndexView view = UiManager.loadView(IndexView.class);
-        view.tasks = db.getAllTasks();
-        view.events = db.getAllEvents();
-        UiManager.renderView(view);
-        UiManager.updateConsoleMessage(MESSAGE_ADD_SUCCESS);
-    }
-
     /**
      * Creates and persists a CalendarItem to the DB.
      * 
@@ -197,10 +198,12 @@ public class AddController implements Controller {
                 naturalFrom = parsedResult.get("time")[1];
                 break setTime;
             }
-            if (parsedResult.get("timeFrom") != null && parsedResult.get("timeFrom")[1] != null)
+            if (parsedResult.get("timeFrom") != null && parsedResult.get("timeFrom")[1] != null) {
                 naturalFrom = parsedResult.get("timeFrom")[1];
-            if (parsedResult.get("timeTo") != null && parsedResult.get("timeTo")[1] != null)
+            }
+            if (parsedResult.get("timeTo") != null && parsedResult.get("timeTo")[1] != null) {
                 naturalTo = parsedResult.get("timeTo")[1];
+            }
         }
         return new String[] { naturalFrom, naturalTo };
     }
@@ -213,10 +216,12 @@ public class AddController implements Controller {
      */
     private String parseName(Map<String, String[]> parsedResult) {
         String name = null;
-        if (parsedResult.get("default") != null && parsedResult.get("default")[1] != null)
+        if (parsedResult.get("default") != null && parsedResult.get("default")[1] != null) {
             name = parsedResult.get("default")[1];
-        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[1] != null)
+        }
+        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[1] != null) {
             name = parsedResult.get("eventType")[1];
+        }
         return name;
     }
 
@@ -228,8 +233,9 @@ public class AddController implements Controller {
      */
     private boolean parseIsTask(Map<String, String[]> parsedResult) {
         boolean isTask = true;
-        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[0].equals("event"))
+        if (parsedResult.get("eventType") != null && parsedResult.get("eventType")[0].equals("event")) {
             isTask = false;
+        }
         return isTask;
     }
 
@@ -238,23 +244,36 @@ public class AddController implements Controller {
      * 
      * @param natural
      * @return LocalDateTime object
+     * @throws InvalidNaturalDateException 
      */
-    private LocalDateTime parseNatural(String natural) {
+    private LocalDateTime parseNatural(String natural) throws InvalidNaturalDateException {
         Parser parser = new Parser();
         List<DateGroup> groups = parser.parse(natural);
         Date date = null;
         try {
             date = groups.get(0).getDates().get(0);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error!"); // TODO
-            return null;
+            throw new InvalidNaturalDateException(natural);
         }
         LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         return ldt;
     }
     
-    private void renderDisambiguation(Map<String, String[]> parsedResult) {
-        System.out.println("Disambiguate!");
+    private void renderDisambiguation(boolean isTask, String name, String naturalFrom, String naturalTo) {
+        name = StringUtil.replaceNull(name, "<name>");
+        naturalTo = StringUtil.replaceNull(name, "<end time>");
+
+        String disambiguationString;
+        if (isTask) {
+            naturalFrom = StringUtil.replaceNull(naturalFrom, "<deadline>");
+            disambiguationString = String.format("add task \"%s\" by \"%s\"", name, naturalFrom);
+        } else {
+            naturalFrom = StringUtil.replaceNull(naturalFrom, "<start time>");
+            naturalTo = StringUtil.replaceNull(naturalTo, "<end time>");
+            disambiguationString = String.format("add event \"%s\" from \"%s\" to \"%s\"", name, naturalFrom, naturalTo);
+        }
+        
+        System.out.println(disambiguationString); // TODO
     }
     
 }

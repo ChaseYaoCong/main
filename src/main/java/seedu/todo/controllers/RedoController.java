@@ -5,9 +5,10 @@ import java.util.Map;
 
 import seedu.todo.commons.exceptions.UnmatchedQuotesException;
 import seedu.todo.commons.util.StringUtil;
+import seedu.todo.controllers.concerns.Renderer;
+import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.TodoListDB;
 import seedu.todo.ui.UiManager;
-import seedu.todo.ui.views.IndexView;
 
 /**
  * Controller to redo a database commit.
@@ -23,7 +24,7 @@ public class RedoController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        return input.startsWith("redo") ? 1 : 0;
+        return input.toLowerCase().startsWith("redo") ? 1 : 0;
     }
     
     /**
@@ -76,13 +77,7 @@ public class RedoController implements Controller {
         db = TodoListDB.getInstance();
         
         // Render
-        IndexView view = UiManager.loadView(IndexView.class);
-        view.tasks = db.getAllTasks();
-        view.events = db.getAllEvents();
-        UiManager.renderView(view);
-        
-        // Update console message
-        UiManager.updateConsoleMessage(String.format(MESSAGE_SUCCESS, numRedo,
+        Renderer.renderIndex(db, String.format(MESSAGE_SUCCESS, numRedo,
                 StringUtil.pluralizer(numRedo, "command", "commands")));
     }
 }
