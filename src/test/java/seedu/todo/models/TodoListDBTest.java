@@ -1,11 +1,16 @@
 package seedu.todo.models;
 
 import org.junit.*;
+import org.junit.rules.TemporaryFolder;
+
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
 
 public class TodoListDBTest {
+    
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
     
     @Test
     public void check_singleton() {
@@ -42,5 +47,20 @@ public class TodoListDBTest {
         assertEquals(TodoListDB.getInstance().countOverdueTasks(), 1);
     }
     
+    @Test
+    public void test_CRUD_events() {
+        TodoListDB.getInstance().destroyAllEvent();
+        Event event = TodoListDB.getInstance().createEvent();
+        assertNotEquals(TodoListDB.getInstance().getAllEvents().indexOf(event), -1);
+    }
+    
+    @Test
+    public void test_future_events() {
+        TodoListDB.getInstance().destroyAllEvent();
+        Event event = TodoListDB.getInstance().createEvent();
+        event.setStartDate(LocalDateTime.now().plusSeconds(10));
+        event.setEndDate(LocalDateTime.now().plusSeconds(30));
+        assertEquals(TodoListDB.getInstance().countFutureEvents(), 1);
+    }
 
 }
