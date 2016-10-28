@@ -174,7 +174,7 @@ public class FindController implements Controller {
             numTasks = tasks.size();
         }
         
-        if(events != null) {
+        if (events != null) {
             numEvents = events.size();
         }
         
@@ -187,7 +187,7 @@ public class FindController implements Controller {
        
     }
     
-    private String formatDisplayMessage (int numTasks, int numEvents) {
+    private String formatDisplayMessage(int numTasks, int numEvents) {
         if (numTasks != 0 && numEvents != 0) {
             return String.format("%s and %s", formatTaskMessage(numTasks), formatEventMessage(numEvents));
         } else if (numTasks != 0) {
@@ -197,7 +197,7 @@ public class FindController implements Controller {
         }
     }
     
-    private String formatEventMessage (int numEvents) {
+    private String formatEventMessage(int numEvents) {
         return String.format("%d %s", numEvents, StringUtil.pluralizer(numEvents, "event", "events"));
     }
     

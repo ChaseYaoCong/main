@@ -87,7 +87,7 @@ public class UntagController implements Controller {
         
         // Re-render
         if (resultOfTagging) {
-            //db.updateTagList(tagName);
+            db.updateTagList(tagName);
             db.save();
             Renderer.renderIndex(db, MESSAGE_UNTAG_SUCCESS);
         } else {

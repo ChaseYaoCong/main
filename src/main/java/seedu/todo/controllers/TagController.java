@@ -95,7 +95,7 @@ public class TagController implements Controller {
         
         // Re-render
         if (resultOfTagging) {
-            db.updateTagList(tagName);
+            db.addIntoTagList(tagName);
             db.save();
             Renderer.renderIndex(db, MESSAGE_TAG_SUCCESS);
         } else {

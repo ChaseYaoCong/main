@@ -38,7 +38,7 @@ public class TodoListDB {
     private Set<Task> tasks = new LinkedHashSet<Task>();
     private Set<Event> events = new LinkedHashSet<Event>();
     private Map<String, String> aliases = new HashMap<String, String>();
-    private Set<String> tagList = new LinkedHashSet<String>();
+    private HashMap<String, Integer> tagList = new HashMap<String, Integer>();
     
     protected TodoListDB() {
         // Prevent instantiation.
@@ -49,26 +49,68 @@ public class TodoListDB {
     }
     
     /**
-     * Update the overall Tags that exist in the DB.
-     * 
+     * add into the overall Tags in the DB.
+     * @@author Tiong YaoCong A0139922Y
+     */
+    public void addIntoTagList(String tagName) {
+        if (tagList.get(tagName) != null) {
+            int currentTagCount = tagList.get(tagName);
+            tagList.put(tagName, currentTagCount + 1);
+        } else {
+            tagList.put(tagName, 1);
+        }
+    }
+    
+    /**
+     * Remove from the overall Tags with a single tagName that exist in the DB.
+     * @@author Tiong YaoCong A0139922Y
      */
     public void updateTagList(String tagName) {
-        tagList.add(tagName);
+        assert tagName != null;
+        int currentTagCount = tagList.get(tagName);
+        int newTagCount = currentTagCount - 1;
+        if (newTagCount == 0) {
+            tagList.remove(tagName);
+        } else {
+            tagList.put(tagName, newTagCount);
+        }
+    }
+    
+    /**
+     * Remove from the overall Tags with a given List of CalendarItem that exist in the DB.
+     * @param <E>listOfItem of type CalendarItem
+     * @@author Tiong YaoCong A0139922Y
+     */
+    public <E> void removeFromTagList(List<E> listOfItem) {
+        assert listOfItem != null;
+        
+        HashSet<String> selectedTagList = new HashSet<String>();
+        for (int i = 0; i < listOfItem.size(); i ++) {
+            selectedTagList.addAll(((CalendarItem) listOfItem.get(i)).getTagList());
+        }
+        
+        Iterator<String> iter = selectedTagList.iterator();
+        while (iter.hasNext()) {
+            String tagName = iter.next();
+            updateTagList(tagName);
+        }
     }
     
     /**
      * Get a list of Tags in the DB.
      * 
      * @return tagList
+     * @@author Tiong YaoCong A0139922Y
      */
     public List<String> getTagList() {
-        return new ArrayList<String>(tagList);
+        return new ArrayList<String>(tagList.keySet());
     }
     
     /**
      * Count tags which are already inserted into the db
      * 
      * @return Number of tags
+     * @@author Tiong YaoCong A0139922Y
      */
     public int countTagList() {
         return tagList.size();
@@ -164,9 +206,13 @@ public class TodoListDB {
      * 
      * @param task
      * @return true if the save was successful, false otherwise
+     * @@author Tiong YaoCong A0139922Y
      */
     public boolean destroyTask(Task task) {
         tasks.remove(task);
+        ArrayList<Task> taskList = new ArrayList<Task>();
+        taskList.add(task);
+        removeFromTagList(taskList);
         return save();
     }
     
@@ -177,6 +223,7 @@ public class TodoListDB {
      * @@author Tiong YaoCong A0139922Y
      */
     public void destroyAllTask() {
+        removeFromTagList(new ArrayList<Task>(tasks));
         tasks = new LinkedHashSet<Task>();
     }
     
@@ -188,6 +235,7 @@ public class TodoListDB {
      */
     public void destroyAllTaskByDate(LocalDateTime givenDate) {
         List<Task> selectedTasks = getTaskByDate(givenDate);
+        removeFromTagList(selectedTasks);
         tasks.removeAll(selectedTasks);
     }
     
@@ -198,6 +246,7 @@ public class TodoListDB {
      */
     public void destroyAllTaskByRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Task> selectedTasks = getTaskByRange(dateFrom, dateTo);
+        removeFromTagList(selectedTasks);
         tasks.removeAll(selectedTasks);
     }
     
@@ -224,6 +273,7 @@ public class TodoListDB {
      */
     public boolean destroyEvent(Event event) {
         events.remove(event);
+        updateTagList(event.getName());
         return save();
     }
     
@@ -233,6 +283,7 @@ public class TodoListDB {
      * @@author Tiong YaoCong A0139922Y
      */
     public void destroyAllEvent() {
+        removeFromTagList(new ArrayList<Event>(events));
         events = new LinkedHashSet<Event>();
     }
     
@@ -244,6 +295,7 @@ public class TodoListDB {
     public void destroyAllEventByDate(LocalDateTime givenDate) {
         List<Event> selectedEvents = getEventByDate(givenDate);
         events.removeAll(selectedEvents);
+        removeFromTagList(selectedEvents);
     }
     
     /**
@@ -256,6 +308,7 @@ public class TodoListDB {
     public void destroyAllEventByRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Event> selectedEvents = getEventByRange(dateFrom, dateTo);
         events.removeAll(selectedEvents);
+        removeFromTagList(selectedEvents);
     }
     
     
@@ -886,4 +939,5 @@ public class TodoListDB {
         }
         return eventByName;
     }
+
 }
