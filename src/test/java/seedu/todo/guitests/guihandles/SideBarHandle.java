@@ -11,7 +11,7 @@ import seedu.todo.guitests.GuiRobot;
  */
 public class SideBarHandle extends GuiHandle {
 
-    private static final String TAGLIST_ID = "#sidebarTagsPlaceholder";
+    private static final String TAGLIST = "#sidebarTagsPlaceholder";
 
     public SideBarHandle(GuiRobot guiRobot, Stage primaryStage, String stageTitle) {
         super(guiRobot, primaryStage, stageTitle);
@@ -22,7 +22,7 @@ public class SideBarHandle extends GuiHandle {
      * If it doesn't exist, it returns null.
      */
     public TagListItemHandle getTagListItem(String tagName) {
-        Optional<Node> tagItemNode = guiRobot.lookup(TAGLIST_ID).queryAll().stream()
+        Optional<Node> tagItemNode = guiRobot.lookup(TAGLIST).queryAll().stream()
                 .filter(node -> new TagListItemHandle(guiRobot, primaryStage, node).getName().equals(tagName))
                 .findFirst();
         
