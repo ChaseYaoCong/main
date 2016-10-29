@@ -23,6 +23,7 @@ public class TagController implements Controller {
     private static final String DESCRIPTION = "Tag a task/event by listed index";
     private static final String COMMAND_SYNTAX = "tag <index> <tag name>";
     
+    private static final String TAG_FORMAT = "tag %d";
     private static final String MESSAGE_TAG_SUCCESS = "Item has been tagged successfully.";
     private static final String MESSAGE_INDEX_OUT_OF_RANGE = "Could not tag task/event: Invalid index provided!";
     private static final String MESSAGE_MISSING_INDEX_AND_TAG_NAME = "Please specify the index of the item and the tag name to tag.";
@@ -32,7 +33,7 @@ public class TagController implements Controller {
     private static final String MESSAGE_TAG_NAME_EXIST = "Could not tag task/event: Tag name already exist or Duplicate Tag Names!";
     
     private static final int ITEM_INDEX = 0;
-    private static final int TOKENIZER_RESULT_INDEX = 1;
+    private static final int TOKENIZER_DEFAULT_INDEX = 1;
     
     private static CommandDefinition commandDefinition =
             new CommandDefinition(NAME, DESCRIPTION, COMMAND_SYNTAX); 
@@ -67,7 +68,7 @@ public class TagController implements Controller {
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         
         // Extract param
-        String param = parsedResult.get("default")[TOKENIZER_RESULT_INDEX];
+        String param = parsedResult.get("default")[TOKENIZER_DEFAULT_INDEX];
         
         if (param.length() <= 0) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
@@ -94,7 +95,7 @@ public class TagController implements Controller {
         TodoListDB db = TodoListDB.getInstance();
         
         if (calendarItem == null) {
-            Renderer.renderDisambiguation(String.format("tag %d", index), MESSAGE_INDEX_OUT_OF_RANGE);
+            Renderer.renderDisambiguation(String.format(TAG_FORMAT, index), MESSAGE_INDEX_OUT_OF_RANGE);
             return;
         }
         
@@ -111,7 +112,7 @@ public class TagController implements Controller {
         boolean isTagNameDuplicate = checkDuplicateTagName(parsedTagNames, calendarItem);
         
         if (isTagNameDuplicate) {
-            Renderer.renderDisambiguation(String.format("tag %d", index), MESSAGE_TAG_NAME_EXIST);
+            Renderer.renderDisambiguation(String.format(TAG_FORMAT, index), MESSAGE_TAG_NAME_EXIST);
             return;
         }
         

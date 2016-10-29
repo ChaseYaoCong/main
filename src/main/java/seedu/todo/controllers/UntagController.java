@@ -33,7 +33,7 @@ public class UntagController implements Controller {
     private static final String MESSAGE_TAG_NAME_EXIST = "Could not untag task/event : Tag name does not exist or Duplicate Tag name detected!";
     
     private static final int ITEM_INDEX = 0;
-    private static final int TOKENIZER_RESULT_INDEX = 1;
+    private static final int TOKENIZER_DEFAULT_INDEX = 1;
     
     private static CommandDefinition commandDefinition =
             new CommandDefinition(NAME, DESCRIPTION, COMMAND_SYNTAX); 
@@ -68,7 +68,7 @@ public class UntagController implements Controller {
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         
         // Extract param
-        String param = parsedResult.get("default")[TOKENIZER_RESULT_INDEX];
+        String param = parsedResult.get("default")[TOKENIZER_DEFAULT_INDEX];
         
         if (param.length() <= 0) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
