@@ -9,10 +9,24 @@ import java.util.List;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
+/**
+ * Helper function to help in filtering results
+ * 
+ * @@author Tiong YaoCong A0139922Y
+ *
+ */
+
 public class FilterUtil {
     
     /*==================== Filtering Methods for Tasks ======================*/
     
+    /**
+     * Filter the task list based on matching task name list
+     * @param tasks 
+     *             Provided list for filtering
+     * @param namelist
+     *             Search and filter based on the name list
+     */
     public static List<Task> filterTaskByNames(List<Task> tasks, HashSet<String> nameList) {
         if (tasks.size() == 0 || nameList.size() == 0) {
             return tasks;
@@ -34,6 +48,13 @@ public class FilterUtil {
         return filteredTasks;
     }
     
+    /**
+     * Filter the task list based on matching tag name list
+     * @param tasks 
+     *             Provided list for filtering
+     * @param namelist
+     *             Search and filter based on the name list
+     */
     public static List<Task> filterTaskByTags(List<Task> tasks, HashSet<String> nameList) {
         if (tasks.size() == 0 || nameList.size() == 0) {
             return tasks;
@@ -56,6 +77,11 @@ public class FilterUtil {
         return filteredTasks;
     }
     
+    /**
+     * Filter the task list based on incomplete status
+     * @param tasks 
+     *             Provided list for filtering
+     */
     public static List<Task> filterCompletedTaskList(List<Task> tasks) {
         if (tasks.size() == 0) {
             return tasks;
@@ -71,6 +97,11 @@ public class FilterUtil {
         return filteredTasks.size() == 0 ? tasks : filteredTasks;
     }
     
+    /**
+     * Filter the task list based on incomplete status
+     * @param tasks 
+     *             Provided list for filtering
+     */
     public static List<Task> filterIncompletedTaskList(List<Task> tasks) {
         if (tasks.size() == 0) {
             return tasks;
@@ -86,7 +117,13 @@ public class FilterUtil {
         return filteredTasks.size() == 0 ? tasks : filteredTasks;
     }
     
-    
+    /**
+     * Filter the task list based on single date
+     * @param tasks 
+     *             Provided list for filtering
+     * @param date            
+     *             Search based on this date
+     */
     public static List<Task> filterTaskBySingleDate (List<Task> tasks, LocalDateTime date) {
         if (tasks.size() == 0) {
             return tasks;
@@ -96,6 +133,7 @@ public class FilterUtil {
         Iterator<Task> iterator = tasks.iterator();
         while (iterator.hasNext()) {
             Task task = iterator.next();
+            assert date != null;
             LocalDateTime taskDate = DateUtil.floorDate(task.getCalendarDT());
             
             //May have floating tasks
@@ -106,6 +144,15 @@ public class FilterUtil {
         return filteredTasks.size() == 0 ? tasks : filteredTasks;
     }
     
+    /**
+     * Filter the task list with a date range
+     * @param tasks 
+     *             Provided list for filtering
+     * @param startDate            
+     *             Search based on this as starting date
+     * @param endDate            
+     *             Search based on this as ending date
+     */
     public static List<Task> filterTaskWithDateRange (List<Task> tasks, LocalDateTime startDate, LocalDateTime endDate) {
         if (tasks.size() == 0) {
             return tasks;
@@ -137,6 +184,13 @@ public class FilterUtil {
     
     /*==================== Filtering Methods for Events ======================*/
     
+    /**
+     * Filter the event list based on event name list
+     * @param events 
+     *             Provided list for filtering
+     * @param namelist
+     *             Search and filter based on the name list
+     */
     public static List<Event> filterEventByNames (List<Event> events, HashSet<String> nameList) {
         if (events.size() == 0 || nameList.size() == 0) {
             return events;
@@ -158,6 +212,13 @@ public class FilterUtil {
         return filteredEvents;
     }
     
+    /**
+     * Filter the event list based on tag name list
+     * @param events 
+     *             Provided list for filtering
+     * @param namelist
+     *             Search and filter based on the name list
+     */
     public static List<Event> filterEventByTags (List<Event> events, HashSet<String> nameList) {
         if (events.size() == 0 || nameList.size() == 0) {
             return events;
@@ -180,7 +241,11 @@ public class FilterUtil {
         return filteredEvents;
     }
     
-    
+    /**
+     * Filter the event list if the event date is over
+     * @param events 
+     *             Provided list for filtering
+     */
     public static List<Event> filterIsOverEventList(List<Event> events) {
         if (events.size() == 0) {
             return events;
@@ -196,6 +261,11 @@ public class FilterUtil {
         return filteredEvents.size() == 0 ? events : filteredEvents;
     }
     
+    /**
+     * Filter the event list if the event is not over
+     * @param events 
+     *             Provided list for filtering
+     */
     public static List<Event> filterCurrentEventList(List<Event> events) {
         if (events.size() == 0) {
             return events;
@@ -211,6 +281,13 @@ public class FilterUtil {
         return filteredEvents.size() == 0 ? events : filteredEvents;
     }
     
+    /**
+     * Filter the event list based on single date
+     * @param events 
+     *             Provided list for filtering
+     * @param date            
+     *             Search based on this date         
+     */
     public static List<Event> filterEventBySingleDate(List<Event> events, LocalDateTime date) {
         if (events.size() == 0) {
             return events;
@@ -229,6 +306,15 @@ public class FilterUtil {
         return filteredEvents.size() == 0 ? events : filteredEvents;
     }
     
+    /**
+     * Filter the event list with range of dates
+     * @param events 
+     *             Provided list for filtering
+     * @param startDate            
+     *             Search based on this as starting date
+     * @param endDate            
+     *             Search based on this as ending date
+     */
     public static List<Event> filterEventWithDateRange(List<Event> events, LocalDateTime startDate, LocalDateTime endDate) {
         if (events.size() == 0) {
             return events;
