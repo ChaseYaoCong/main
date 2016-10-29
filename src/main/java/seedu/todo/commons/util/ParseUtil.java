@@ -75,7 +75,7 @@ public class ParseUtil {
         String naturalOn = getTokenResult(parsedResult, "time");
         int numOfDateFound = 0;
         
-        String [] dateResult = { Integer.toString(numOfDateFound), naturalOn, naturalFrom, naturalTo };
+        String [] dateResult = { null, naturalOn, naturalFrom, naturalTo };
         for (int i = 0; i < dateResult.length; i ++) {
             if (dateResult[i] != null) {
                 numOfDateFound ++;

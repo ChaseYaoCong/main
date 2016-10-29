@@ -59,9 +59,9 @@ public class StringUtil {
      *        
      * @return the display message for console message output           
      */
-    public static String formatNumberOfTaskAndEventWithPuralizer (int numTasks, int numEvents) {
+    public static String displayNumberOfTaskAndEventFoundWithPuralizer (int numTasks, int numEvents) {
         if (numTasks != 0 && numEvents != 0) {
-            return String.format("%s and %s.", formatNumberOfTaskWithPuralizer(numTasks), formatNumberOfEventWithPuralizer(numEvents));
+            return String.format("%s and %s", formatNumberOfTaskWithPuralizer(numTasks), formatNumberOfEventWithPuralizer(numEvents));
         } else if (numTasks != 0) {
             return formatNumberOfTaskWithPuralizer(numTasks);
         } else {
