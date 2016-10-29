@@ -16,16 +16,20 @@ public class TagTaskCommandTest extends GuiTest {
 
     @Test
     public void tagTaskWithNewTagName() {
-        
+        console.runCommand("add 123");
         String command; 
-        Task task;
-        
+        Task task = getInitialData().createTask();
+        task.setName("testcase1");
         //adding 1 tag
-        task = new Task();
-        String[] testCase1 = {"CS3216"};
-        initializeTestCase(testCase1, task);
+        //task = new Task();
+        //String[] testCase1 = {"CS3216"};
+        //initializeTestCase(testCase1, task);
         command = "tag 1 CS3216";
         
+        assertTaskTaggedSuccess(command, task);
+        
+        task.setName("testcase2");
+        command = "tag 1 CS3216, CS3217";
         assertTaskTaggedSuccess(command, task);
         
         //adding multiple tags
