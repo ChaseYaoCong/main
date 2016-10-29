@@ -1,19 +1,14 @@
 package seedu.todo.controllers;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.joestelmach.natty.DateGroup;
-import com.joestelmach.natty.Parser;
 
 import seedu.todo.commons.exceptions.ParseException;
-import seedu.todo.commons.util.DateUtil;
+import seedu.todo.commons.util.ParseUtil;
 import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.controllers.concerns.Renderer;
@@ -37,6 +32,12 @@ public class FindController implements Controller {
     
     private static final String MESSAGE_LISTING_SUCCESS = "A total of %s found!";
     private static final String MESSAGE_LISTING_FAILURE = "No task or event found!";
+
+    //use to access parsing of dates
+    private static final int NUM_OF_DATES_FOUND_INDEX = 0;
+    private static final int DATE_TO_INDEX = 1;
+    private static final int DATE_FROM_INDEX = 2;
+    private static final int DATE_ON_INDEX = 3;
     
     private static CommandDefinition commandDefinition =
             new CommandDefinition(NAME, DESCRIPTION, COMMAND_SYNTAX); 
@@ -54,12 +55,12 @@ public class FindController implements Controller {
         Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
         tokenDefinitions.put("default", new String[] {"find"});
         tokenDefinitions.put("eventType", new String[] { "event", "events", "task", "tasks"});
-        tokenDefinitions.put("status", new String[] { "complete" , "completed", "uncomplete", "uncompleted"});
+        tokenDefinitions.put("status", new String[] { "complete" , "completed", "incomplete", "incompleted"});
         tokenDefinitions.put("time", new String[] { "at", "by", "on", "time" });
         tokenDefinitions.put("timeFrom", new String[] { "from" });
         tokenDefinitions.put("timeTo", new String[] { "to", "before" });
-        tokenDefinitions.put("name", new String[] { "name" });
-        tokenDefinitions.put("tag", new String [] { "tag" }); 
+        tokenDefinitions.put("itemName", new String[] { "name" });
+        tokenDefinitions.put("tagName", new String [] { "tag" }); 
         return tokenDefinitions;
     }
 
@@ -71,54 +72,56 @@ public class FindController implements Controller {
         
         HashSet<String> itemNameList = new HashSet<String>();
         HashSet<String> tagNameList = new HashSet<String>();
+        HashSet<String> keywordList = new HashSet<String>();
         
-        parseExactFindCommand(parsedResult, itemNameList);
+        //to be use to be either name or tag
+        updateHashList(parsedResult, keywordList, "default");
+        updateHashList(parsedResult, itemNameList, "itemName");
+        updateHashList(parsedResult, tagNameList, "tagName");
         
-        parseName(parsedResult, itemNameList); //parse additional name enter by user
-        parseTag(parsedResult, tagNameList);
+        if (keywordList.size() == 0 && itemNameList.size() == 0 && tagNameList.size() == 0) {
+            //No name provided display error
+            return;
+        }
         
-        // Task or event?
-        boolean listAll = parseListAllType(parsedResult);
+        boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, "eventType");
+        boolean isItemStatusProvided = !ParseUtil.isTokenNull(parsedResult, "status");
         
         boolean isTask = true; //default
         //if listing all type , set isTask and isEvent true
-        if (!listAll) {
-            isTask = parseIsTask(parsedResult);
+        if (isItemTypeProvided) {
+            isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
         }
         
-        boolean listAllStatus = parseListAllStatus(parsedResult);
+        
         boolean isCompleted = false; //default 
-        //if listing all status, isCompleted will be ignored, listing both complete and uncomplete
-        if (!listAllStatus) {
-            isCompleted = !parseIsUncomplete(parsedResult);
+        //if listing all status, isCompleted will be ignored, listing both complete and incomplete
+        if (isItemStatusProvided) {
+            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, "status", "incomplete");
         }
         
-        String[] parsedDates = parseDates(parsedResult);
-        if (parsedDates == null && listAllStatus == true && listAll == true 
-                && itemNameList.size() == 0 && tagNameList.size() == 0) {
-            //display error message, no keyword provided
-            String disambiguationString = String.format("%s %s %s %s %s", COMMAND_WORD, "<name>" , 
-                    "<complete/incomplete>", "<task/event>", "<tag tagName>");  
-            Renderer.renderDisambiguation(disambiguationString, input);
-            return ;
-        }
+        String[] parsedDates = ParseUtil.parseDates(parsedResult);
         
         LocalDateTime dateOn = null;
         LocalDateTime dateFrom = null;
         LocalDateTime dateTo = null;
         
         if (parsedDates != null) {
-            String naturalOn = parsedDates[0];
-            String naturalFrom = parsedDates[1];
-            String naturalTo = parsedDates[2];
+            String naturalOn = parsedDates[DATE_ON_INDEX];
+            String naturalFrom = parsedDates[DATE_FROM_INDEX];
+            String naturalTo = parsedDates[DATE_TO_INDEX];
+            
+            if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
+                //date conflict detected
+            }
     
             // Parse natural date using Natty.
-            dateOn = naturalOn == null ? null : parseNatural(naturalOn); 
-            dateFrom = naturalFrom == null ? null : parseNatural(naturalFrom); 
-            dateTo = naturalTo == null ? null : parseNatural(naturalTo);
+            dateOn = naturalOn == null ? null : ParseUtil.parseNatural(naturalOn); 
+            dateFrom = naturalFrom == null ? null : ParseUtil.parseNatural(naturalFrom); 
+            dateTo = naturalTo == null ? null : ParseUtil.parseNatural(naturalTo);
         }
         //setting up view
-        setupView(isTask, listAll, isCompleted, listAllStatus, dateOn, dateFrom, dateTo, itemNameList, tagNameList);
+        setupView(isTask, isItemTypeProvided, isCompleted, isItemStatusProvided, dateOn, dateFrom, dateTo, itemNameList, tagNameList);
         
     }
 
@@ -245,74 +248,22 @@ public class FindController implements Controller {
     }
     
     /**
-     * Extract the name keyword enter by the user and put in the hashset of name keywords
+     * Extract the parsed result and update the hash list
      * @param parsedResult
      */
-    private void parseExactFindCommand(Map<String, String[]> parsedResult, HashSet<String> itemNameList) {
-        if (parsedResult.get("default")[1] != null) {
-            String[] result = parsedResult.get("default")[1].trim().split(" ");
-            for (int i = 0; i < result.length; i ++) {
-                itemNameList.add(result[i]);
+    private void updateHashList(Map<String, String[]> parsedResult, HashSet<String> hashList, 
+            String token) {
+      
+        String result = ParseUtil.getTokenResult(parsedResult, token);
+        
+        //if found any matching , update list
+        if (result != null) {
+            hashList.add(result);
+            String[] resultArray = StringUtil.convertStringIntoArray(result);
+            for (int i = 0; i < resultArray.length; i ++) {
+                hashList.add(resultArray[i]);
             }
-        } 
-    }
-    
-    /**
-     * Extract the name keyword enter by the user and put in the hashset of name keywords
-     * @param parsedResult, tagNameList to store all the keywords
-     */
-    
-    private void parseName(Map<String, String[]> parsedResult, HashSet<String> itemNameList) {
-        if (parsedResult.get("name") != null && parsedResult.get("name")[1] != null) {
-            String[] result = parsedResult.get("name")[1].trim().split(" ");
-            for (int i = 0; i < result.length; i ++) {
-                itemNameList.add(result[i].trim());
-            }
-        } 
-    }
-    
-    /**
-     * Extract the tag name keyword enter by the user and put in the hashset of tag keywords
-     * @param parsedResult, tagNameList to store all the keywords
-     */
-    
-    private void parseTag(Map<String, String[]> parsedResult, HashSet<String> tagNameList) {
-        if (parsedResult.get("tag") != null && parsedResult.get("tag")[1] != null) {
-            String[] result = parsedResult.get("tag")[1].trim().split(",");
-            for (int i = 0; i < result.length; i ++) {
-                tagNameList.add(result[i].trim());
-            }
-        } 
-    }
-    
-    /**
-     * Parse a natural date into a LocalDateTime object.
-     * 
-     * @param natural
-     * @return LocalDateTime object
-     */
-    private LocalDateTime parseNatural(String natural) {
-        Parser parser = new Parser();
-        List<DateGroup> groups = parser.parse(natural);
-        Date date = null;
-        try {
-            date = groups.get(0).getDates().get(0);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error!"); // TODO
-            return null;
         }
-        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        return DateUtil.floorDate(ldt);
-    }
-    
-    /**
-     * Extracts the intended CalendarItem type specify from parsedResult.
-     * 
-     * @param parsedResult
-     * @return true if Task or event is not specify, false if either Task or Event specify
-     */
-    private boolean parseListAllType (Map<String, String[]> parsedResult) {
-        return !(parsedResult.get("eventType") != null);
     }
     
     /**

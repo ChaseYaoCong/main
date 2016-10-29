@@ -119,4 +119,12 @@ public class StringUtil {
     public static String checkEmptyList(ArrayList<String> list) {
         return (list.size() == 0) ? "" : list.toString();
     }
+    
+    /*
+     * Convert input into individual input by splitting with space  
+     * 
+     */
+    public static String[] convertStringIntoArray(String input) {
+        return input.trim().split(" ");
+    }
 }
