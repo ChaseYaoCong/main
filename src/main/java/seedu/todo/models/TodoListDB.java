@@ -53,8 +53,9 @@ public class TodoListDB {
      * @@author Tiong YaoCong A0139922Y
      */
     public void addIntoTagList(String[] parsedTagNames) {
+        assert parsedTagNames != null;
         for (int i = 0; i < parsedTagNames.length; i ++) {
-            String tagName = parsedTagNames[i];
+            String tagName = parsedTagNames[i].trim();
             if (tagList.get(tagName) != null) {
                 int currentTagCount = tagList.get(tagName);
                 tagList.put(tagName, currentTagCount + 1);
@@ -68,14 +69,18 @@ public class TodoListDB {
      * Remove from the overall Tags with a single tagName that exist in the DB.
      * @@author Tiong YaoCong A0139922Y
      */
-    public void updateTagList(String tagName) {
-        assert tagName != null;
-        int currentTagCount = tagList.get(tagName);
-        int newTagCount = currentTagCount - 1;
-        if (newTagCount == 0) {
-            tagList.remove(tagName);
-        } else {
-            tagList.put(tagName, newTagCount);
+    public void updateTagList(String[] parsedTagNames) {
+        assert parsedTagNames != null;
+        for (int i = 0; i < parsedTagNames.length; i ++) {
+            String tagName = parsedTagNames[i].trim();
+            int currentTagCount = tagList.get(tagName);
+            
+            int newTagCount = currentTagCount - 1;
+            if (newTagCount == 0) {
+                tagList.remove(tagName);
+            } else {
+                tagList.put(tagName, newTagCount);
+            }
         }
     }
     
@@ -84,19 +89,15 @@ public class TodoListDB {
      * @param <E>listOfItem of type CalendarItem
      * @@author Tiong YaoCong A0139922Y
      */
-    public <E> void removeFromTagList(List<E> listOfItem) {
-        assert listOfItem != null;
+    public <E> void removeFromTagList(List<E> listOfCalendarItem) {
+        assert listOfCalendarItem != null;
         
         ArrayList<String> selectedTagList = new ArrayList<String>();
-        for (int i = 0; i < listOfItem.size(); i ++) {
-            selectedTagList.addAll(((CalendarItem) listOfItem.get(i)).getTagList());
+        for (int i = 0; i < listOfCalendarItem.size(); i ++) {
+            selectedTagList.addAll(((CalendarItem) listOfCalendarItem.get(i)).getTagList());
         }
         
-        Iterator<String> iter = selectedTagList.iterator();
-        while (iter.hasNext()) {
-            String tagName = iter.next();
-            updateTagList(tagName);
-        }
+        updateTagList(selectedTagList.toArray(new String[0]));
     }
     
     /**
@@ -276,7 +277,9 @@ public class TodoListDB {
      */
     public boolean destroyEvent(Event event) {
         events.remove(event);
-        updateTagList(event.getName());
+        ArrayList<CalendarItem> listOfCalendarItem = new ArrayList<CalendarItem>();
+        listOfCalendarItem.add(event);
+        removeFromTagList(listOfCalendarItem);
         return save();
     }
     

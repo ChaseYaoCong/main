@@ -1,11 +1,13 @@
 package seedu.todo.controllers;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import seedu.todo.commons.EphemeralDB;
+import seedu.todo.commons.exceptions.ParseException;
 import seedu.todo.controllers.concerns.Renderer;
+import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.CalendarItem;
 import seedu.todo.models.TodoListDB;
 
@@ -30,6 +32,7 @@ public class TagController implements Controller {
     private static final String MESSAGE_TAG_NAME_EXIST = "Could not tag task/event: Tag name already exist or Duplicate Tag Names!";
     
     private static final int ITEM_INDEX = 0;
+    private static final int TOKENIZER_RESULT_INDEX = 1;
     
     private static CommandDefinition commandDefinition =
             new CommandDefinition(NAME, DESCRIPTION, COMMAND_SYNTAX); 
@@ -43,13 +46,28 @@ public class TagController implements Controller {
         // TODO
         return (input.toLowerCase().startsWith("tag") || input.startsWith("tags")) ? 1 : 0;
     }
+    
+    /**
+     * Get the token definitions for use with <code>tokenizer</code>.<br>
+     * This method exists primarily because Java does not support HashMap
+     * literals...
+     * 
+     * @return tokenDefinitions
+     */
+    private static Map<String, String[]> getTokenDefinitions() {
+        Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
+        tokenDefinitions.put("default", new String[] {"tag"});
+        return tokenDefinitions;
+    }
 
     @Override
-    public void process(String args) {
-        // TODO: Example of last minute work
+    public void process(String input) throws ParseException {
+        
+        Map<String, String[]> parsedResult;
+        parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         
         // Extract param
-        String param = args.replaceFirst("(tag|tags)", "").trim();
+        String param = parsedResult.get("default")[TOKENIZER_RESULT_INDEX];
         
         if (param.length() <= 0) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
@@ -58,13 +76,13 @@ public class TagController implements Controller {
         
         assert param.length() > 0;
         
-        String[] parsedResult = parseParam(param);
+        String[] parameters = parseParam(param);
         // Get index.
         int index = 0;
-        String tagName = null;
+        String tagNames = null;
         try {
-            index = Integer.decode(parsedResult[ITEM_INDEX]);
-            tagName = param.replaceFirst(parsedResult[ITEM_INDEX], "").trim();
+            index = Integer.decode(parameters[ITEM_INDEX]);
+            tagNames = param.replaceFirst(parameters[ITEM_INDEX], "").trim();
         } catch (NumberFormatException e) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_INDEX_NOT_NUMBER);
             return;
@@ -81,14 +99,14 @@ public class TagController implements Controller {
         }
         
         // Check if tag name is provided
-        if (parsedResult.length <= 1) {
+        if (parameters.length <= 1) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_TAG_NAME_NOT_FOUND);
             return;
         }
         
         assert calendarItem != null;
         
-        String[] parsedTagNames = tagName.split(",");
+        String[] parsedTagNames = parseTags(tagNames);
         
         boolean isTagNameDuplicate = checkDuplicateTagName(parsedTagNames, calendarItem);
         
@@ -112,14 +130,13 @@ public class TagController implements Controller {
     private boolean addingTagNames(String[] parsedTagNames, CalendarItem calendarItem) {
         assert parsedTagNames != null;
         
-        System.out.println(Arrays.toString(parsedTagNames));
         boolean result = true;
         for (int i = 0; i < parsedTagNames.length; i ++) {
             result = calendarItem.addTag(parsedTagNames[i].trim()) & result;
         }
         return result;
     }
-
+    
     private boolean checkDuplicateTagName(String[] parsedTagNames, CalendarItem calendarItem) {
         HashSet<String> parsedTagNamesList = new HashSet<String>();
         for (int i = 0; i < parsedTagNames.length; i ++) {
@@ -138,9 +155,13 @@ public class TagController implements Controller {
         
         return false;
     }
-
+    
     private String[] parseParam(String param) {
         return param.split(" ");
+    }
+    
+    private String [] parseTags(String tags) {
+        return tags.split(",");
     }
 
 }
