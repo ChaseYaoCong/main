@@ -38,8 +38,22 @@ public class FilterUtil {
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
                 String currentMatchingName = nameListIterator.next().toLowerCase();
-                if (task.getName().startsWith(currentMatchingName)) {
+                if (task.getName().toLowerCase().startsWith(currentMatchingName)) {
                     filteredTasks.add(task);
+                    break;
+                }
+                
+                boolean matchFound = false;
+                String [] taskNameBySpace = task.getName().split(" ");
+                for (int j = 0; j < taskNameBySpace.length; j ++) {
+                    if (taskNameBySpace[j].toLowerCase().startsWith(currentMatchingName)) {
+                        filteredTasks.add(task);
+                        matchFound = true;
+                        break;
+                    }
+                }
+                
+                if (matchFound) {
                     break;
                 }
             }
@@ -204,6 +218,20 @@ public class FilterUtil {
                 String currentMatchingName = nameListIterator.next().toLowerCase();
                 if (event.getName().startsWith(currentMatchingName)) {
                     filteredEvents.add(event);
+                    break;
+                }
+                
+                boolean matchFound = false;
+                String [] eventNameBySpace = event.getName().split(" ");
+                for (int j = 0; j < eventNameBySpace.length; j ++) {
+                    if (eventNameBySpace[j].toLowerCase().startsWith(currentMatchingName)) {
+                        filteredEvents.add(event);
+                        matchFound = true;
+                        break;
+                    }
+                }
+                
+                if (matchFound) {
                     break;
                 }
             }
