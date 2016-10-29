@@ -1,5 +1,9 @@
 package seedu.todo.controllers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 import seedu.todo.commons.EphemeralDB;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.models.CalendarItem;
@@ -23,7 +27,7 @@ public class TagController implements Controller {
     private static final String MESSAGE_INDEX_NOT_NUMBER = "Index has to be a number!";
     private static final String MESSAGE_TAG_NAME_NOT_FOUND = "Could not tag task/event: Tag name not provided!";
     private static final String MESSAGE_EXCEED_TAG_SIZE = "Could not tag task/event : Tag size exceed";
-    private static final String MESSAGE_TAG_NAME_EXIST = "Could not tag task/event: Tag name already exist!";
+    private static final String MESSAGE_TAG_NAME_EXIST = "Could not tag task/event: Tag name already exist or Duplicate Tag Names!";
     
     private static final int ITEM_INDEX = 0;
     
@@ -84,23 +88,55 @@ public class TagController implements Controller {
         
         assert calendarItem != null;
         
-        boolean isTagNameDuplicate = calendarItem.getTagList().contains(tagName);
+        String[] parsedTagNames = tagName.split(",");
+        
+        boolean isTagNameDuplicate = checkDuplicateTagName(parsedTagNames, calendarItem);
         
         if (isTagNameDuplicate) {
             Renderer.renderDisambiguation(String.format("tag %d", index), MESSAGE_TAG_NAME_EXIST);
             return;
         }
         
-        boolean resultOfTagging = calendarItem.addTag(tagName);
+        boolean resultOfTagging = addingTagNames(parsedTagNames, calendarItem);
         
         // Re-render
         if (resultOfTagging) {
-            db.addIntoTagList(tagName);
+            db.addIntoTagList(parsedTagNames);
             db.save();
             Renderer.renderIndex(db, MESSAGE_TAG_SUCCESS);
         } else {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_EXCEED_TAG_SIZE);
         }
+    }
+
+    private boolean addingTagNames(String[] parsedTagNames, CalendarItem calendarItem) {
+        assert parsedTagNames != null;
+        
+        System.out.println(Arrays.toString(parsedTagNames));
+        boolean result = true;
+        for (int i = 0; i < parsedTagNames.length; i ++) {
+            result = calendarItem.addTag(parsedTagNames[i].trim()) & result;
+        }
+        return result;
+    }
+
+    private boolean checkDuplicateTagName(String[] parsedTagNames, CalendarItem calendarItem) {
+        HashSet<String> parsedTagNamesList = new HashSet<String>();
+        for (int i = 0; i < parsedTagNames.length; i ++) {
+            //checking with overall tag list in db
+            if (calendarItem.getTagList().contains(parsedTagNames[i].trim())) {
+                return true;
+            }
+            
+            //checking with the current array, if there are duplicate tags
+            parsedTagNamesList.add(parsedTagNames[i]);
+        }
+        
+        if (parsedTagNamesList.size() != parsedTagNames.length) {
+            return true;
+        }
+        
+        return false;
     }
 
     private String[] parseParam(String param) {

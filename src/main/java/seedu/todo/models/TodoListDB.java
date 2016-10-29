@@ -52,12 +52,15 @@ public class TodoListDB {
      * add into the overall Tags in the DB.
      * @@author Tiong YaoCong A0139922Y
      */
-    public void addIntoTagList(String tagName) {
-        if (tagList.get(tagName) != null) {
-            int currentTagCount = tagList.get(tagName);
-            tagList.put(tagName, currentTagCount + 1);
-        } else {
-            tagList.put(tagName, 1);
+    public void addIntoTagList(String[] parsedTagNames) {
+        for (int i = 0; i < parsedTagNames.length; i ++) {
+            String tagName = parsedTagNames[i];
+            if (tagList.get(tagName) != null) {
+                int currentTagCount = tagList.get(tagName);
+                tagList.put(tagName, currentTagCount + 1);
+            } else {
+                tagList.put(tagName, 1);
+            }
         }
     }
     
@@ -84,7 +87,7 @@ public class TodoListDB {
     public <E> void removeFromTagList(List<E> listOfItem) {
         assert listOfItem != null;
         
-        HashSet<String> selectedTagList = new HashSet<String>();
+        ArrayList<String> selectedTagList = new ArrayList<String>();
         for (int i = 0; i < listOfItem.size(); i ++) {
             selectedTagList.addAll(((CalendarItem) listOfItem.get(i)).getTagList());
         }
