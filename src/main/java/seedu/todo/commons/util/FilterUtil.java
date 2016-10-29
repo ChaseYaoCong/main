@@ -68,7 +68,7 @@ public class FilterUtil {
                 filteredTasks.add(task);
             }
         }
-        return filteredTasks;
+        return filteredTasks.size() == 0 ? tasks : filteredTasks;
     }
     
     public static List<Task> filterIncompletedTaskList(List<Task> tasks) {
@@ -83,7 +83,7 @@ public class FilterUtil {
                 filteredTasks.add(task);
             }
         }
-        return filteredTasks;
+        return filteredTasks.size() == 0 ? tasks : filteredTasks;
     }
     
     
@@ -103,7 +103,7 @@ public class FilterUtil {
                 filteredTasks.add(task);
             }
         }
-        return filteredTasks;
+        return filteredTasks.size() == 0 ? tasks : filteredTasks;
     }
     
     public static List<Task> filterTaskWithDateRange (List<Task> tasks, LocalDateTime startDate, LocalDateTime endDate) {
@@ -132,7 +132,7 @@ public class FilterUtil {
                 filteredTasks.add(task);
             }
         }
-        return filteredTasks;
+        return filteredTasks.size() == 0 ? tasks : filteredTasks;
     }
     
     /*==================== Filtering Methods for Events ======================*/
@@ -186,14 +186,14 @@ public class FilterUtil {
             return events;
         }
         
-        List<Event> filteredEvent = new ArrayList<Event>();
+        List<Event> filteredEvents = new ArrayList<Event>();
         for (int i = 0; i < events.size(); i ++) {
             Event event = events.get(i);
             if (event.isOver()) {
-                filteredEvent.add(event);
+                filteredEvents.add(event);
             }
         }
-        return filteredEvent;
+        return filteredEvents.size() == 0 ? events : filteredEvents;
     }
     
     public static List<Event> filterCurrentEventList(List<Event> events) {
@@ -201,14 +201,14 @@ public class FilterUtil {
             return events;
         }
         
-        List<Event> filteredEvent = new ArrayList<Event>();
+        List<Event> filteredEvents = new ArrayList<Event>();
         for (int i = 0; i < events.size(); i ++) {
             Event event = events.get(i);
             if (!event.isOver()) {
-                filteredEvent.add(event);
+                filteredEvents.add(event);
             }
         }
-        return filteredEvent;
+        return filteredEvents.size() == 0 ? events : filteredEvents;
     }
     
     public static List<Event> filterEventBySingleDate(List<Event> events, LocalDateTime date) {
@@ -226,7 +226,7 @@ public class FilterUtil {
                 filteredEvents.add(event);
             }
         }
-        return filteredEvents;
+        return filteredEvents.size() == 0 ? events : filteredEvents;
     }
     
     public static List<Event> filterEventWithDateRange(List<Event> events, LocalDateTime startDate, LocalDateTime endDate) {
@@ -255,13 +255,11 @@ public class FilterUtil {
             if (eventEndDate == null) {
                 eventEndDate = DateUtil.floorDate(LocalDateTime.MAX);
             }
-            System.out.println(eventStartDate);
-            System.out.println(startDate);
             if (eventStartDate.compareTo(startDate) >= 0 && eventEndDate.compareTo(endDate) <= 0) {
                 filteredEvents.add(event);
             }
         }
-        return filteredEvents;
+        return filteredEvents.size() == 0 ? events : filteredEvents;
     }
 
 }

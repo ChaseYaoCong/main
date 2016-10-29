@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ public class FindController implements Controller {
         updateHashList(parsedResult, itemNameList, "itemName");
         updateHashList(parsedResult, tagNameList, "tagName");
         itemNameList.addAll(keywordList);
-        tagNameList.addAll(tagNameList);
+        tagNameList.addAll(keywordList);
         
         if (keywordList.size() == 0 && itemNameList.size() == 0 && tagNameList.size() == 0) {
             //No keyword provided, display error
@@ -106,7 +107,6 @@ public class FindController implements Controller {
             
             if (isTask && isEventStatusProvided) {
                 Renderer.renderDisambiguation(TASK_SYNTAX, MESSAGE_ITEMTYPE_CONFLICT);
-                System.out.println("Task and Event keyword Provided");
                 return;
             }
             
@@ -163,14 +163,20 @@ public class FindController implements Controller {
         TodoListDB db = TodoListDB.getInstance();
         List<Task> tasks = db.getAllTasks();
         List<Event> events = db.getAllEvents();
-        
+        HashSet<Task> mergedTasks = new HashSet<Task>();
+        HashSet<Event> mergedEvents = new HashSet<Event>();
         if (!isItemTypeProvided) {
-            System.out.println("finding all");
-            tasks = FilterUtil.filterTaskByNames(tasks, itemNameList);
-            tasks = FilterUtil.filterTaskByTags(tasks, tagNameList);
+            List<Task> tasksByNames = FilterUtil.filterTaskByNames(tasks, itemNameList);
+            List<Task> tasksByTags = FilterUtil.filterTaskByTags(tasks, tagNameList);
+            mergedTasks.addAll(tasksByNames);
+            mergedTasks.addAll(tasksByTags);
+            tasks = new ArrayList<Task>(mergedTasks);
             
-            events = FilterUtil.filterEventByNames(events, itemNameList);
-            events = FilterUtil.filterEventByTags(events, tagNameList);
+            List<Event> eventsByNames = FilterUtil.filterEventByNames(events, itemNameList);
+            List<Event> eventsByTags = FilterUtil.filterEventByTags(events, tagNameList);
+            mergedEvents.addAll(eventsByNames);
+            mergedEvents.addAll(eventsByTags);
+            events = new ArrayList<Event>(mergedEvents);
         } else if (isTask) {
             tasks = db.getTaskByName(tasks, itemNameList, tagNameList);
             events = new ArrayList<Event>();
@@ -181,36 +187,30 @@ public class FindController implements Controller {
         
         if (isTaskStatusProvided) {
             if (isCompleted) {
-                System.out.println("completed only");
                 tasks = FilterUtil.filterCompletedTaskList(tasks);
             } 
             
             if (!isCompleted) {
-                System.out.println("incompleted only");
                 tasks = FilterUtil.filterIncompletedTaskList(tasks);
             }
         }
         
         if (isEventStatusProvided) {
             if (isOver) {
-                System.out.println("over only");
                 events = FilterUtil.filterIsOverEventList(events);
             } 
             
             if (!isOver) {
-                System.out.println("not over only");
                 events = FilterUtil.filterCurrentEventList(events);
             }
         }
         
         if (dateOn != null) {
             //filter by single date
-            System.out.println("single date only");
             tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
             events = FilterUtil.filterEventBySingleDate(events, dateOn);
         } else {
             //filter by range
-            System.out.println("date range only");
             tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
             events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
         }
