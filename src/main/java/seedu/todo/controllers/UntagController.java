@@ -168,12 +168,7 @@ public class UntagController implements Controller {
             //checking with the current array, if there are duplicate tags
             parsedTagNamesList.add(parsedTagNames[i]);
         }
-        
-        if (parsedTagNamesList.size() != parsedTagNames.length) {
-            return true;
-        }
-        
-        return false;
+        return parsedTagNamesList.size() != parsedTagNames.length;
     }
     
     /*
