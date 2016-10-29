@@ -165,23 +165,16 @@ public class FindController implements Controller {
         HashSet<Task> mergedTasks = new HashSet<Task>();
         HashSet<Event> mergedEvents = new HashSet<Event>();
         if (!isItemTypeProvided) {
-            List<Task> tasksByNames = FilterUtil.filterTaskByNames(tasks, itemNameList);
-            List<Task> tasksByTags = FilterUtil.filterTaskByTags(tasks, tagNameList);
-            mergedTasks.addAll(tasksByNames);
-            mergedTasks.addAll(tasksByTags);
-            tasks = new ArrayList<Task>(mergedTasks);
+            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks, mergedTasks);
             
-            List<Event> eventsByNames = FilterUtil.filterEventByNames(events, itemNameList);
-            List<Event> eventsByTags = FilterUtil.filterEventByTags(events, tagNameList);
-            mergedEvents.addAll(eventsByNames);
-            mergedEvents.addAll(eventsByTags);
-            events = new ArrayList<Event>(mergedEvents);
+            events = filterByEventNameAndTagName(itemNameList, tagNameList, events, mergedEvents);
         } else if (isTask) {
-            tasks = db.getTaskByName(tasks, itemNameList, tagNameList);
+            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks, mergedTasks);
+            
             events = new ArrayList<Event>();
         } else if (!isTask) {
             tasks = new ArrayList<Task>();
-            events = db.getEventByName(events, itemNameList, tagNameList);
+            events = filterByEventNameAndTagName(itemNameList, tagNameList, events, mergedEvents);
         }
         
         if (isTaskStatusProvided) {
@@ -222,6 +215,26 @@ public class FindController implements Controller {
         String consoleMessage = String.format(MESSAGE_LISTING_SUCCESS, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
         Renderer.renderSelected(db, consoleMessage, tasks, events);
+    }
+
+    private List<Event> filterByEventNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
+            List<Event> events, HashSet<Event> mergedEvents) {
+        List<Event> eventsByNames = FilterUtil.filterEventByNames(events, itemNameList);
+        List<Event> eventsByTags = FilterUtil.filterEventByTags(events, tagNameList);
+        mergedEvents.addAll(eventsByNames);
+        mergedEvents.addAll(eventsByTags);
+        events = new ArrayList<Event>(mergedEvents);
+        return events;
+    }
+
+    private List<Task> filterByTaskNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
+            List<Task> tasks, HashSet<Task> mergedTasks) {
+        List<Task> tasksByNames = FilterUtil.filterTaskByNames(tasks, itemNameList);
+        List<Task> tasksByTags = FilterUtil.filterTaskByTags(tasks, tagNameList);
+        mergedTasks.addAll(tasksByNames);
+        mergedTasks.addAll(tasksByTags);
+        tasks = new ArrayList<Task>(mergedTasks);
+        return tasks;
     }
     
     /**
