@@ -67,7 +67,6 @@ public class TagController implements Controller {
         Map<String, String[]> parsedResult;
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         
-        // Extract param
         String param = parsedResult.get("default")[TOKENIZER_DEFAULT_INDEX];
         
         if (param.length() <= 0) {
@@ -78,9 +77,11 @@ public class TagController implements Controller {
         assert param.length() > 0;
         
         String[] parameters = parseParam(param);
+        
         // Get index.
         int index = 0;
         String tagNames = null;
+        
         try {
             index = Integer.decode(parameters[ITEM_INDEX]);
             tagNames = param.replaceFirst(parameters[ITEM_INDEX], "").trim();
@@ -128,8 +129,22 @@ public class TagController implements Controller {
         }
     }
 
+    /*
+     * To be used to add tag into the tag list that belong to the CalendarItem
+     * @param parsedTagNames
+     *                     tag names that are entered by user and not duplicate and do not belong to the calendarItem
+     * @param calendarItem                    
+     *                     can be task or event
+     *                     
+     * @return true if all tags have been added successfully, false if one of the tags is not added successfully                     
+     */
     private boolean addingTagNames(String[] parsedTagNames, CalendarItem calendarItem) {
         assert parsedTagNames != null;
+        
+        //if tag names parsed exceed the maximum tag list limit
+        if (calendarItem.getTagList().size() + parsedTagNames.length > calendarItem.getTagListLimit()) {
+            return false;
+        }
         
         boolean result = true;
         for (int i = 0; i < parsedTagNames.length; i ++) {
@@ -138,6 +153,15 @@ public class TagController implements Controller {
         return result;
     }
     
+    /*
+     * To be used to check if user enter any duplicate tag name and if calendarItem already has that tag name
+     * @param parsedTagNames
+     *                   tag names that has been split into an array
+     * @param calendarItem
+     *                   calendarItem that can be either a task or event
+     * 
+     * @return true if tag name already exist or is entered more than once, false if it does not exist
+     */
     private boolean checkDuplicateTagName(String[] parsedTagNames, CalendarItem calendarItem) {
         HashSet<String> parsedTagNamesList = new HashSet<String>();
         for (int i = 0; i < parsedTagNames.length; i ++) {
@@ -145,7 +169,6 @@ public class TagController implements Controller {
             if (calendarItem.getTagList().contains(parsedTagNames[i].trim())) {
                 return true;
             }
-            
             //checking with the current array, if there are duplicate tags
             parsedTagNamesList.add(parsedTagNames[i]);
         }
@@ -153,14 +176,28 @@ public class TagController implements Controller {
         if (parsedTagNamesList.size() != parsedTagNames.length) {
             return true;
         }
-        
         return false;
     }
     
+    /*
+     * To be used to split index and tag names entered by user
+     * @param param
+     *            parameter enter by user
+     * 
+     * @return an array with the index 0 containing edb index
+     * and index 1 containing tag names
+     */
     private String[] parseParam(String param) {
         return param.split(" ");
     }
     
+    /*
+     * To be used to split tag names by comma if more than one is entered
+     * @param tags
+     *           tag names that is entered
+     *           
+     * @return an array of tag name that is split by comma
+     */
     private String [] parseTags(String tags) {
         return tags.split(",");
     }

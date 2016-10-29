@@ -76,4 +76,11 @@ public interface CalendarItem {
      */
     public boolean removeTag(String tagName);
 
+    /**
+     * Get the limit of the tag that is allowed for calendar item
+     * 
+     * @return the limit of tag list
+     * @@author Tiong YaoCong A0139922Y
+     */    
+    public int getTagListLimit();
 }

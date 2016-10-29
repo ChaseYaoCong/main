@@ -67,7 +67,6 @@ public class UntagController implements Controller {
         Map<String, String[]> parsedResult;
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         
-        // Extract param
         String param = parsedResult.get("default")[TOKENIZER_DEFAULT_INDEX];
         
         if (param.length() <= 0) {
@@ -78,6 +77,7 @@ public class UntagController implements Controller {
         assert param.length() > 0;
         
         String[] parameters = parseParam(param);
+        
         // Get index.
         int index = 0;
         String tagNames = null;
@@ -127,15 +127,16 @@ public class UntagController implements Controller {
             Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_TAG_NAME_DOES_NOT_EXIST);
         }
     }
-
-    private String[] parseParam(String param) {
-        return param.split(" ");
-    }
     
-    private String [] parseTags(String tags) {
-        return tags.split(",");
-    }
-    
+    /*
+     * To be used to remove tag from the tag list that belong to the CalendarItem
+     * @param parsedTagNames
+     *                     tag names that are entered by user and not duplicate and belong to the calendarItem
+     * @param calendarItem                    
+     *                     can be task or event
+     *                     
+     * @return true if all tags have been removed successfully, false if one of the tags its not removed successfully                     
+     * */
     private boolean removingTagNames(String[] parsedTagNames, CalendarItem calendarItem) {
         assert parsedTagNames != null;
         assert calendarItem != null;
@@ -147,6 +148,15 @@ public class UntagController implements Controller {
         return result;
     }
     
+    /*
+     * To be used to check if user enter any duplicate tag name and if calendarItem has the exact tag name
+     * @param parsedTagNames
+     *                   tag names that has been split into an array
+     * @param calendarItem
+     *                   calendarItem that can be either a task or event
+     * 
+     * @return true if tag name does not exist or is entered more than once, false if it exist in the tag list
+     */
     private boolean checkTagNameExist(String[] parsedTagNames, CalendarItem calendarItem) {
         HashSet<String> parsedTagNamesList = new HashSet<String>();
         for (int i = 0; i < parsedTagNames.length; i ++) {
@@ -164,6 +174,29 @@ public class UntagController implements Controller {
         }
         
         return false;
+    }
+    
+    /*
+     * To be used to split index and tag names entered by user
+     * @param param
+     *            parameter enter by user
+     * 
+     * @return an array with the index 0 containing edb index
+     * and index 1 containing tag names
+     */
+    private String[] parseParam(String param) {
+        return param.split(" ");
+    }
+    
+    /*
+     * To be used to split tag names by comma if more than one is entered
+     * @param tags
+     *           tag names that is entered
+     *           
+     * @return an array of tag name that is split by comma
+     */
+    private String [] parseTags(String tags) {
+        return tags.split(",");
     }
 
 }
