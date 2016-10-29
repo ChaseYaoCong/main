@@ -34,8 +34,8 @@ public class FindController implements Controller {
     private static final String EVENT_SYNTAX = "find <name> event [over/ongoing]";
     private static final String COMMAND_WORD = "find";
     
-    private static final String MESSAGE_LISTING_SUCCESS = "A total of %s found!";
-    private static final String MESSAGE_LISTING_FAILURE = "No task or event found!";
+    private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
+    private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
     private static final String MESSAGE_NO_KEYWORD_FOUND = "No keyword found!";
     private static final String MESSAGE_DATE_CONFLICT = "Unable to find!\nMore than 1 date criteria is provided!";
     private static final String MESSAGE_ITEMTYPE_CONFLICT = "Unable to find!\nItem type conflict detected!";
@@ -208,11 +208,11 @@ public class FindController implements Controller {
         }
         
         if (tasks.size() == 0 && events.size() == 0) {
-            Renderer.renderIndex(db, MESSAGE_LISTING_FAILURE);
+            Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
             return;
         }
         
-        String consoleMessage = String.format(MESSAGE_LISTING_SUCCESS, 
+        String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
         Renderer.renderSelected(db, consoleMessage, tasks, events);
     }
