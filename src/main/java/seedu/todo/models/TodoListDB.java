@@ -106,8 +106,8 @@ public class TodoListDB {
      * @return tagList
      * @@author Tiong YaoCong A0139922Y
      */
-    public List<String> getTagList() {
-        return new ArrayList<String>(tagList.keySet());
+    public HashMap<String, Integer> getTagList() {
+        return tagList;
     }
     
     /**

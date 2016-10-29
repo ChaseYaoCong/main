@@ -67,7 +67,7 @@ public class ParseUtil {
      * Extracts the natural dates from parsedResult.
      * 
      * @param parsedResult
-     * @return { dateFound, naturalOn, naturalFrom, naturalTo } 
+     * @return { numOfdateFound, naturalOn, naturalFrom, naturalTo } 
      */
     public static String[] parseDates(Map<String, String[]> parsedResult) {
         String naturalFrom = getTokenResult(parsedResult, "timeFrom");
