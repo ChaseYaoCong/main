@@ -8,7 +8,11 @@ import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import com.joestelmach.natty.DateGroup;
+import com.joestelmach.natty.Parser;
 
 /**
  * A utility class for Dates and LocalDateTimes
@@ -196,6 +200,24 @@ public class DateUtil {
     public static LocalDateTime parseDateTime(String dateTimeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(dateTimeString, formatter);
+    }
+    
+    /*
+     * To be used to parse natural date into LocalDateTime 
+     * @parser Natty
+     * 
+     * */
+    public static LocalDateTime parseNatural(String natural) {
+        Parser parser = new Parser();
+        List<DateGroup> groups = parser.parse(natural);
+        Date date = null;
+        try {
+            date = groups.get(0).getDates().get(0);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        return DateUtil.floorDate(ldt);
     }
 
 }

@@ -2,6 +2,7 @@ package seedu.todo.commons.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,24 +44,6 @@ public class ParseUtil {
             return parsedResult.get(token)[TOKEN_RESULT_INDEX];
         }
         return null;
-    }
-    
-    /*
-     * To be used to parse natural date into LocalDateTime 
-     * @parser Natty
-     * 
-     * */
-    public static LocalDateTime parseNatural(String natural) {
-        Parser parser = new Parser();
-        List<DateGroup> groups = parser.parse(natural);
-        Date date = null;
-        try {
-            date = groups.get(0).getDates().get(0);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        return DateUtil.floorDate(ldt);
     }
     
     /**

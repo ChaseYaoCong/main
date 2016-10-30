@@ -15,6 +15,8 @@ import seedu.todo.commons.util.DateUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test cases for {@link DateUtil}.
@@ -122,5 +124,12 @@ public class DateUtilTest {
 	private static LocalDateTime fromEpoch(long epoch) {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault());
 	}
+	
+    @Test
+    public void testParseNatural() {
+        assertNull(DateUtil.parseNatural("todar"));
+        assertNotNull(DateUtil.parseNatural("today"));
+        assertEquals(DateUtil.floorDate(LocalDateTime.now()), DateUtil.parseNatural("today"));
+    }
 	
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 
 
 import seedu.todo.commons.exceptions.ParseException;
+import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.FilterUtil;
 import seedu.todo.commons.util.ParseUtil;
 import seedu.todo.commons.util.StringUtil;
@@ -141,9 +142,9 @@ public class FindController implements Controller {
             }
     
             // Parse natural date using Natty.
-            dateOn = naturalOn == null ? null : ParseUtil.parseNatural(naturalOn); 
-            dateFrom = naturalFrom == null ? null : ParseUtil.parseNatural(naturalFrom); 
-            dateTo = naturalTo == null ? null : ParseUtil.parseNatural(naturalTo);
+            dateOn = naturalOn == null ? null : DateUtil.parseNatural(naturalOn); 
+            dateFrom = naturalFrom == null ? null : DateUtil.parseNatural(naturalFrom); 
+            dateTo = naturalTo == null ? null : DateUtil.parseNatural(naturalTo);
         }
         
         if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
