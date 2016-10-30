@@ -1,5 +1,6 @@
 package seedu.todo.controllers;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -66,7 +67,6 @@ public class TagController implements Controller {
         
         Map<String, String[]> parsedResult;
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
-        
         String param = parsedResult.get("default")[TOKENIZER_DEFAULT_INDEX];
         
         if (param.length() <= 0) {

@@ -1,6 +1,7 @@
 package seedu.todo.ui.components;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import javafx.fxml.FXML;
@@ -79,6 +80,7 @@ public class Sidebar extends Component {
         TagListItem.reset(sidebarTagsPlaceholder);
         
         ArrayList<String> tagKeys = new ArrayList<String>(tags.keySet());
+        Collections.sort(tagKeys);
         for (String tag : tagKeys) {
             TagListItem item = load(primaryStage, sidebarTagsPlaceholder, TagListItem.class);
             item.tag = tag;
