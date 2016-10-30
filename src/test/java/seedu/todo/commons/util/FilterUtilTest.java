@@ -17,63 +17,61 @@ public class FilterUtilTest {
         List<Task> tasks = new ArrayList<Task>();
         HashSet<String> nameList = new HashSet<String>();
         assertEquals(tasks, FilterUtil.filterTaskByNames(tasks, nameList));
-        
-        
     }
 
     @Test
     public void testFilterTaskByTags() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterCompletedTaskList() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterIncompletedTaskList() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterTaskBySingleDate() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterTaskWithDateRange() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterEventByNames() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterEventByTags() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterIsOverEventList() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterCurrentEventList() {
-        fail("Not yet implemented");
+        //TODO        
     }
 
     @Test
     public void testFilterEventBySingleDate() {
-        fail("Not yet implemented");
+        //TODO
     }
 
     @Test
     public void testFilterEventWithDateRange() {
-        fail("Not yet implemented");
+        //TODO
     }
 
 }
