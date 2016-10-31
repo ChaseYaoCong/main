@@ -82,7 +82,7 @@ public class EphemeralDB {
         List<Task> tasks = new ArrayList<Task>();
         for (int i = 0; i < displayedCalendarItems.size(); i ++) {
             CalendarItem calendarItem = displayedCalendarItems.get(i);
-            if(calendarItem instanceof Task) {
+            if (calendarItem instanceof Task) {
                 tasks.add((Task) calendarItem);
             }
         }
@@ -93,7 +93,7 @@ public class EphemeralDB {
         List<Event> events = new ArrayList<Event>();
         for (int i = 0; i < displayedCalendarItems.size(); i ++) {
             CalendarItem calendarItem = displayedCalendarItems.get(i);
-            if(calendarItem instanceof Event) {
+            if (calendarItem instanceof Event) {
                 events.add((Event) calendarItem);
             }
         }
