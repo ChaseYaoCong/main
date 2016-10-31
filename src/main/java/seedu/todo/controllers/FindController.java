@@ -40,7 +40,7 @@ public class FindController implements Controller {
     private static final String MESSAGE_NO_KEYWORD_FOUND = "No keyword found!";
     private static final String MESSAGE_DATE_CONFLICT = "Unable to find!\nMore than 1 date criteria is provided!";
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to find!\nThe natural date entered is not supported.";
-    private static final String MESSAGE_INVALUD_TASK_STATUS = "Unable to find!\nTry searching with [complete] or [incomplete]";
+    private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with [complete] or [incomplete]";
     private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with [over] or [current]";
     
     //use to access parsing of dates
@@ -107,7 +107,7 @@ public class FindController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
             
             if (isTask && isEventStatusProvided) {
-                Renderer.renderDisambiguation(TASK_SYNTAX, MESSAGE_INVALUD_TASK_STATUS);
+                Renderer.renderDisambiguation(TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
                 return;
             }
             
