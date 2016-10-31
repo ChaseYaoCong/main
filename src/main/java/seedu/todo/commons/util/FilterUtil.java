@@ -28,11 +28,12 @@ public class FilterUtil {
      *             Search and filter based on the name list
      */
     public static List<Task> filterTaskByNames(List<Task> tasks, HashSet<String> nameList) {
-        if (tasks.size() == 0 || nameList.size() == 0) {
-            return tasks;
+        //if search list size is 0 , user not searching based on name
+        List<Task> filteredTasks = new ArrayList<Task>();
+        if (nameList.size() == 0) {
+            return filteredTasks;
         }
         
-        List<Task> filteredTasks = new ArrayList<Task>();
         for (int i = 0; i < tasks.size(); i ++) {
             Task task = tasks.get(i);
             Iterator<String> nameListIterator = nameList.iterator();
@@ -70,11 +71,12 @@ public class FilterUtil {
      *             Search and filter based on the name list
      */
     public static List<Task> filterTaskByTags(List<Task> tasks, HashSet<String> nameList) {
-        if (tasks.size() == 0 || nameList.size() == 0) {
-            return tasks;
+        //if no search list is provided, user not searching based on tags
+        List<Task> filteredTasks = new ArrayList<Task>();
+        if (nameList.size() == 0) {
+            return filteredTasks;
         }
         
-        List<Task> filteredTasks = new ArrayList<Task>();
         for (int i = 0; i < tasks.size(); i ++) {
             Task task = tasks.get(i);
             ArrayList<String> taskTagList = task.getTagList();
@@ -95,8 +97,10 @@ public class FilterUtil {
      * Filter the task list based on incomplete status
      * @param tasks 
      *             Provided list for filtering
+     * @param taskStatus
+     *             True if searching for is completed, false if search for not completed!            
      */
-    public static List<Task> filterCompletedTaskList(List<Task> tasks) {
+    public static List<Task> filterTasksByStatus(List<Task> tasks, boolean taskStatus) {
         if (tasks.size() == 0) {
             return tasks;
         }
@@ -104,31 +108,11 @@ public class FilterUtil {
         List<Task> filteredTasks = new ArrayList<Task>();
         for (int i = 0; i < tasks.size(); i ++) {
             Task task = tasks.get(i);
-            if (task.isCompleted()) {
+            if (task.isCompleted() == taskStatus) {
                 filteredTasks.add(task);
             }
         }
-        return filteredTasks.size() == 0 ? tasks : filteredTasks;
-    }
-    
-    /**
-     * Filter the task list based on incomplete status
-     * @param tasks 
-     *             Provided list for filtering
-     */
-    public static List<Task> filterIncompletedTaskList(List<Task> tasks) {
-        if (tasks.size() == 0) {
-            return tasks;
-        }
-        
-        List<Task> filteredTasks = new ArrayList<Task>();
-        for (int i = 0; i < tasks.size(); i ++) {
-            Task task = tasks.get(i);
-            if (!task.isCompleted()) {
-                filteredTasks.add(task);
-            }
-        }
-        return filteredTasks.size() == 0 ? tasks : filteredTasks;
+        return filteredTasks;
     }
     
     /**
@@ -155,7 +139,7 @@ public class FilterUtil {
                 filteredTasks.add(task);
             }
         }
-        return filteredTasks.size() == 0 ? tasks : filteredTasks;
+        return filteredTasks;
     }
     
     /**
@@ -193,7 +177,7 @@ public class FilterUtil {
                 filteredTasks.add(task);
             }
         }
-        return filteredTasks.size() == 0 ? tasks : filteredTasks;
+        return filteredTasks;
     }
     
     /*==================== Filtering Methods for Events ======================*/
@@ -206,11 +190,12 @@ public class FilterUtil {
      *             Search and filter based on the name list
      */
     public static List<Event> filterEventByNames (List<Event> events, HashSet<String> nameList) {
-        if (events.size() == 0 || nameList.size() == 0) {
-            return events;
+        List<Event> filteredEvents = new ArrayList<Event>();
+        //if name list size is 0, means not searching by tags 
+        if (nameList.size() == 0) {
+            return filteredEvents;
         }
         
-        List<Event> filteredEvents = new ArrayList<Event>();
         for (int i = 0; i < events.size(); i ++) {
             Event event = events.get(i);
             Iterator<String> nameListIterator = nameList.iterator();
@@ -248,11 +233,12 @@ public class FilterUtil {
      *             Search and filter based on the name list
      */
     public static List<Event> filterEventByTags (List<Event> events, HashSet<String> nameList) {
-        if (events.size() == 0 || nameList.size() == 0) {
-            return events;
+        List<Event> filteredEvents = new ArrayList<Event>();
+        //if name list size is 0, means not searching by tags 
+        if (nameList.size() == 0) {
+            return filteredEvents;
         }
         
-        List<Event> filteredEvents = new ArrayList<Event>();
         for (int i = 0; i < events.size(); i ++) {
             Event event = events.get(i);
             ArrayList<String> taskTagList = event.getTagList();
@@ -273,8 +259,10 @@ public class FilterUtil {
      * Filter the event list if the event date is over
      * @param events 
      *             Provided list for filtering
-     */
-    public static List<Event> filterIsOverEventList(List<Event> events) {
+     * @param isEventOver
+     *             True if searching for event that are over, false if searching for current event            
+     */            
+    public static List<Event> filterEventsByStatus(List<Event> events, boolean eventStatus) {
         if (events.size() == 0) {
             return events;
         }
@@ -282,31 +270,11 @@ public class FilterUtil {
         List<Event> filteredEvents = new ArrayList<Event>();
         for (int i = 0; i < events.size(); i ++) {
             Event event = events.get(i);
-            if (event.isOver()) {
+            if (event.isOver() == eventStatus) {
                 filteredEvents.add(event);
             }
         }
-        return filteredEvents.size() == 0 ? events : filteredEvents;
-    }
-    
-    /**
-     * Filter the event list if the event is not over
-     * @param events 
-     *             Provided list for filtering
-     */
-    public static List<Event> filterCurrentEventList(List<Event> events) {
-        if (events.size() == 0) {
-            return events;
-        }
-        
-        List<Event> filteredEvents = new ArrayList<Event>();
-        for (int i = 0; i < events.size(); i ++) {
-            Event event = events.get(i);
-            if (!event.isOver()) {
-                filteredEvents.add(event);
-            }
-        }
-        return filteredEvents.size() == 0 ? events : filteredEvents;
+        return filteredEvents;
     }
     
     /**
@@ -331,7 +299,7 @@ public class FilterUtil {
                 filteredEvents.add(event);
             }
         }
-        return filteredEvents.size() == 0 ? events : filteredEvents;
+        return filteredEvents;
     }
     
     /**
@@ -373,7 +341,6 @@ public class FilterUtil {
                 filteredEvents.add(event);
             }
         }
-        return filteredEvents.size() == 0 ? events : filteredEvents;
+        return filteredEvents;
     }
-
 }

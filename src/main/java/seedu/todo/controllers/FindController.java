@@ -39,8 +39,9 @@ public class FindController implements Controller {
     private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
     private static final String MESSAGE_NO_KEYWORD_FOUND = "No keyword found!";
     private static final String MESSAGE_DATE_CONFLICT = "Unable to find!\nMore than 1 date criteria is provided!";
-    private static final String MESSAGE_ITEMTYPE_CONFLICT = "Unable to find!\nItem type conflict detected!";
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to find!\nThe natural date entered is not supported.";
+    private static final String MESSAGE_INVALUD_TASK_STATUS = "Unable to find!\nTry searching with [complete] or [incomplete]";
+    private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with [over] or [current]";
     
     //use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
@@ -106,12 +107,12 @@ public class FindController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
             
             if (isTask && isEventStatusProvided) {
-                Renderer.renderDisambiguation(TASK_SYNTAX, MESSAGE_ITEMTYPE_CONFLICT);
+                Renderer.renderDisambiguation(TASK_SYNTAX, MESSAGE_INVALUD_TASK_STATUS);
                 return;
             }
             
             if (!isTask && isTaskStatusProvided) {
-                Renderer.renderDisambiguation(EVENT_SYNTAX, MESSAGE_ITEMTYPE_CONFLICT);
+                Renderer.renderDisambiguation(EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
                 return;
             }
         }
@@ -167,11 +168,9 @@ public class FindController implements Controller {
         HashSet<Event> mergedEvents = new HashSet<Event>();
         if (!isItemTypeProvided) {
             tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks, mergedTasks);
-            
             events = filterByEventNameAndTagName(itemNameList, tagNameList, events, mergedEvents);
         } else if (isTask) {
             tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks, mergedTasks);
-            
             events = new ArrayList<Event>();
         } else if (!isTask) {
             tasks = new ArrayList<Task>();
@@ -179,23 +178,13 @@ public class FindController implements Controller {
         }
         
         if (isTaskStatusProvided) {
-            if (isCompleted) {
-                tasks = FilterUtil.filterCompletedTaskList(tasks);
-            } 
-            
-            if (!isCompleted) {
-                tasks = FilterUtil.filterIncompletedTaskList(tasks);
-            }
+            tasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            events = new ArrayList<Event>();
         }
         
         if (isEventStatusProvided) {
-            if (isOver) {
-                events = FilterUtil.filterIsOverEventList(events);
-            } 
-            
-            if (!isOver) {
-                events = FilterUtil.filterCurrentEventList(events);
-            }
+            events = FilterUtil.filterEventsByStatus(events, isOver);
+            tasks = new ArrayList<Task>();
         }
         
         if (dateOn != null) {
@@ -215,7 +204,7 @@ public class FindController implements Controller {
         
         String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
-        Renderer.renderSelected(db, consoleMessage, tasks, events);
+        Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
     }
 
     private List<Event> filterByEventNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
