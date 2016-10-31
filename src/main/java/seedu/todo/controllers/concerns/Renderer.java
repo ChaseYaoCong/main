@@ -45,7 +45,7 @@ public class Renderer {
      * @param db
      * @param consoleMessage to be rendered in console, leave null if not needed
      */
-    public static void renderSelected(TodoListDB db, String consoleMessage, List<Task> tasks, List<Event> events) {
+    public static void renderSelectedIndex(TodoListDB db, String consoleMessage, List<Task> tasks, List<Event> events) {
         IndexView view = UiManager.loadView(IndexView.class);
         
         if (tasks != null) {

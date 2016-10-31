@@ -1,6 +1,5 @@
 package seedu.todo.controllers;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -123,7 +122,7 @@ public class TagController implements Controller {
         if (resultOfTagging) {
             db.addIntoTagList(parsedTagNames);
             db.save();
-            Renderer.renderIndex(db, MESSAGE_TAG_SUCCESS);
+            Renderer.renderSelectedIndex(db, MESSAGE_TAG_SUCCESS, edb.getAllDisplayedTasks(), edb.getAllDisplayedEvents());
         } else {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_EXCEED_TAG_SIZE);
         }

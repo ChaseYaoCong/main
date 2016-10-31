@@ -286,7 +286,7 @@ public class ListController implements Controller {
         }
         
         //render the view as parsed result
-        Renderer.renderSelected(db, consoleMessage, tasks, events);
+        Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
        
     }
     

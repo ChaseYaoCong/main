@@ -122,7 +122,7 @@ public class UntagController implements Controller {
         if (resultOfUntagging) {
             db.updateTagList(parsedTagNames);
             db.save();
-            Renderer.renderIndex(db, MESSAGE_UNTAG_SUCCESS);
+            Renderer.renderSelectedIndex(db, MESSAGE_UNTAG_SUCCESS, edb.getAllDisplayedTasks(), edb.getAllDisplayedEvents());
         } else {
             Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_TAG_NAME_DOES_NOT_EXIST);
         }
