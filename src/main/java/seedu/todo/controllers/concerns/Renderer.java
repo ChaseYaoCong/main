@@ -1,7 +1,11 @@
 package seedu.todo.controllers.concerns;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import seedu.todo.commons.util.FilterUtil;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
@@ -71,8 +75,11 @@ public class Renderer {
      */
     public static void renderIndex(TodoListDB db, String consoleMessage) {
         IndexView view = UiManager.loadView(IndexView.class);
-        view.tasks = db.getIncompleteTasksAndTaskFromTodayDate();
-        view.events = db.getAllCurrentEvents();
+        HashSet<Task> tasksList = new HashSet<Task>();
+        tasksList.addAll(FilterUtil.filterTasksByStatus(db.getAllTasks(), false));
+        tasksList.addAll(FilterUtil.filterTaskBySingleDate(db.getAllTasks(), LocalDateTime.now()));
+        view.tasks = new ArrayList<Task>(tasksList);    
+        view.events = FilterUtil.filterEventsByStatus(db.getAllEvents(), false);
         view.tags = db.getTagList();
         UiManager.renderView(view);
         

@@ -30,9 +30,9 @@ public class ListController implements Controller {
     private static final String COMMAND_SYNTAX = "list [task complete/incomplete or event] [event over/ongoing] "
             + "[on date] or [from date to date]";
     private static final String COMMAND_WORD = "list";
-    private static final String TASK_SYNTAX = "list task [complete/incomplete]";
-    private static final String EVENT_SYNTAX = "list event [over/ongoing]";
-    private static final String DATE_SYNTAX = "list [date] or [from <date> to <date>]";
+    private static final String LIST_TASK_SYNTAX = "list task [complete/incomplete]";
+    private static final String LIST_EVENT_SYNTAX = "list event [over/ongoing]";
+    private static final String LIST_DATE_SYNTAX = "list [date] or [from <date> to <date>]";
     
     private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
     private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
@@ -67,7 +67,7 @@ public class ListController implements Controller {
         tokenDefinitions.put("eventType", new String[] { "event", "events", "task", "tasks"});
         tokenDefinitions.put("taskStatus", new String[] { "complete" , "completed", "incomplete", "incompleted"});
         tokenDefinitions.put("eventStatus", new String[] { "over" , "ongoing", "current", "schedule" , "scheduled"});
-        tokenDefinitions.put("time", new String[] { "at", "by", "on", "time" });
+        tokenDefinitions.put("time", new String[] { "at", "by", "on", "time", "date" });
         tokenDefinitions.put("timeFrom", new String[] { "from" });
         tokenDefinitions.put("timeTo", new String[] { "to", "before", "until" });
         return tokenDefinitions;
@@ -86,7 +86,6 @@ public class ListController implements Controller {
             return;
         }
         
-        
         boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, "eventType");
         boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, "taskStatus");
         boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, "eventStatus");
@@ -96,12 +95,12 @@ public class ListController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
             
             if (isTask && isEventStatusProvided) {
-                Renderer.renderDisambiguation(TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
+                Renderer.renderDisambiguation(LIST_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
                 return;
             }
             
             if (!isTask && isTaskStatusProvided) {
-                Renderer.renderDisambiguation(EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
+                Renderer.renderDisambiguation(LIST_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
                 return;
             }
         }
@@ -120,7 +119,7 @@ public class ListController implements Controller {
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, "default");
         if (date != null && parsedDates != null) {
-            Renderer.renderDisambiguation(DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
             return;
         }
         
@@ -133,7 +132,7 @@ public class ListController implements Controller {
         if (date != null) {
             dateCriteria = DateUtil.parseNatural(date);
             if (dateCriteria == null) {
-                Renderer.renderDisambiguation(DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
                 return ;
             } 
         }
@@ -145,7 +144,7 @@ public class ListController implements Controller {
             
             if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
                 //date conflict detected
-                Renderer.renderDisambiguation(DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
                 return;
             }
     
@@ -157,13 +156,13 @@ public class ListController implements Controller {
         
         if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
             //Natty failed to parse date
-            Renderer.renderDisambiguation(DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
             return ;
         }
         
         if (parsedDates != null && isEventStatusProvided) {
             //detect date conflict
-            Renderer.renderDisambiguation(DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
             return;
         }
         

@@ -31,8 +31,8 @@ public class FindController implements Controller {
     private static final String DESCRIPTION = "Find all tasks and events based on the provided keywords.\n" + 
     "This command will be searching with non-case sensitive keywords.";
     private static final String COMMAND_SYNTAX = "find <name> [on <date>] [task/event]";
-    private static final String TASK_SYNTAX = "find <name> task [complete/incomplete]";
-    private static final String EVENT_SYNTAX = "find <name> event [over/ongoing]";
+    private static final String FIND_TASK_SYNTAX = "find <name> task [complete/incomplete]";
+    private static final String FIND_EVENT_SYNTAX = "find <name> event [over/ongoing]";
     private static final String COMMAND_WORD = "find";
     
     private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
@@ -69,7 +69,7 @@ public class FindController implements Controller {
         tokenDefinitions.put("eventStatus", new String[] { "over" , "ongoing", "current", "schedule" , "scheduled"});
         tokenDefinitions.put("time", new String[] { "at", "by", "on", "time", "date" });
         tokenDefinitions.put("timeFrom", new String[] { "from" });
-        tokenDefinitions.put("timeTo", new String[] { "to", "before" });
+        tokenDefinitions.put("timeTo", new String[] { "to", "before", "until" });
         tokenDefinitions.put("itemName", new String[] { "name" });
         tokenDefinitions.put("tagName", new String [] { "tag" }); 
         return tokenDefinitions;
@@ -107,12 +107,12 @@ public class FindController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
             
             if (isTask && isEventStatusProvided) {
-                Renderer.renderDisambiguation(TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
+                Renderer.renderDisambiguation(FIND_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
                 return;
             }
             
             if (!isTask && isTaskStatusProvided) {
-                Renderer.renderDisambiguation(EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
+                Renderer.renderDisambiguation(FIND_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
                 return;
             }
         }
