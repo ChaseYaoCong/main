@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.FilterUtil;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
@@ -77,7 +78,7 @@ public class Renderer {
         IndexView view = UiManager.loadView(IndexView.class);
         HashSet<Task> tasksList = new HashSet<Task>();
         tasksList.addAll(FilterUtil.filterTasksByStatus(db.getAllTasks(), false));
-        tasksList.addAll(FilterUtil.filterTaskBySingleDate(db.getAllTasks(), LocalDateTime.now()));
+        tasksList.addAll(FilterUtil.filterTaskWithDateRange(db.getAllTasks(), DateUtil.floorDate(LocalDateTime.now()), null));
         view.tasks = new ArrayList<Task>(tasksList);    
         view.events = FilterUtil.filterEventsByStatus(db.getAllEvents(), false);
         view.tags = db.getTagList();
