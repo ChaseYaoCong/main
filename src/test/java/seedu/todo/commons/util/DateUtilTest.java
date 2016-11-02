@@ -154,13 +154,7 @@ public class DateUtilTest {
         LocalDateTime currentTime = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfTimeExist(currentTime));
         assertFalse(DateUtil.checkIfTimeExist(currentTime));
-        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - 1, 
-                currentTime.getMinute())));
-        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour(), 
-                currentTime.getMinute() - 1)));
-        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - 1, 
-                currentTime.getMinute() - 1)));
-        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - 12, 
+        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - currentTime.getHour(), 
                 currentTime.getMinute())));
         assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour(), 
                 currentTime.getMinute() - currentTime.getMinute())));
