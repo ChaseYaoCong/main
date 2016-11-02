@@ -12,7 +12,7 @@ import seedu.todo.models.Task;
 /**
  * Helper function to help in filtering results
  * 
- * @@author Tiong YaoCong A0139922Y
+ * @@author A0139922Y
  *
  */
 

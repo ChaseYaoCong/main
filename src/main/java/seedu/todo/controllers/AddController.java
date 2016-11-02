@@ -140,7 +140,18 @@ public class AddController implements Controller {
         }
         db.save();
     }
-
+    
+    /* @@author A0139922Y
+     * To convert LocalDateTime to 00:00 or 23:59 if not specified
+     * @param actualDate 
+     *                  is the date that that is require for checking
+     * @param checkedDate
+     *                  is the date to be used for checking
+     * @isDateFrom
+     *                  if true, actualDate is dateFrom, false if actualDate is dateTo                 
+     * 
+     * @return the correct date format
+     */
     private LocalDateTime parseTimeStamp(LocalDateTime actualDate, LocalDateTime checkedDate, boolean isDateFrom) {
         //check for date
         if (checkedDate != null && actualDate != null && DateUtil.checkIfDateExist(checkedDate) && !DateUtil.checkIfDateExist(actualDate)) {

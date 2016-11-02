@@ -87,9 +87,9 @@ public class Task implements CalendarItem {
 
     
     /**
+     * @@author A0139922Y
      * Return the tag list that belong to the calendar item
      * 
-     * @@author Tiong YaoCong A0139922Y
      */
     @Override
     public ArrayList<String> getTagList() {
@@ -97,12 +97,12 @@ public class Task implements CalendarItem {
     }
 
     /**
+     * @@author A0139922Y
      * Adding the tag into the tag list that belong to the calendar item
      * @param tagName
      *               name of the tag
      *               
      * @return true tag name is successfully added, false if tag list if full         
-     * @@author Tiong YaoCong A0139922Y
      */
     @Override
     public boolean addTag(String tagName) {
@@ -115,12 +115,12 @@ public class Task implements CalendarItem {
     }
 
     /**
+     * @@author A0139922Y
      * Removing the tag from the tag list that belong to the calendar item
      * @param tagName
      *               name of the tag
      *               
      * @return true tag name is successfully removed, false if tag name does not exist    
-     * @@author Tiong YaoCong A0139922Y
      */
     @Override
     public boolean removeTag(String tagName) {
@@ -128,9 +128,9 @@ public class Task implements CalendarItem {
     }
 
     /**
+     * @@author A0139922Y
      * Returning the maximum tag list size that is allowed
      *               
-     * @@author Tiong YaoCong A0139922Y
      */
     @Override
     public int getTagListLimit() {

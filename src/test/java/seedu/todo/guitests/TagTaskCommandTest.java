@@ -10,7 +10,7 @@ import seedu.todo.guitests.guihandles.TagListItemHandle;
 import seedu.todo.models.Task;
 
 /**
- * @@author Tiong YaoCong A0139922Y
+ * @@author A0139922Y
  */
 public class TagTaskCommandTest extends GuiTest {
 
@@ -59,9 +59,9 @@ public class TagTaskCommandTest extends GuiTest {
     }
     
     /**
+     * @@author A0139922Y
      * Method to initialize test case
      * 
-     * @@author Tiong YaoCong A0139922Y 
      */
     private ArrayList<String> initializeTestCase(String[] tagNameList, Task task) {
         ArrayList<String> result = new ArrayList<String>();

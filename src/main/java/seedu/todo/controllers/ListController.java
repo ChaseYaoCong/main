@@ -20,7 +20,7 @@ import seedu.todo.models.TodoListDB;
 /**
  * Controller to list CalendarItems.
  * 
- * @@author Tiong Yaocong A0139922Y
+ * @@author A0139922Y
  *
  */
 public class ListController implements Controller {

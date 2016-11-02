@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import seedu.todo.guitests.GuiRobot;
 
 /**
- * @@author Tiong YaoCong A0139922Y
+ * @@author A0139922Y
  */
 public class TagListItemHandle extends GuiHandle {
 

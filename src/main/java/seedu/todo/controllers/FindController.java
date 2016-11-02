@@ -22,7 +22,7 @@ import seedu.todo.models.TodoListDB;
 /**
  * Controller to find task/event by keyword
  * 
- * @@author Tiong YaoCong A0139922Y
+ * @@author A0139922Y
  *
  */
 public class FindController implements Controller {

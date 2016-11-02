@@ -13,7 +13,7 @@ import com.joestelmach.natty.Parser;
 /**
  * Helper functions for parsing.
  * 
- * @@author Tiong YaoCong A0139922Y
+ * @@author A0139922Y
  */
 public class ParseUtil {
     private static final int TOKEN_INDEX = 0;
