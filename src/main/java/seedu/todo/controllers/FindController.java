@@ -43,6 +43,7 @@ public class FindController implements Controller {
     private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with [complete] or [incomplete]";
     private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with [over] or [current]";
     
+    private static final int COMMAND_INPUT_INDEX = 0;
     //use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
     private static final int DATE_ON_INDEX = 1;
@@ -58,7 +59,7 @@ public class FindController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        return (input.toLowerCase().startsWith(COMMAND_WORD)) ? 1 : 0;
+        return (StringUtil.convertStringIntoArray(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
     }
     
     private static Map<String, String[]> getTokenDefinitions() {

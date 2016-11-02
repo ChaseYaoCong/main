@@ -6,6 +6,7 @@ import java.util.Map;
 
 import seedu.todo.commons.EphemeralDB;
 import seedu.todo.commons.exceptions.ParseException;
+import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.CalendarItem;
@@ -22,6 +23,7 @@ public class UntagController implements Controller {
     private static final String NAME = "Untag";
     private static final String DESCRIPTION = "Untag a task/event by listed index";
     private static final String COMMAND_SYNTAX = "untag <index> <tag name>";
+    private static final String COMMAND_WORD = "untag";
     
     private static final String UNTAG_FORMAT = "untag %d";
     private static final String MESSAGE_UNTAG_SUCCESS = "Item has been untagged successfully.";
@@ -32,6 +34,7 @@ public class UntagController implements Controller {
     private static final String MESSAGE_TAG_NAME_DOES_NOT_EXIST = "Could not untag task/event: Tag name does not exist!";
     private static final String MESSAGE_TAG_NAME_EXIST = "Could not untag task/event : Tag name does not exist or Duplicate Tag name detected!";
     
+    private static final int COMMAND_INPUT_INDEX = 0;
     private static final int ITEM_INDEX = 0;
     private static final int TOKENIZER_DEFAULT_INDEX = 1;
     
@@ -45,7 +48,7 @@ public class UntagController implements Controller {
     @Override
     public float inputConfidence(String input) {
         // TODO
-        return (input.toLowerCase().startsWith("untag")) ? 1 : 0;
+        return (StringUtil.convertStringIntoArray(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
     }
     
     /**

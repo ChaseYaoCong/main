@@ -40,6 +40,7 @@ public class ClearController implements Controller {
     
     //use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
+    private static final int COMMAND_INPUT_INDEX = 0;
     private static final int DATE_ON_INDEX = 1;
     private static final int DATE_FROM_INDEX = 2;
     private static final int DATE_TO_INDEX = 3;
@@ -53,7 +54,7 @@ public class ClearController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        return (input.toLowerCase().startsWith(COMMAND_WORD)) ? 1 : 0;
+        return (StringUtil.convertStringIntoArray(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
     }
     
     /**
@@ -106,6 +107,7 @@ public class ClearController implements Controller {
         
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, "default");
+        
         if (date != null && parsedDates != null) {
             Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
             return;
@@ -128,13 +130,11 @@ public class ClearController implements Controller {
             String naturalOn = parsedDates[DATE_ON_INDEX];
             String naturalFrom = parsedDates[DATE_FROM_INDEX];
             String naturalTo = parsedDates[DATE_TO_INDEX];
-            
             if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
                 //date conflict detected
                 Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
                 return;
             }
-    
             // Parse natural date using Natty.
             dateOn = naturalOn == null ? null : DateUtil.parseNatural(naturalOn); 
             dateFrom = naturalFrom == null ? null : DateUtil.parseNatural(naturalFrom); 

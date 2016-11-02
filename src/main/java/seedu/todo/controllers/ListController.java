@@ -44,6 +44,7 @@ public class ListController implements Controller {
     
     //use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
+    private static final int COMMAND_INPUT_INDEX = 0;
     private static final int DATE_ON_INDEX = 1;
     private static final int DATE_FROM_INDEX = 2;
     private static final int DATE_TO_INDEX = 3;
@@ -58,7 +59,7 @@ public class ListController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        return (input.toLowerCase().startsWith("list")) ? 1 : 0;
+        return (StringUtil.convertStringIntoArray(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
     }
     
     private static Map<String, String[]> getTokenDefinitions() {

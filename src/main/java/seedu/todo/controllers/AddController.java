@@ -11,6 +11,7 @@ import com.joestelmach.natty.*;
 
 import seedu.todo.commons.exceptions.InvalidNaturalDateException;
 import seedu.todo.commons.exceptions.ParseException;
+import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.controllers.concerns.Renderer;
@@ -59,6 +60,7 @@ public class AddController implements Controller {
         tokenDefinitions.put("time", new String[] { "at", "by", "on", "before", "time" });
         tokenDefinitions.put("timeFrom", new String[] { "from" });
         tokenDefinitions.put("timeTo", new String[] { "to" });
+        tokenDefinitions.put("tagName", new String [] { "tag" }); 
         return tokenDefinitions;
     }
 
@@ -120,6 +122,12 @@ public class AddController implements Controller {
      */
     private void createCalendarItem(TodoListDB db, 
             boolean isTask, String name, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        assert dateFrom != null;
+        LocalDateTime parsedDateFrom = parseTimeStamp(dateFrom, dateTo, true);
+        LocalDateTime parsedDateTo = parseTimeStamp(dateTo, dateFrom, false);
+        dateFrom = parsedDateFrom;
+        dateTo = parsedDateTo;
+        
         if (isTask) {
             Task newTask = db.createTask();
             newTask.setName(name);
@@ -131,6 +139,27 @@ public class AddController implements Controller {
             newEvent.setEndDate(dateTo);
         }
         db.save();
+    }
+
+    private LocalDateTime parseTimeStamp(LocalDateTime actualDate, LocalDateTime checkedDate, boolean isDateFrom) {
+        //check for date
+        if (checkedDate != null && actualDate != null && DateUtil.checkIfDateExist(checkedDate) && !DateUtil.checkIfDateExist(actualDate)) {
+            if (!isDateFrom) {
+                actualDate = checkedDate.toLocalDate().atTime(actualDate.getHour(), actualDate.getMinute());
+            }
+        }
+        //check for time
+        if (checkedDate != null && actualDate != null && DateUtil.checkIfTimeExist(checkedDate) && !DateUtil.checkIfTimeExist(actualDate)) {
+            actualDate = actualDate.toLocalDate().atTime(checkedDate.getHour(), checkedDate.getMinute());            
+        }
+        if (actualDate != null && !DateUtil.checkIfTimeExist(actualDate)) {
+            if (isDateFrom) {
+                actualDate = DateUtil.floorDate(actualDate);
+            } else {
+                actualDate = DateUtil.ceilDate(actualDate);
+            }
+        }
+        return actualDate;
     }
 
     

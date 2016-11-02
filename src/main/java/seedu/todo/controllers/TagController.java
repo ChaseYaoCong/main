@@ -6,6 +6,7 @@ import java.util.Map;
 
 import seedu.todo.commons.EphemeralDB;
 import seedu.todo.commons.exceptions.ParseException;
+import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.CalendarItem;
@@ -22,6 +23,7 @@ public class TagController implements Controller {
     private static final String NAME = "Tag";
     private static final String DESCRIPTION = "Tag a task/event by listed index";
     private static final String COMMAND_SYNTAX = "tag <index> <tag name>";
+    private static final String COMMAND_WORD = "tag";
     
     private static final String TAG_FORMAT = "tag %d";
     private static final String MESSAGE_TAG_SUCCESS = "Item has been tagged successfully.";
@@ -32,6 +34,7 @@ public class TagController implements Controller {
     private static final String MESSAGE_EXCEED_TAG_SIZE = "Could not tag task/event : Tag size exceed";
     private static final String MESSAGE_TAG_NAME_EXIST = "Could not tag task/event: Tag name already exist or Duplicate Tag Names!";
     
+    private static final int COMMAND_INPUT_INDEX = 0;
     private static final int ITEM_INDEX = 0;
     private static final int TOKENIZER_DEFAULT_INDEX = 1;
     
@@ -44,8 +47,7 @@ public class TagController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        // TODO
-        return (input.toLowerCase().startsWith("tag") || input.startsWith("tags")) ? 1 : 0;
+        return (StringUtil.convertStringIntoArray(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
     }
     
     /**

@@ -55,6 +55,21 @@ public class DateUtil {
         
         return dateTime.toLocalDate().atTime(0, 0);
     }
+    
+    /**
+     * Performs a "ceiling" operation on a LocalDateTime, and returns a new LocalDateTime
+     * with time set to 23:59.
+     * 
+     * @param dateTime   LocalDateTime for operation to be performed on.
+     * @return           "Ceiled" LocalDateTime.
+     */
+    public static LocalDateTime ceilDate(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            return null;
+        }
+        
+        return dateTime.toLocalDate().atTime(23, 59);
+    }
 
     /**
      * Formats a LocalDateTime to a relative date. 
@@ -200,6 +215,29 @@ public class DateUtil {
     public static LocalDateTime parseDateTime(String dateTimeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(dateTimeString, formatter);
+    }
+    
+    /*
+     * Check a LocalDateTime if the time is the same as the current time
+     * 
+     * @param date
+     * @return true if it is not the same as current time, false if it is the same as current time 
+     */
+    public static boolean checkIfTimeExist(LocalDateTime date) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        return currentTime.getHour() != date.getHour() || currentTime.getMinute() != date.getMinute();
+    }
+    
+    /*
+     * Check a LocalDateTime if the date is the same as the current date
+     * 
+     * @param date
+     * @return true if it is not the same as current time, false if it is the same as current time 
+     */
+    public static boolean checkIfDateExist(LocalDateTime date) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        return currentDate.getDayOfYear() != date.getDayOfYear() || currentDate.getMonth() != date.getMonth() || 
+                currentDate.getYear() != date.getYear();
     }
     
     /*

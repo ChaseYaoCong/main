@@ -14,9 +14,11 @@ import org.junit.Test;
 import seedu.todo.commons.util.DateUtil;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test cases for {@link DateUtil}.
@@ -132,4 +134,35 @@ public class DateUtilTest {
         assertEquals(DateUtil.floorDate(LocalDateTime.now()), DateUtil.parseNatural("today"));
     }
 	
+    @Test
+    public void testIfDateExist() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
+        assertFalse(DateUtil.checkIfDateExist(currentDate));
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(1)));
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365)));        
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(1)));
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(12)));
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusYears(1)));
+    }
+    
+    @Test
+    public void testIfTimeExist() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfTimeExist(currentTime));
+        assertFalse(DateUtil.checkIfTimeExist(currentTime));
+        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - 1, 
+                currentTime.getMinute())));
+        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour(), 
+                currentTime.getMinute() - 1)));
+        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - 1, 
+                currentTime.getMinute() - 1)));
+        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - 12, 
+                currentTime.getMinute())));
+        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour(), 
+                currentTime.getMinute() - currentTime.getMinute())));
+        assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - currentTime.getHour(), 
+                currentTime.getMinute() - currentTime.getMinute())));
+        
+    }
 }
