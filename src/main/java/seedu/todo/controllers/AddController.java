@@ -122,7 +122,6 @@ public class AddController implements Controller {
      */
     private void createCalendarItem(TodoListDB db, 
             boolean isTask, String name, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        assert dateFrom != null;
         LocalDateTime parsedDateFrom = parseTimeStamp(dateFrom, dateTo, true);
         LocalDateTime parsedDateTo = parseTimeStamp(dateTo, dateFrom, false);
         dateFrom = parsedDateFrom;
