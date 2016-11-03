@@ -64,8 +64,10 @@ public class StringUtil {
             return String.format("%s and %s", formatNumberOfTaskWithPuralizer(numTasks), formatNumberOfEventWithPuralizer(numEvents));
         } else if (numTasks != 0) {
             return formatNumberOfTaskWithPuralizer(numTasks);
-        } else {
+        } else if (numEvents != 0){
             return formatNumberOfEventWithPuralizer(numEvents);
+        } else {
+            return "No item found!";
         }
     }
     
@@ -125,6 +127,6 @@ public class StringUtil {
      * 
      */
     public static String[] splitStringBySpace(String input) {
-        return input.trim().split(" ");
+        return (input == null) ? null : input.trim().split(" ");
     }
 }
