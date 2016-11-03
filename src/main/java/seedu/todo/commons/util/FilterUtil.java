@@ -45,7 +45,7 @@ public class FilterUtil {
                 }
                 
                 boolean matchFound = false;
-                String [] taskNameBySpace = task.getName().split(" ");
+                String [] taskNameBySpace = StringUtil.splitStringBySpace(task.getName());
                 for (int j = 0; j < taskNameBySpace.length; j ++) {
                     if (taskNameBySpace[j].toLowerCase().startsWith(currentMatchingName)) {
                         filteredTasks.add(task);
