@@ -147,6 +147,11 @@ public class ClearController implements Controller {
             return ;
         }
         
+        deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
+    }
+
+    private void deleteSelectedTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTask,
+            LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Task> tasks = db.getAllTasks(); 
         List<Event> events = db.getAllEvents();; 
         if (isItemTypeProvided) {

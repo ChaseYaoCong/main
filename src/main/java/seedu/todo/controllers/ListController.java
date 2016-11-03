@@ -168,6 +168,13 @@ public class ListController implements Controller {
         }
         
         //Setting up views
+        filterTasksAndEvents(db, isItemTypeProvided, isTaskStatusProvided, isEventStatusProvided, isTask, isCompleted,
+                isOver, dateCriteria, dateOn, dateFrom, dateTo);
+    }
+
+    private void filterTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTaskStatusProvided,
+            boolean isEventStatusProvided, boolean isTask, boolean isCompleted, boolean isOver,
+            LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Task> tasks = db.getAllTasks(); 
         List<Event> events = db.getAllEvents();; 
         if (isItemTypeProvided) {

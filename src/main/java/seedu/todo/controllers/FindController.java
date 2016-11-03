@@ -162,6 +162,13 @@ public class FindController implements Controller {
         }
                 
         //setting up view
+        filterTasksAndEvents(itemNameList, tagNameList, isItemTypeProvided, isTaskStatusProvided, isEventStatusProvided,
+                isTask, isCompleted, isOver, dateOn, dateFrom, dateTo);
+    }
+
+    private void filterTasksAndEvents(HashSet<String> itemNameList, HashSet<String> tagNameList,
+            boolean isItemTypeProvided, boolean isTaskStatusProvided, boolean isEventStatusProvided, boolean isTask,
+            boolean isCompleted, boolean isOver, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
         TodoListDB db = TodoListDB.getInstance();
         List<Task> tasks = db.getAllTasks();
         List<Event> events = db.getAllEvents();
