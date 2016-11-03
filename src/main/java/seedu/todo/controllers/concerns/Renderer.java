@@ -45,7 +45,8 @@ public class Renderer {
     }
     
     /**
-     * Renders the indexView.
+     * Renders the indexView with selected tasks and events. 
+     * Mainly use by List and Find Controller to display filtered results. 
      * 
      * @param db
      * @param consoleMessage to be rendered in console, leave null if not needed
