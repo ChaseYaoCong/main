@@ -123,7 +123,7 @@ public class ClearController implements Controller {
             if (dateCriteria == null) {
                 Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
                 return ;
-            } 
+            }
         }
         
         if (parsedDates != null) {
@@ -150,6 +150,10 @@ public class ClearController implements Controller {
         deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
     }
 
+    /*
+     * Delete the selected Tasks and Events based on the date criteria the user has input
+     * 
+     */
     private void deleteSelectedTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTask,
             LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Task> tasks = db.getAllTasks(); 

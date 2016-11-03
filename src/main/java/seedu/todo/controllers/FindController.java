@@ -166,6 +166,10 @@ public class FindController implements Controller {
                 isTask, isCompleted, isOver, dateOn, dateFrom, dateTo);
     }
 
+    /*
+     * Filter out the selected tasks and events based on the search criteria
+     * 
+     */
     private void filterTasksAndEvents(HashSet<String> itemNameList, HashSet<String> tagNameList,
             boolean isItemTypeProvided, boolean isTaskStatusProvided, boolean isEventStatusProvided, boolean isTask,
             boolean isCompleted, boolean isOver, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {

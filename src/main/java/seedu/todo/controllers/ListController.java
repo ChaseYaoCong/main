@@ -172,6 +172,10 @@ public class ListController implements Controller {
                 isOver, dateCriteria, dateOn, dateFrom, dateTo);
     }
 
+    /*
+     * Filter out the selected tasks and events based on the search criteria
+     * 
+     */
     private void filterTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTaskStatusProvided,
             boolean isEventStatusProvided, boolean isTask, boolean isCompleted, boolean isOver,
             LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
