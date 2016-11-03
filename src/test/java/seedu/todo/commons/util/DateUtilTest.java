@@ -223,7 +223,7 @@ public class DateUtilTest {
     //@@author A0139922Y
     @Test
     public void testIfTimeExist_true() {
-        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTime = LocalDateTime.now().toLocalDate().atTime(10,0);
         assertNotNull(DateUtil.checkIfTimeExist(currentTime));
         assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - currentTime.getHour(), 
                 currentTime.getMinute())));
