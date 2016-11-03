@@ -21,9 +21,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * @@author A0139812A
  * Test cases for {@link DateUtil}.
  * 
- * @@author A0139812A
  */
 public class DateUtilTest {
 	
@@ -95,7 +95,7 @@ public class DateUtilTest {
     //@@author A0139922Y
     public void ceilDate_null_test() {
         LocalDateTime nullDate = null;
-        assertNull(DateUtil.ceilDate(nullDate));
+        assertEquals(null, DateUtil.ceilDate(nullDate));
     }
 	
 	@Test
@@ -184,7 +184,7 @@ public class DateUtilTest {
     }
     
     //@@author A0139922Y
-    public void testIfDateExist_true() {
+    public void testCheckIfDateExist_true() {
         LocalDateTime currentDate = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfDateExist(currentDate));
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365)));        
@@ -199,7 +199,7 @@ public class DateUtilTest {
     
     //@@author A0139922Y
     @Test
-    public void testIfTimeExist_false() {
+    public void testCheckIfTimeExist_false() {
         LocalDateTime currentTime = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfTimeExist(currentTime));
         assertFalse(DateUtil.checkIfTimeExist(currentTime));

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+//@@author A0139922Y
 public class ParseUtilTest {
     
     Map<String, String[]> parsedResult = new HashMap<String, String[]>();
@@ -24,32 +25,49 @@ public class ParseUtilTest {
     public static final String INCORRECT_NATURAL_DATE = "todar";
     
     @Test
-    public void testIsTokenNull() {
+    public void testIsTokenNull_true() {
         parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
         assertTrue(ParseUtil.isTokenNull(parsedResult, EMPTY_TOKEN));
-        assertFalse(ParseUtil.isTokenNull(parsedResult, TEST_TOKEN));
         
         parsedResult.put(TEST_TOKEN, NULL_TOKEN_RESULT);
         assertTrue(ParseUtil.isTokenNull(parsedResult, TEST_TOKEN));
     }
-
+    
     @Test
-    public void testDoesTokenContainKeyword() {
-       parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
-       assertTrue(ParseUtil.doesTokenContainKeyword(parsedResult, TEST_TOKEN, TOKEN_RESULT[TOKEN_RESULT_INDEX_ONE]));
-       assertFalse(ParseUtil.doesTokenContainKeyword(parsedResult, TEST_TOKEN, TOKEN_KEYWORD_DOES_NOT_EXIST));
-       
-       assertFalse(ParseUtil.doesTokenContainKeyword(parsedResult, EMPTY_TOKEN, TOKEN_RESULT[TOKEN_RESULT_INDEX_ONE]));
-       assertFalse(ParseUtil.doesTokenContainKeyword(parsedResult, EMPTY_TOKEN, NULL_TOKEN_RESULT[TOKEN_RESULT_INDEX_ONE]));
+    public void testIsTokenNull_false() {
+        parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
+        assertFalse(ParseUtil.isTokenNull(parsedResult, TEST_TOKEN));
     }
 
+    @Test
+    public void testDoesTokenContainKeyword_true() {
+        parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
+        assertTrue(ParseUtil.doesTokenContainKeyword(parsedResult, TEST_TOKEN, TOKEN_RESULT[TOKEN_RESULT_INDEX_ONE]));
+    }
+    
+    @Test
+    public void testDoesTokenContainKeyword_false() {
+        parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
+        assertFalse(ParseUtil.doesTokenContainKeyword(parsedResult, TEST_TOKEN, TOKEN_KEYWORD_DOES_NOT_EXIST));
+        assertFalse(ParseUtil.doesTokenContainKeyword(parsedResult, EMPTY_TOKEN, TOKEN_RESULT[TOKEN_RESULT_INDEX_ONE]));
+        assertFalse(ParseUtil.doesTokenContainKeyword(parsedResult, EMPTY_TOKEN, NULL_TOKEN_RESULT[TOKEN_RESULT_INDEX_ONE]));
+    }
+
+    @Test
+    public void testGetTokenResult_null_test() {
+        assertNotNull(ParseUtil.getTokenResult(parsedResult, TEST_TOKEN), TOKEN_RESULT[TOKEN_RESULT_INDEX_TWO]);
+        assertNull(ParseUtil.getTokenResult(parsedResult, EMPTY_TOKEN));
+    }
+    
     @Test
     public void testGetTokenResult() {
         parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
         assertEquals(ParseUtil.getTokenResult(parsedResult, TEST_TOKEN), TOKEN_RESULT[TOKEN_RESULT_INDEX_TWO]);
-        assertNotNull(ParseUtil.getTokenResult(parsedResult, TEST_TOKEN), TOKEN_RESULT[TOKEN_RESULT_INDEX_TWO]);
-        
-        assertNull(ParseUtil.getTokenResult(parsedResult, EMPTY_TOKEN));
+    }
+    
+    @Test
+    public void testGetTokenResult_not_equals() {
+        parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
         assertNotEquals(ParseUtil.getTokenResult(parsedResult, TEST_TOKEN), TOKEN_RESULT[TOKEN_RESULT_INDEX_ONE]);
     }
 

@@ -77,11 +77,13 @@ public class StringUtilTest {
         assertEquals(StringUtil.replaceEmpty(first, last), last);
     }
     
+    //@@author A0139922Y
     @Test
     public void testSplitStringBySpace_null_test() {
         assertNull(StringUtil.splitStringBySpace(null));
     }
-    
+
+    //@@author A0139922Y
     @Test 
     public void testSplitStringBySpace_equals() {
         String testcase1 = "TEST";
@@ -92,6 +94,7 @@ public class StringUtilTest {
         assertArrayEquals(testcase2.split(" "),StringUtil.splitStringBySpace(testcase2));
     }
     
+    //@@author A0139922Y    
     @Test
     public void testFormatNumberOfTaskWithPuralizer_equals() {
         int single = 1;
@@ -100,6 +103,7 @@ public class StringUtilTest {
         assertEquals(String.format("%d tasks", pural), StringUtil.formatNumberOfTaskWithPuralizer(pural));
     }
     
+    //@@author A0139922Y    
     @Test
     public void testFormatNumberOfTaskWithPuralizer_not_equals() {
         int single = 1;
@@ -107,7 +111,8 @@ public class StringUtilTest {
         int pural = 2;
         assertNotEquals(String.format("%d task", pural), StringUtil.formatNumberOfTaskWithPuralizer(pural));
     }
-    
+
+    //@@author A0139922Y
     @Test
     public void testFormatNumberOfEventWithPuralizer_equals() {
         int single = 1;
@@ -116,6 +121,7 @@ public class StringUtilTest {
         assertEquals(String.format("%d events", pural), StringUtil.formatNumberOfEventWithPuralizer(pural));
     }
     
+    //@@author A0139922Y    
     @Test
     public void testFormatNumberOfEventWithPuralizer_not_equals() {
         int single = 1;
@@ -124,6 +130,7 @@ public class StringUtilTest {
         assertNotEquals(String.format("%d event", pural), StringUtil.formatNumberOfEventWithPuralizer(pural));
     }
     
+    //@@author A0139922Y    
     @Test
     public void testDisplayNumberOfTaskAndEventFoundWithPuralizer_equals() {
         int numTasks = 0;
@@ -136,5 +143,4 @@ public class StringUtilTest {
         numTasks = 0;
         assertEquals("1 event", StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(numTasks, numEvents));
     }
-    
 }
