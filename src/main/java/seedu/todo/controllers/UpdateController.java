@@ -216,7 +216,7 @@ public class UpdateController implements Controller {
         
         //update task date
         if (isCalendarItemTask && dateOn != null) {
-            calendarItem.setCalendarDT(DateUtil.parseTimeStamp(dateOn, dateTo, true));
+            calendarItem.setCalendarDateTime(DateUtil.parseTimeStamp(dateOn, dateTo, true));
         }
         
         //update event date

@@ -39,6 +39,19 @@ public class TodoListDB {
         // Prevent instantiation.
     }
     
+    /**
+     * @@author A0093907W
+     * Gets the singleton instance of the TodoListDB.
+     * 
+     * @return TodoListDB
+     */
+    public static TodoListDB getInstance() {
+        if (instance == null) {
+            instance = new TodoListDB();
+        }
+        return instance;
+    }
+    
     public void setStorage(Storage storageToSet) {
         storage = storageToSet;
     }
@@ -297,21 +310,10 @@ public class TodoListDB {
         removeFromTagList(new ArrayList<Event>(events));
         events = new LinkedHashSet<Event>();
     }
-
-    /**
-     * @@author A0093907W
-     * Gets the singleton instance of the TodoListDB.
-     * 
-     * @return TodoListDB
-     */
-    public static TodoListDB getInstance() {
-        if (instance == null) {
-            instance = new TodoListDB();
-        }
-        return instance;
-    }
     
     /**
+     * @@author A0093907W
+     * 
      * Explicitly persists the database to disk.
      * 
      * @return true if the save was successful, false otherwise

@@ -234,7 +234,7 @@ public class FilterUtilTest {
     private Task generateFirstTestTask() {
         Task task = new Task();
         task.setName("Buy Milk");
-        task.setCalendarDT(today);
+        task.setCalendarDateTime(today);
         task.addTag("personal");
         task.setCompleted();
         return task;
@@ -243,7 +243,7 @@ public class FilterUtilTest {
     private Task generateSecondTestTask() {
         Task task = new Task();
         task.setName("CS2103");
-        task.setCalendarDT(tmr);
+        task.setCalendarDateTime(tmr);
         task.addTag("CS2103");
         return task;
     }
