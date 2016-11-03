@@ -163,4 +163,34 @@ public class DateUtilTest {
                 currentTime.getMinute() - currentTime.getMinute())));
         
     }
+    
+    //@@author A0139922Y
+    @Test
+    public void testParseTimeStamp() {
+        LocalDateTime currentDay = LocalDateTime.now();
+        LocalDateTime currentDayAt2Pm = currentDay.toLocalDate().atTime(2, 0);
+        LocalDateTime nextDay = currentDay.plusDays(1);
+        LocalDateTime nextDayAt2Pm = nextDay.toLocalDate().atTime(2, 0);
+        LocalDateTime nextDayAt2359 = nextDay.toLocalDate().atTime(23, 59);
+        assertNotEquals(DateUtil.parseTimeStamp(currentDay, null, true), currentDay);
+        assertEquals(DateUtil.parseTimeStamp(currentDay, null, true), DateUtil.floorDate(currentDay));
+        //will set the time to 00:00
+        assertNotEquals(DateUtil.parseTimeStamp(currentDay, nextDay, true), currentDay);
+        assertEquals(DateUtil.parseTimeStamp(currentDay, nextDay, true), DateUtil.floorDate(currentDay));
+        // will set the time to 23:59
+        assertNotEquals(DateUtil.parseTimeStamp(nextDay, currentDay, false), nextDay);
+        assertEquals(DateUtil.parseTimeStamp(nextDay, currentDay, false), nextDayAt2359);
+        // will set the time to follow the nextDay
+        assertNotEquals(DateUtil.parseTimeStamp(currentDay, nextDayAt2Pm, true), currentDay);
+        assertEquals(DateUtil.parseTimeStamp(currentDay, nextDayAt2Pm, true), currentDayAt2Pm);
+        // will set the time to follow the currentDay
+        assertEquals(DateUtil.parseTimeStamp(currentDayAt2Pm, nextDay, true), currentDayAt2Pm);
+        assertNotEquals(DateUtil.parseTimeStamp(nextDay, currentDayAt2Pm, false), nextDay);
+        assertEquals(DateUtil.parseTimeStamp(nextDay, currentDayAt2Pm, false), nextDayAt2Pm);
+        // if date and time exist, will not overwrite it
+        assertEquals(DateUtil.parseTimeStamp(currentDayAt2Pm, nextDay, true), currentDayAt2Pm);
+        assertEquals(DateUtil.parseTimeStamp(currentDayAt2Pm, nextDayAt2Pm, true), currentDayAt2Pm);
+        assertEquals(DateUtil.parseTimeStamp(nextDayAt2Pm, currentDay, false), nextDayAt2Pm);
+        assertEquals(DateUtil.parseTimeStamp(nextDayAt2Pm, currentDayAt2Pm, false), nextDayAt2Pm);
+    }
 }
