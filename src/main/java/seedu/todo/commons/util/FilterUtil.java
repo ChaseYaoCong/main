@@ -201,7 +201,7 @@ public class FilterUtil {
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
                 String currentMatchingName = nameListIterator.next().toLowerCase();
-                if (event.getName().startsWith(currentMatchingName)) {
+                if (event.getName().toLowerCase().startsWith(currentMatchingName)) {
                     filteredEvents.add(event);
                     break;
                 }
