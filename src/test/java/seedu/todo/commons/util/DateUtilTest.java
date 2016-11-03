@@ -75,8 +75,8 @@ public class DateUtilTest {
 	//@@author A0139922Y
     @Test
     public void ceilDate_sameDate() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime todayPlusAnHour = LocalDateTime.now().plusHours(1);
+        LocalDateTime today = LocalDateTime.now().toLocalDate().atTime(10,0);
+        LocalDateTime todayPlusAnHour = today.plusHours(1);
         assertNotNull(DateUtil.ceilDate(today));
         assertNotNull(DateUtil.ceilDate(todayPlusAnHour));
         assertEquals(DateUtil.ceilDate(today), DateUtil.ceilDate(todayPlusAnHour));
@@ -187,13 +187,28 @@ public class DateUtilTest {
     public void testCheckIfDateExist_true() {
         LocalDateTime currentDate = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfDateExist(currentDate));
-        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365)));        
+        //only year is diff
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusYears(1)));
+        //only month is diff
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(1)));
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(12)));
+        //only day is diff
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(1)));
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365))); 
+               
+        //day and month are diff
         currentDate = currentDate.plusDays(1);
-        assertTrue(DateUtil.checkIfDateExist(currentDate));
         currentDate = currentDate.plusMonths(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
+        
+        //day and year diff
+        currentDate = currentDate.minusMonths(1);
         currentDate = currentDate.plusYears(1);
+        assertTrue(DateUtil.checkIfDateExist(currentDate));
+        
+        //month and year diff
+        currentDate = currentDate.minusDays(1);
+        currentDate = currentDate.plusMonths(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
     }
     
