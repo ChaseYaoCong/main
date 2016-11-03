@@ -15,6 +15,7 @@ import seedu.todo.models.Task;
 public class FilterUtilTest {
     public static final LocalDateTime today = LocalDateTime.now();
     public static final LocalDateTime tmr = LocalDateTime.now().plusDays(1);
+    public static final LocalDateTime ytd = LocalDateTime.now().minusDays(1);
     Task firstTestTask = generateFirstTestTask();
     Task secondTestTask = generateSecondTestTask();
     
@@ -148,13 +149,56 @@ public class FilterUtilTest {
     }
 
     @Test
-    public void testFilterTaskBySingleDate() {
-        //TODO
+    public void testFilterTaskBySingleDate_equals() {
+        List<Task> tasks = getEmptyTaskList();
+        assertEquals(tasks, FilterUtil.filterTaskBySingleDate(tasks, DateUtil.floorDate(today)));
+        assertEquals(tasks, FilterUtil.filterTaskBySingleDate(tasks, null));
+        tasks.add(firstTestTask);
+        tasks.add(secondTestTask);
+        
+        //filter out first task
+        List<Task> filteredTasks = getEmptyTaskList();
+        filteredTasks.add(firstTestTask);
+        assertEquals(filteredTasks, FilterUtil.filterTaskBySingleDate(filteredTasks, DateUtil.floorDate(today)));
+        
+        //filter out second task
+        filteredTasks = getEmptyTaskList();
+        filteredTasks.add(secondTestTask);
+        assertEquals(filteredTasks, FilterUtil.filterTaskBySingleDate(filteredTasks, DateUtil.floorDate(tmr)));
+    }
+    
+    @Test
+    public void testFilterTaskBySingleDate_not_equals() {
+        List<Task> tasks = getEmptyTaskList();
+        tasks.add(firstTestTask);
+        tasks.add(secondTestTask);
+        
+        assertNotEquals(tasks, FilterUtil.filterTaskBySingleDate(tasks, today));
+        assertNotEquals(tasks, FilterUtil.filterTaskBySingleDate(tasks, tmr));
     }
 
     @Test
-    public void testFilterTaskWithDateRange() {
-        //TODO
+    public void testFilterTaskWithDateRange_equals() {
+        List<Task> tasks = getEmptyTaskList();
+        tasks.add(firstTestTask);
+        tasks.add(secondTestTask);
+        
+        //filter out of range of test task
+        assertEquals(getEmptyTaskList(), FilterUtil.filterTaskWithDateRange(tasks, 
+                LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(4)));
+        
+        //filter out first task
+        List<Task> filteredTasks = getEmptyTaskList();
+        filteredTasks.add(firstTestTask);
+        assertEquals(getEmptyTaskList(), FilterUtil.filterTaskWithDateRange(tasks, today, today));
+        
+        //filter out second task
+        filteredTasks = getEmptyTaskList();
+        filteredTasks.add(secondTestTask);
+        assertEquals(getEmptyTaskList(), FilterUtil.filterTaskWithDateRange(tasks, tmr, tmr));
+        
+        //filter out both task
+        assertEquals(tasks, FilterUtil.filterTaskWithDateRange(tasks, ytd, tmr));
     }
 
     @Test
@@ -201,6 +245,14 @@ public class FilterUtilTest {
         task.setName("CS2103");
         task.setCalendarDT(tmr);
         task.addTag("CS2103");
+        return task;
+    }
+    
+    private Task generateThirdTestTask() {
+        Task task = new Task();
+        task.setName("CS2105");
+        task.setCalendarDT(null);
+        task.addTag("CS");
         return task;
     }
     
