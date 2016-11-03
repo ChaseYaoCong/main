@@ -78,7 +78,8 @@ public class Renderer {
         IndexView view = UiManager.loadView(IndexView.class);
         HashSet<Task> tasksList = new HashSet<Task>();
         tasksList.addAll(FilterUtil.filterTasksByStatus(db.getAllTasks(), false));
-        tasksList.addAll(FilterUtil.filterTaskWithDateRange(db.getAllTasks(), DateUtil.floorDate(LocalDateTime.now()), null));
+        tasksList.addAll(FilterUtil.filterTaskWithDateRange(db.getAllTasks(), 
+                DateUtil.floorDate(LocalDateTime.now()), DateUtil.ceilDate(LocalDateTime.now())));
         view.tasks = new ArrayList<Task>(tasksList);    
         view.events = FilterUtil.filterEventsByStatus(db.getAllEvents(), false);
         view.tags = db.getTagList();
