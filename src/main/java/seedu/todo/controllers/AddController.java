@@ -122,8 +122,8 @@ public class AddController implements Controller {
      */
     private void createCalendarItem(TodoListDB db, 
             boolean isTask, String name, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        LocalDateTime parsedDateFrom = parseTimeStamp(dateFrom, dateTo, true);
-        LocalDateTime parsedDateTo = parseTimeStamp(dateTo, dateFrom, false);
+        LocalDateTime parsedDateFrom = DateUtil.parseTimeStamp(dateFrom, dateTo, true);
+        LocalDateTime parsedDateTo = DateUtil.parseTimeStamp(dateTo, dateFrom, false);
         dateFrom = parsedDateFrom;
         dateTo = parsedDateTo;
         
@@ -139,39 +139,6 @@ public class AddController implements Controller {
         }
         db.save();
     }
-    
-    /* @@author A0139922Y
-     * To convert LocalDateTime to 00:00 or 23:59 if not specified
-     * @param actualDate 
-     *                  is the date that that is require for checking
-     * @param checkedDate
-     *                  is the date to be used for checking
-     * @isDateFrom
-     *                  if true, actualDate is dateFrom, false if actualDate is dateTo                 
-     * 
-     * @return the correct date format
-     */
-    private LocalDateTime parseTimeStamp(LocalDateTime actualDate, LocalDateTime checkedDate, boolean isDateFrom) {
-        //check for date
-        if (checkedDate != null && actualDate != null && DateUtil.checkIfDateExist(checkedDate) && !DateUtil.checkIfDateExist(actualDate)) {
-            if (!isDateFrom) {
-                actualDate = checkedDate.toLocalDate().atTime(actualDate.getHour(), actualDate.getMinute());
-            }
-        }
-        //check for time
-        if (checkedDate != null && actualDate != null && DateUtil.checkIfTimeExist(checkedDate) && !DateUtil.checkIfTimeExist(actualDate)) {
-            actualDate = actualDate.toLocalDate().atTime(checkedDate.getHour(), checkedDate.getMinute());            
-        }
-        if (actualDate != null && !DateUtil.checkIfTimeExist(actualDate)) {
-            if (isDateFrom) {
-                actualDate = DateUtil.floorDate(actualDate);
-            } else {
-                actualDate = DateUtil.ceilDate(actualDate);
-            }
-        }
-        return actualDate;
-    }
-
     
     /**
      * Validates the parsed parameters.

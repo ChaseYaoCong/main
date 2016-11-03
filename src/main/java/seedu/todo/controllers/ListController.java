@@ -131,7 +131,7 @@ public class ListController implements Controller {
         LocalDateTime dateTo = null;
         
         if (date != null) {
-            dateCriteria = DateUtil.parseNatural(date);
+            dateCriteria = DateUtil.floorDate(DateUtil.parseNatural(date));
             if (dateCriteria == null) {
                 Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
                 return ;
@@ -150,9 +150,9 @@ public class ListController implements Controller {
             }
     
             // Parse natural date using Natty.
-            dateOn = naturalOn == null ? null : DateUtil.parseNatural(naturalOn); 
-            dateFrom = naturalFrom == null ? null : DateUtil.parseNatural(naturalFrom); 
-            dateTo = naturalTo == null ? null : DateUtil.parseNatural(naturalTo);
+            dateOn = naturalOn == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalOn)); 
+            dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalFrom)); 
+            dateTo = naturalTo == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalTo));
         }
         
         if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {

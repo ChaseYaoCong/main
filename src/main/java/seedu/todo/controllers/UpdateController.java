@@ -1,17 +1,8 @@
 package seedu.todo.controllers;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.joestelmach.natty.DateGroup;
-import com.joestelmach.natty.Parser;
 
 import seedu.todo.commons.EphemeralDB;
 import seedu.todo.commons.exceptions.ParseException;
@@ -177,7 +168,7 @@ public class UpdateController implements Controller {
         }
         
         if (isCalendarItemTask && dateOn != null) {
-            calendarItem.setCalendarDT(dateOn);
+            calendarItem.setCalendarDT(DateUtil.parseTimeStamp(dateOn, dateTo, true));
         }
         
         //update event date
@@ -187,6 +178,10 @@ public class UpdateController implements Controller {
         }
         
         if (dateFrom != null && dateTo !=null && !isCalendarItemTask) {
+            LocalDateTime parsedDateFrom = DateUtil.parseTimeStamp(dateFrom, dateTo, true);
+            LocalDateTime parsedDateTo = DateUtil.parseTimeStamp(dateTo, dateFrom, false);
+            dateFrom = parsedDateFrom;
+            dateTo = parsedDateTo;
             Event event = (Event) calendarItem;
             event.setStartDate(dateFrom);
             event.setEndDate(dateTo);

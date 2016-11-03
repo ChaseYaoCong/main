@@ -255,7 +255,39 @@ public class DateUtil {
             return null;
         }
         LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        return DateUtil.floorDate(ldt);
+        return ldt;
+    }
+    
+    /* @@author A0139922Y
+     * To convert LocalDateTime to 00:00 or 23:59 if not specified
+     * @param actualDate 
+     *                  is the date that that is require for checking
+     * @param checkedDate
+     *                  is the date to be used for checking
+     * @isDateFrom
+     *                  if true, actualDate is dateFrom, false if actualDate is dateTo                 
+     * 
+     * @return the correct date format
+     */
+    public static LocalDateTime parseTimeStamp(LocalDateTime actualDate, LocalDateTime checkedDate, boolean isDateFrom) {
+        //check for date
+        if (checkedDate != null && actualDate != null && checkIfDateExist(checkedDate) && !checkIfDateExist(actualDate)) {
+            if (!isDateFrom) {
+                actualDate = checkedDate.toLocalDate().atTime(actualDate.getHour(), actualDate.getMinute());
+            }
+        }
+        //check for time
+        if (checkedDate != null && actualDate != null && checkIfTimeExist(checkedDate) && !checkIfTimeExist(actualDate)) {
+            actualDate = actualDate.toLocalDate().atTime(checkedDate.getHour(), checkedDate.getMinute());            
+        }
+        if (actualDate != null && !checkIfTimeExist(actualDate)) {
+            if (isDateFrom) {
+                actualDate = floorDate(actualDate);
+            } else {
+                actualDate = ceilDate(actualDate);
+            }
+        }
+        return actualDate;
     }
 
 }

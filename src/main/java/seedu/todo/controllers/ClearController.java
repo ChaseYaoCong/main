@@ -136,9 +136,9 @@ public class ClearController implements Controller {
                 return;
             }
             // Parse natural date using Natty.
-            dateOn = naturalOn == null ? null : DateUtil.parseNatural(naturalOn); 
-            dateFrom = naturalFrom == null ? null : DateUtil.parseNatural(naturalFrom); 
-            dateTo = naturalTo == null ? null : DateUtil.parseNatural(naturalTo);
+            dateOn = naturalOn == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalOn)); 
+            dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalFrom)); 
+            dateTo = naturalTo == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalTo));
         }
         
         if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
