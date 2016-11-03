@@ -12,6 +12,7 @@ import com.joestelmach.natty.*;
 import seedu.todo.commons.exceptions.InvalidNaturalDateException;
 import seedu.todo.commons.exceptions.ParseException;
 import seedu.todo.commons.util.DateUtil;
+import seedu.todo.commons.util.ParseUtil;
 import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.controllers.concerns.Renderer;
@@ -82,6 +83,9 @@ public class AddController implements Controller {
         // Name
         String name = parseName(parsedResult);
         
+        // Tag
+        String tag = ParseUtil.getTokenResult(parsedResult, "tagName");
+        
         // Time
         String[] naturalDates = parseDates(parsedResult);
         String naturalFrom = naturalDates[0];
@@ -106,7 +110,7 @@ public class AddController implements Controller {
         
         // Create and persist task / event.
         TodoListDB db = TodoListDB.getInstance();
-        createCalendarItem(db, isTask, name, dateFrom, dateTo);
+        createCalendarItem(db, isTask, name, dateFrom, dateTo, tag);
         
         // Re-render
         Renderer.renderIndex(db, MESSAGE_ADD_SUCCESS);
@@ -126,8 +130,8 @@ public class AddController implements Controller {
      * @param dateTo
      *            End date for Event
      */
-    private void createCalendarItem(TodoListDB db, 
-            boolean isTask, String name, LocalDateTime dateFrom, LocalDateTime dateTo) {
+    private void createCalendarItem(TodoListDB db, boolean isTask, String name, 
+            LocalDateTime dateFrom, LocalDateTime dateTo, String tag) {
         LocalDateTime parsedDateFrom = DateUtil.parseTimeStamp(dateFrom, dateTo, true);
         LocalDateTime parsedDateTo = DateUtil.parseTimeStamp(dateTo, dateFrom, false);
         dateFrom = parsedDateFrom;
@@ -137,11 +141,19 @@ public class AddController implements Controller {
             Task newTask = db.createTask();
             newTask.setName(name);
             newTask.setDueDate(dateFrom);
+            if (tag != null) {
+                newTask.addTag(tag);
+                db.addIntoTagList(new String[] { tag });
+            }
         } else {
             Event newEvent = db.createEvent();
             newEvent.setName(name);
             newEvent.setStartDate(dateFrom);
             newEvent.setEndDate(dateTo);
+            if (tag != null) {
+                newEvent.addTag(tag);
+                db.addIntoTagList(new String[] { tag });
+            }
         }
         db.save();
     }
