@@ -156,27 +156,44 @@ public class UpdateController implements Controller {
         
         boolean isCalendarItemTask = calendarItem instanceof Task;
         
-        //update name
-        if (itemName != null) {
-            calendarItem.setName(itemName);
-        }
-        
-        //update task date 
+        //update task date , error found
         if (isCalendarItemTask && dateOn == null && numOfDatesFound > 0) {
             Renderer.renderDisambiguation(UPDATE_TASK_SYNTAX, MESSAGE_INVALID_ITEMTYPE);
             return ;
         }
         
-        if (isCalendarItemTask && dateOn != null) {
-            calendarItem.setCalendarDT(DateUtil.parseTimeStamp(dateOn, dateTo, true));
-        }
-        
-        //update event date
+        //update event date , error found
         if (!isCalendarItemTask && (dateFrom == null || dateTo == null) && numOfDatesFound > 0) {
             Renderer.renderDisambiguation(UPDATE_EVENT_SYNTAX, MESSAGE_INVALID_ITEMTYPE);
             return ;
         }
         
+        updateCalendarItem(itemName, dateOn, dateFrom, dateTo, calendarItem, isCalendarItemTask);
+        
+        db.save();
+        
+        // Re-render
+        Renderer.renderIndex(db, MESSAGE_UPDATE_SUCCESS);
+    }
+
+    
+    /*
+     * Update calendarItem according to user input 
+     * 
+     */
+    private void updateCalendarItem(String itemName, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo,
+            CalendarItem calendarItem, boolean isCalendarItemTask) {
+        //update name
+        if (itemName != null) {
+            calendarItem.setName(itemName);
+        }
+        
+        //update task date
+        if (isCalendarItemTask && dateOn != null) {
+            calendarItem.setCalendarDT(DateUtil.parseTimeStamp(dateOn, dateTo, true));
+        }
+        
+        //update event date
         if (dateFrom != null && dateTo !=null && !isCalendarItemTask) {
             LocalDateTime parsedDateFrom = DateUtil.parseTimeStamp(dateFrom, dateTo, true);
             LocalDateTime parsedDateTo = DateUtil.parseTimeStamp(dateTo, dateFrom, false);
@@ -186,10 +203,5 @@ public class UpdateController implements Controller {
             event.setStartDate(dateFrom);
             event.setEndDate(dateTo);
         }
-        
-        db.save();
-        
-        // Re-render
-        Renderer.renderIndex(db, MESSAGE_UPDATE_SUCCESS);
     }
 }
