@@ -25,19 +25,22 @@ public class UpdateController implements Controller {
     
     private static final String NAME = "Update";
     private static final String DESCRIPTION = "Updates a task by listed index.";
-    private static final String COMMAND_SYNTAX = "update <index> <task/event> by <deadline>";
+    private static final String COMMAND_SYNTAX = "update <index> <name> on <deadline> tag <tagName> newTag <tagName>";
     private static final String UPDATE_EVENT_SYNTAX = "update <index> <name> event from <date/time> to <date/time>";
     private static final String UPDATE_TASK_SYNTAX = "update <index> <name> task on <date/time>";
-    private static final String COMMAND_WORD = "update";
+    private static final String UPDATE_TAG_SYNTAX = "update <index> tag <tagName> newTag <tagName>";
     
+    private static final String COMMAND_WORD = "update";
+       
     private static final String MESSAGE_INDEX_OUT_OF_RANGE = "Could not update task/event: Invalid index provided!";
     private static final String MESSAGE_MISSING_INDEX_AND_PARAMETERS = "Please specify the index of the item and details to update.";
     private static final String MESSAGE_INDEX_NOT_NUMBER = "Index has to be a number!";
     private static final String MESSAGE_INVALID_ITEMTYPE = "Unable to update!\nTry updating with the syntax provided!";
     private static final String MESSAGE_DATE_CONFLICT = "Unable to update!\nMore than 1 date criteria is provided!";
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to update!\nThe natural date entered is not supported.";
-    
+    private static final String MESSAGE_INVALID_TAG = "Unable to update!\nTag name not found!";
     private static final String MESSAGE_UPDATE_SUCCESS = "Item successfully updated!";
+    
     private static final int COMMAND_INPUT_INDEX = 0;
     private static final int TOKENIZER_DEFAULT_INDEX = 1;
     private static final int ITEM_INDEX = 0;
@@ -75,7 +78,8 @@ public class UpdateController implements Controller {
         tokenDefinitions.put("timeFrom", new String[] { "from" });
         tokenDefinitions.put("timeTo", new String[] { "to", "before", "until" });
         tokenDefinitions.put("itemName", new String[] { "name" });
-        tokenDefinitions.put("tagName", new String [] { "tag" }); 
+        tokenDefinitions.put("tagName", new String [] { "tag" });
+        tokenDefinitions.put("newTagName", new String [] { "newTag" });
         return tokenDefinitions;
     }
 
@@ -109,8 +113,17 @@ public class UpdateController implements Controller {
         }
         
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
+        String oldTagName = ParseUtil.getTokenResult(parsedResult, "tagName");
+        String newTagName = ParseUtil.getTokenResult(parsedResult, "newTagName");
+        
+        //only 1 tag name detected
+        if ((oldTagName != null && newTagName == null) || (oldTagName == null && newTagName != null)) {
+            Renderer.renderDisambiguation(UPDATE_TAG_SYNTAX, MESSAGE_INVALID_ITEMTYPE);
+            return;
+        }
+        
         //no details provided to update
-        if (parsedDates == null && itemName == null) {
+        if (parsedDates == null && itemName == null && oldTagName == null && newTagName == null) {
             Renderer.renderDisambiguation(UPDATE_TASK_SYNTAX, MESSAGE_INVALID_ITEMTYPE);
             return ;
         }
@@ -168,7 +181,13 @@ public class UpdateController implements Controller {
             return ;
         }
         
-        updateCalendarItem(itemName, dateOn, dateFrom, dateTo, calendarItem, isCalendarItemTask);
+        //calendarItem does not contain tag
+        if (!calendarItem.getTagList().contains(oldTagName) && oldTagName != null && newTagName != null) {
+            Renderer.renderDisambiguation(UPDATE_TAG_SYNTAX, MESSAGE_INVALID_TAG);
+            return ;
+        }
+        
+        updateCalendarItem(itemName, dateOn, dateFrom, dateTo, calendarItem, isCalendarItemTask, oldTagName, newTagName, db);
         
         db.save();
         
@@ -182,10 +201,17 @@ public class UpdateController implements Controller {
      * 
      */
     private void updateCalendarItem(String itemName, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo,
-            CalendarItem calendarItem, boolean isCalendarItemTask) {
+            CalendarItem calendarItem, boolean isCalendarItemTask, String oldTagName, String newTagName, TodoListDB db) {
         //update name
         if (itemName != null) {
             calendarItem.setName(itemName);
+        }
+        
+        if (oldTagName != null && newTagName != null) {
+            calendarItem.removeTag(oldTagName);
+            calendarItem.addTag(newTagName);
+            db.addIntoTagList(new String[] { newTagName });
+            db.updateTagList(new String[] { oldTagName });
         }
         
         //update task date
