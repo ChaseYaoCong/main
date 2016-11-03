@@ -132,7 +132,8 @@ public class DateUtilTest {
     public void testParseNatural() {
         assertNull(DateUtil.parseNatural("todar"));
         assertNotNull(DateUtil.parseNatural("today"));
-        assertEquals(DateUtil.floorDate(LocalDateTime.now()), DateUtil.parseNatural("today"));
+        assertNotEquals(LocalDateTime.now(), DateUtil.parseNatural("today"));
+        assertEquals(DateUtil.floorDate(LocalDateTime.now()), DateUtil.floorDate(DateUtil.parseNatural("today")));
     }
     
     //@@author A0139922Y	
