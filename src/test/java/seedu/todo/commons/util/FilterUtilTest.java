@@ -248,14 +248,6 @@ public class FilterUtilTest {
         return task;
     }
     
-    private Task generateThirdTestTask() {
-        Task task = new Task();
-        task.setName("CS2105");
-        task.setCalendarDT(null);
-        task.addTag("CS");
-        return task;
-    }
-    
     private List<Task> getEmptyTaskList() {
         return new ArrayList<Task>();
     }
