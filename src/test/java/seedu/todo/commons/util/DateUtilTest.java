@@ -72,6 +72,32 @@ public class DateUtilTest {
 		assertEquals(DateUtil.floorDate(null), null);
 	}
 	
+	//@@author A0139922Y
+    @Test
+    public void ceilDate_sameDate() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime todayPlusAnHour = LocalDateTime.now().plusHours(1);
+        assertNotNull(DateUtil.ceilDate(today));
+        assertNotNull(DateUtil.ceilDate(todayPlusAnHour));
+        assertEquals(DateUtil.ceilDate(today), DateUtil.ceilDate(todayPlusAnHour));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void ceilDate_differentDate() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime tmr = LocalDateTime.now().plusDays(1);
+        assertNotNull(DateUtil.ceilDate(today));
+        assertNotNull(DateUtil.ceilDate(tmr));
+        assertNotEquals(DateUtil.ceilDate(today), DateUtil.ceilDate(tmr));
+    }
+    
+    //@@author A0139922Y
+    public void ceilDate_null_test() {
+        LocalDateTime nullDate = null;
+        assertNull(DateUtil.ceilDate(nullDate));
+    }
+	
 	@Test
 	public void formatDayTests() {
 	    LocalDateTime now = LocalDateTime.now();
@@ -109,6 +135,13 @@ public class DateUtilTest {
 	    assertEquals(DateUtil.formatShortDate(pastDate), pastDate.format(DateTimeFormatter.ofPattern("E dd MMM")));
 	}
 	
+	//@@author A0139922Y
+    @Test
+    public void formatShortDateTests_null_test() {
+        assertNull(DateUtil.formatShortDate(null));
+        assertNotNull(DateUtil.formatShortDate(LocalDateTime.now()));
+    }
+	
 	@Test
 	public void parseShortDateTests() {
 	    // TODO
@@ -123,6 +156,13 @@ public class DateUtilTest {
 	    assertEquals(DateUtil.formatTime(LocalDateTime.of(2016, 1, 1, 23, 59)), "23:59");
 	}
 	
+	//@@author A0139922Y
+	@Test
+	public void formatTime_null_test() {
+	    assertNull(DateUtil.formatTime(null));
+	    assertNotNull(DateUtil.formatTime(LocalDateTime.now()));
+	}
+	
 	private static LocalDateTime fromEpoch(long epoch) {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault());
 	}
@@ -132,36 +172,50 @@ public class DateUtilTest {
     public void testParseNatural() {
         assertNull(DateUtil.parseNatural("todar"));
         assertNotNull(DateUtil.parseNatural("today"));
-        assertNotEquals(LocalDateTime.now(), DateUtil.parseNatural("today"));
         assertEquals(DateUtil.floorDate(LocalDateTime.now()), DateUtil.floorDate(DateUtil.parseNatural("today")));
     }
     
     //@@author A0139922Y	
     @Test
-    public void testIfDateExist() {
+    public void testIfDateExist_false() {
         LocalDateTime currentDate = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfDateExist(currentDate));
         assertFalse(DateUtil.checkIfDateExist(currentDate));
-        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(1)));
+    }
+    
+    //@@author A0139922Y
+    public void testIfDateExist_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365)));        
-        assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(1)));
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(12)));
-        assertTrue(DateUtil.checkIfDateExist(currentDate.plusYears(1)));
+        currentDate = currentDate.plusDays(1);
+        assertTrue(DateUtil.checkIfDateExist(currentDate));
+        currentDate = currentDate.plusMonths(1);
+        assertTrue(DateUtil.checkIfDateExist(currentDate));
+        currentDate = currentDate.plusYears(1);
+        assertTrue(DateUtil.checkIfDateExist(currentDate));
     }
     
     //@@author A0139922Y
     @Test
-    public void testIfTimeExist() {
+    public void testIfTimeExist_false() {
         LocalDateTime currentTime = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfTimeExist(currentTime));
         assertFalse(DateUtil.checkIfTimeExist(currentTime));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testIfTimeExist_true() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfTimeExist(currentTime));
         assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - currentTime.getHour(), 
                 currentTime.getMinute())));
         assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour(), 
                 currentTime.getMinute() - currentTime.getMinute())));
         assertTrue(DateUtil.checkIfTimeExist(currentTime.toLocalDate().atTime(currentTime.getHour() - currentTime.getHour(), 
                 currentTime.getMinute() - currentTime.getMinute())));
-        
     }
     
     //@@author A0139922Y

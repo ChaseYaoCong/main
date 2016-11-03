@@ -232,7 +232,7 @@ public class DateUtil {
      * Check a LocalDateTime if the date is the same as the current date
      * 
      * @param date
-     * @return true if it is not the same as current time, false if it is the same as current time 
+     * @return true if it is not the same as current date, false if it is the same as current date 
      */
     public static boolean checkIfDateExist(LocalDateTime date) {
         LocalDateTime currentDate = LocalDateTime.now();

@@ -1,14 +1,6 @@
 package seedu.todo.commons.util;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
-import com.joestelmach.natty.DateGroup;
-import com.joestelmach.natty.Parser;
 
 /**
  * Helper functions for parsing.
