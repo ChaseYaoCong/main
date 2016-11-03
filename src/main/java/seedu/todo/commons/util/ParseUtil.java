@@ -26,7 +26,11 @@ public class ParseUtil {
     public static boolean isTokenNull(Map<String, String[]> parsedResult, String token) {
         return parsedResult.get(token) == null || parsedResult.get(token)[TOKEN_INDEX] == null;
     }
-    
+    /*
+     * To check if parsedResult with the token containing the keyword provided 
+     * 
+     * @return true if keyword is found, false if it is not found
+     */
     public static boolean doesTokenContainKeyword(Map<String, String[]> parsedResult, String token, String keyword) {
         if (!isTokenNull(parsedResult, token)) {
             return parsedResult.get(token)[TOKEN_INDEX].contains(keyword);

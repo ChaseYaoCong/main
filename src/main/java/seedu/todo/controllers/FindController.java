@@ -59,7 +59,7 @@ public class FindController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        return (StringUtil.convertStringIntoArray(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
+        return (StringUtil.splitStringBySpace(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
     }
     
     private static Map<String, String[]> getTokenDefinitions() {
@@ -240,7 +240,7 @@ public class FindController implements Controller {
         //if found any matching , update list
         if (result != null) {
             hashList.add(result);
-            String[] resultArray = StringUtil.convertStringIntoArray(result);
+            String[] resultArray = StringUtil.splitStringBySpace(result);
             for (int i = 0; i < resultArray.length; i ++) {
                 hashList.add(resultArray[i]);
             }

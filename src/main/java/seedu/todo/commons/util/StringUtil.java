@@ -124,7 +124,7 @@ public class StringUtil {
      * Convert input into individual input by splitting with space  
      * 
      */
-    public static String[] convertStringIntoArray(String input) {
+    public static String[] splitStringBySpace(String input) {
         return input.trim().split(" ");
     }
 }
