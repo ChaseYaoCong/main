@@ -98,6 +98,7 @@ public class DateUtilTest {
     }
     
     //@@author A0139922Y
+    @Test
     public void ceilDate_null_test() {
         LocalDateTime nullDate = null;
         assertEquals(null, DateUtil.ceilDate(nullDate));
@@ -189,30 +190,63 @@ public class DateUtilTest {
     }
     
     //@@author A0139922Y
-    public void testCheckIfDateExist_true() {
+    @Test
+    public void testCheckIfDateExist_diffByYear_true() {
         LocalDateTime currentDate = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfDateExist(currentDate));
         //only year is diff
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusYears(1)));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckIfDateExist_diffByMonth_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
         //only month is diff
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(1)));
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(12)));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckIfDateExist_diffByDay_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
         //only day is diff
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(1)));
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365))); 
-               
+    }
+
+    //@@author A0139922Y
+    @Test
+    public void testCheckIfDateExist_diffByDayAndMonth_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
         //day and month are diff
         currentDate = currentDate.plusDays(1);
         currentDate = currentDate.plusMonths(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
-        
-        //day and year diff
-        currentDate = currentDate.minusMonths(1);
+    }
+
+    //@@author A0139922Y
+    @Test
+    public void testCheckIfDateExist_diffByDayAndYear_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
+        //day and year are diff
+        currentDate = currentDate.plusDays(1);
         currentDate = currentDate.plusYears(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
-        
-        //month and year diff
-        currentDate = currentDate.minusDays(1);
+    }
+         
+    //@@author A0139922Y
+    @Test
+    public void testCheckIfDateExist_diffByMonthAndYear_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
+        //month and year are diff
+        currentDate = currentDate.plusYears(1);
         currentDate = currentDate.plusMonths(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
     }
@@ -220,6 +254,7 @@ public class DateUtilTest {
     //@@author A0139922Y
     @Test
     public void testCheckIfTimeExist_false() {
+        //same day, month and year
         LocalDateTime currentTime = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfTimeExist(currentTime));
         assertFalse(DateUtil.checkIfTimeExist(currentTime));
