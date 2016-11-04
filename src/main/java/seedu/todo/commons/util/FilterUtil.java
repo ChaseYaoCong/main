@@ -40,13 +40,7 @@ public class FilterUtil {
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
                 String matchingName = nameListIterator.next();
-                boolean isMatched = false;
-                //attempt to matching with full name
-                isMatched = matchWithFullName(task, matchingName);
-                if (isMatched) {
-                    filteredTasks.add(task);
-                } else if (!isMatched && matchWithSubName(task, matchingName)) { 
-                    //attempt to matching name with name splitted by space
+                if (matchWithFullName(task, matchingName) || matchWithSubName(task, matchingName)) {
                     filteredTasks.add(task);
                 }
             }
@@ -193,12 +187,7 @@ public class FilterUtil {
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
                 String matchingName = nameListIterator.next().toLowerCase();
-                boolean isMatched = false;
-                isMatched = matchWithFullName(event, matchingName);
-                if (isMatched) {
-                    filteredEvents.add(event);
-                } else if (!isMatched && matchWithSubName(event, matchingName)) { 
-                    //attempt to matching name with name splitted by space
+                if (matchWithFullName(event, matchingName) || matchWithSubName(event, matchingName)) {
                     filteredEvents.add(event);
                 }
             }
@@ -326,7 +315,7 @@ public class FilterUtil {
         return filteredEvents;
     }
     
-    /*==================== Helper Methods for filtering name ======================*/
+    /*==================== Helper Methods for filtering CalendarItem name ======================*/
     
     /*
      * Use to check if calendarItem name starts with the matching name 
