@@ -57,6 +57,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139922Y
      * Performs a "ceiling" operation on a LocalDateTime, and returns a new LocalDateTime
      * with time set to 23:59.
      * 
@@ -207,6 +208,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139922Y
      * Parses a dateTime string with the standard ISO format {@code yyyy-MM-dd HH:mm:ss}.
      * 
      * @param dateTimeString
@@ -229,6 +231,7 @@ public class DateUtil {
     }
     
     /*
+     * @@author A0139922Y
      * Check a LocalDateTime if the date is the same as the current date
      * 
      * @param date
@@ -258,7 +261,8 @@ public class DateUtil {
         return ldt;
     }
     
-    /* @@author A0139922Y
+    /* 
+     * @@author A0139922Y
      * To convert LocalDateTime to 00:00 or 23:59 if not specified
      * @param actualDate 
      *                  is the date that that is require for checking
