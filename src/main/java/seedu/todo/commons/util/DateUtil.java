@@ -243,24 +243,6 @@ public class DateUtil {
                 currentDate.getYear() != date.getYear();
     }
     
-    /*
-     * To be used to parse natural date into LocalDateTime 
-     * @parser Natty
-     * 
-     * */
-    public static LocalDateTime parseNatural(String natural) {
-        Parser parser = new Parser();
-        List<DateGroup> groups = parser.parse(natural);
-        Date date = null;
-        try {
-            date = groups.get(0).getDates().get(0);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        return ldt;
-    }
-    
     /* 
      * @@author A0139922Y
      * To convert LocalDateTime to 00:00 or 23:59 if not specified

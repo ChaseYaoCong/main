@@ -172,14 +172,6 @@ public class DateUtilTest {
 	private static LocalDateTime fromEpoch(long epoch) {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault());
 	}
-	
-    //@@author A0139922Y	
-    @Test
-    public void testParseNatural() {
-        assertNull(DateUtil.parseNatural("todar"));
-        assertNotNull(DateUtil.parseNatural("today"));
-        assertEquals(DateUtil.floorDate(LocalDateTime.now()), DateUtil.floorDate(DateUtil.parseNatural("today")));
-    }
     
     //@@author A0139922Y	
     @Test
