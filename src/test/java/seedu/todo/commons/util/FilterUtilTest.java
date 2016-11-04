@@ -219,13 +219,13 @@ public class FilterUtilTest {
         assertEquals(events, FilterUtil.filterEventByNames(events, nameList));
         
         //filter out overdue events
-        nameList.add("CS3216");
-        nameList.add("roadshow");
+        nameList.add("CS2103");
+        nameList.add("Roadshow");
         events.addAll(overdueEvents);
         events.addAll(currentEvents);
         List<Event> filteredResult = getEmptyEventList();
         filteredResult.addAll(overdueEvents);
-        assertTrue(filteredResult.containsAll(FilterUtil.filterEventByNames(events, nameList)));
+        assertEquals(filteredResult, FilterUtil.filterEventByNames(events, nameList));
         
         //empty event list with name list
         events.removeAll(overdueEvents);
