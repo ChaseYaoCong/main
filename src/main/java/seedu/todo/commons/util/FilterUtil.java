@@ -336,10 +336,7 @@ public class FilterUtil {
      */
     private static boolean matchWithFullName(CalendarItem calendarItem, String matchingName) {
         String taskName = calendarItem.getName();
-        if (taskName.startsWith(matchingName)) {
-            return true;
-        }
-        return false;
+        return taskName.startsWith(matchingName);
     }
     
     /*
