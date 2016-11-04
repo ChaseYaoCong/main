@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import seedu.todo.models.CalendarItem;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
@@ -38,24 +39,15 @@ public class FilterUtil {
             Task task = tasks.get(i);
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
-                String currentMatchingName = nameListIterator.next().toLowerCase();
-                if (task.getName().toLowerCase().startsWith(currentMatchingName)) {
+                String matchingName = nameListIterator.next();
+                boolean isMatched = false;
+                //attempt to matching with full name
+                isMatched = matchWithFullName(task, matchingName);
+                if (isMatched) {
                     filteredTasks.add(task);
-                    break;
-                }
-                
-                boolean matchFound = false;
-                String [] taskNameBySpace = StringUtil.splitStringBySpace(task.getName());
-                for (int j = 0; j < taskNameBySpace.length; j ++) {
-                    if (taskNameBySpace[j].toLowerCase().startsWith(currentMatchingName)) {
-                        filteredTasks.add(task);
-                        matchFound = true;
-                        break;
-                    }
-                }
-                
-                if (matchFound) {
-                    break;
+                } else if (!isMatched && matchWithSubName(task, matchingName)) { 
+                    //attempt to matching name with name splitted by space
+                    filteredTasks.add(task);
                 }
             }
             nameListIterator = nameList.iterator();
@@ -122,7 +114,7 @@ public class FilterUtil {
      * @param date            
      *             Search based on this date
      */
-    public static List<Task> filterTaskBySingleDate (List<Task> tasks, LocalDateTime date) {
+    public static List<Task> filterTaskBySingleDate(List<Task> tasks, LocalDateTime date) {
         if (tasks.size() == 0) {
             return tasks;
         }
@@ -151,7 +143,7 @@ public class FilterUtil {
      * @param endDate            
      *             Search based on this as ending date
      */
-    public static List<Task> filterTaskWithDateRange (List<Task> tasks, LocalDateTime startDate, LocalDateTime endDate) {
+    public static List<Task> filterTaskWithDateRange(List<Task> tasks, LocalDateTime startDate, LocalDateTime endDate) {
         if (tasks.size() == 0) {
             return tasks;
         }
@@ -189,7 +181,7 @@ public class FilterUtil {
      * @param namelist
      *             Search and filter based on the name list
      */
-    public static List<Event> filterEventByNames (List<Event> events, HashSet<String> nameList) {
+    public static List<Event> filterEventByNames(List<Event> events, HashSet<String> nameList) {
         List<Event> filteredEvents = new ArrayList<Event>();
         //if name list size is 0, means not searching by tags 
         if (nameList.size() == 0) {
@@ -200,24 +192,14 @@ public class FilterUtil {
             Event event = events.get(i);
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
-                String currentMatchingName = nameListIterator.next().toLowerCase();
-                if (event.getName().toLowerCase().startsWith(currentMatchingName)) {
+                String matchingName = nameListIterator.next().toLowerCase();
+                boolean isMatched = false;
+                isMatched = matchWithFullName(event, matchingName);
+                if (isMatched) {
                     filteredEvents.add(event);
-                    break;
-                }
-                
-                boolean matchFound = false;
-                String [] eventNameBySpace = event.getName().split(" ");
-                for (int j = 0; j < eventNameBySpace.length; j ++) {
-                    if (eventNameBySpace[j].toLowerCase().startsWith(currentMatchingName)) {
-                        filteredEvents.add(event);
-                        matchFound = true;
-                        break;
-                    }
-                }
-                
-                if (matchFound) {
-                    break;
+                } else if (!isMatched && matchWithSubName(event, matchingName)) { 
+                    //attempt to matching name with name splitted by space
+                    filteredEvents.add(event);
                 }
             }
             nameListIterator = nameList.iterator();
@@ -342,5 +324,37 @@ public class FilterUtil {
             }
         }
         return filteredEvents;
+    }
+    
+    /*==================== Helper Methods for filtering name ======================*/
+    
+    /*
+     * Use to check if calendarItem name starts with the matching name 
+     * 
+     * @return true if it calendarItem's name starts with the matching name, 
+     * false if calendarItem's name does not starts with matching name
+     */
+    private static boolean matchWithFullName(CalendarItem calendarItem, String matchingName) {
+        String taskName = calendarItem.getName();
+        if (taskName.startsWith(matchingName)) {
+            return true;
+        }
+        return false;
+    }
+    
+    /*
+     * Use to check if calendarItem name split by space starts with the matching name 
+     * 
+     * @return true if any of the calendarItem's name that is split by space that starts with the matching name, 
+     * false if calendarItem's name that is split by space does not starts with matching name
+     */
+    private static boolean matchWithSubName(CalendarItem calendarItem, String matchingName) {
+        String[] nameBySpace = StringUtil.splitStringBySpace(calendarItem.getName());
+        for (int i = 0; i < nameBySpace.length; i ++) {
+            if (nameBySpace[i].toLowerCase().startsWith(matchingName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
