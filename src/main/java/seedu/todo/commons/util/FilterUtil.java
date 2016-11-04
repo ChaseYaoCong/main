@@ -42,6 +42,7 @@ public class FilterUtil {
                 String matchingName = nameListIterator.next();
                 if (matchWithFullName(task, matchingName) || matchWithSubName(task, matchingName)) {
                     filteredTasks.add(task);
+                    break;
                 }
             }
             nameListIterator = nameList.iterator();
@@ -189,6 +190,7 @@ public class FilterUtil {
                 String matchingName = nameListIterator.next().toLowerCase();
                 if (matchWithFullName(event, matchingName) || matchWithSubName(event, matchingName)) {
                     filteredEvents.add(event);
+                    break;
                 }
             }
             nameListIterator = nameList.iterator();
