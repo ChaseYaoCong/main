@@ -103,7 +103,7 @@ public class ParseUtilTest {
     }
     
     @Test
-    public void testParseDates_parsedSuccesfully() {
+    public void testParseDates_parsedSuccesfully_equals() {
         parsedResult.put(date_on_format, date_on_result);
         parsedResult.put(date_from_format, date_from_result);
         parsedResult.put(date_to_format, date_to_result);
@@ -111,10 +111,10 @@ public class ParseUtilTest {
     }
     
     @Test
-    public void testParseDates_parsedFailed() {
+    public void testParseDates_parsedSuccesfully_not_equals() {
         parsedResult.put(date_on_format, date_on_result);
         parsedResult.put(date_from_format, date_from_result);
         parsedResult.put(date_to_format, date_to_result);
-        assertArrayEquals(incorrect_test_result, ParseUtil.parseDates(parsedResult));
+        assertNotEquals(incorrect_test_result, ParseUtil.parseDates(parsedResult));
     }
 }
