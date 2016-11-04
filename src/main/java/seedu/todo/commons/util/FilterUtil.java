@@ -324,8 +324,8 @@ public class FilterUtil {
      * false if calendarItem's name does not starts with matching name
      */
     private static boolean matchWithFullName(CalendarItem calendarItem, String matchingName) {
-        String taskName = calendarItem.getName();
-        return taskName.startsWith(matchingName);
+        String taskName = calendarItem.getName().toLowerCase();
+        return taskName.startsWith(matchingName.toLowerCase());
     }
     
     /*
@@ -337,7 +337,7 @@ public class FilterUtil {
     private static boolean matchWithSubName(CalendarItem calendarItem, String matchingName) {
         String[] nameBySpace = StringUtil.splitStringBySpace(calendarItem.getName());
         for (int i = 0; i < nameBySpace.length; i ++) {
-            if (nameBySpace[i].toLowerCase().startsWith(matchingName)) {
+            if (nameBySpace[i].toLowerCase().startsWith(matchingName.toLowerCase())) {
                 return true;
             }
         }
