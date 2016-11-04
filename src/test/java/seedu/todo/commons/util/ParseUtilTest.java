@@ -24,6 +24,17 @@ public class ParseUtilTest {
     public static final String CORRECT_NATURAL_DATE = "today";
     public static final String INCORRECT_NATURAL_DATE = "todar";
     
+    String[] test_result = { "3", "today" , "tuesday" , "wednesday" };
+    String[] incorrect_test_result = { "2" , "today", "tuesday", null };
+    String date_on_format = "time";
+    String date_from_format = "timeFrom";
+    String date_to_format = "timeTo";
+    
+    String [] date_on_result = { "time", "today" };
+    String [] date_from_result = { "timeFrom" , "tuesday" };
+    String [] date_to_result = { "timeTo" , "wednesday" };
+    String [] incorrect_date_result = { "" , null };
+    
     @Test
     public void testIsTokenNull_true() {
         parsedResult.put(TEST_TOKEN, TOKEN_RESULT);
@@ -72,17 +83,7 @@ public class ParseUtilTest {
     }
 
     @Test
-    public void testParseDates() {
-        String[] test_result = { "3", "today" , "tuesday" , "wednesday" };
-        String date_on_format = "time";
-        String date_from_format = "timeFrom";
-        String date_to_format = "timeTo";
-        
-        String [] date_on_result = { "time", "today" };
-        String [] date_from_result = { "timeFrom" , "tuesday" };
-        String [] date_to_result = { "timeTo" , "wednesday" };
-        String [] incorrect_date_result = { "" , null };
-        
+    public void testParseDates_atLeastOneDate_not_null() {
         parsedResult.put(date_on_format, date_on_result);
         parsedResult.put(date_from_format, incorrect_date_result);
         parsedResult.put(date_to_format, incorrect_date_result);
@@ -91,16 +92,29 @@ public class ParseUtilTest {
         parsedResult.put(date_on_format, incorrect_date_result);
         parsedResult.put(date_to_format, date_to_result);
         assertNotNull(ParseUtil.parseDates(parsedResult));
-        
-        parsedResult.put(date_on_format, date_on_result);
-        parsedResult.put(date_from_format, date_from_result);
-        parsedResult.put(date_to_format, date_to_result);
-        assertArrayEquals(test_result, ParseUtil.parseDates(parsedResult));
-        
+    }
+    
+    @Test
+    public void testParseDates_null() {
         parsedResult.put(date_on_format, incorrect_date_result);
         parsedResult.put(date_from_format, incorrect_date_result);
         parsedResult.put(date_to_format, incorrect_date_result);
         assertNull(ParseUtil.parseDates(parsedResult)); 
     }
-
+    
+    @Test
+    public void testParseDates_parsedSuccesfully() {
+        parsedResult.put(date_on_format, date_on_result);
+        parsedResult.put(date_from_format, date_from_result);
+        parsedResult.put(date_to_format, date_to_result);
+        assertArrayEquals(test_result, ParseUtil.parseDates(parsedResult));
+    }
+    
+    @Test
+    public void testParseDates_parsedFailed() {
+        parsedResult.put(date_on_format, date_on_result);
+        parsedResult.put(date_from_format, date_from_result);
+        parsedResult.put(date_to_format, date_to_result);
+        assertArrayEquals(incorrect_test_result, ParseUtil.parseDates(parsedResult));
+    }
 }
