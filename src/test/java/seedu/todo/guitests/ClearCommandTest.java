@@ -228,7 +228,7 @@ public class ClearCommandTest extends GuiTest {
     
     /**
      * Method for testing if task and events have been cleared from the GUI.
-     * This runs a command and checks if the consoleInputTextField matches the error matches
+     * This runs a command and checks if the consoleInputTextField matches with the expect error message.
      */
     public void assertClearFailedBySyntax(String command) {
         console.runCommand("add test"); //To initialise UI

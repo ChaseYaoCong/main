@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.CalendarItem;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
@@ -323,6 +324,23 @@ public class FilterUtil {
         return filteredEvents;
     }
     
+    /*==================== Methods to Check Command Conflict ===================================*/
+    
+    /*
+     * To be use to check if there are more than 1 event type entered by user 
+     * 
+     * @return true if more than 1 event type found, false, if only 1 or 0 event type found
+     */
+    public static boolean isItemTypeConflict(String input) {
+        int itemTypeFound = 0;
+        for (int i = 0; i < Tokenizer.EVENT_TYPE_DEFINITION.length; i ++) {
+            if(input.contains(Tokenizer.EVENT_TYPE_DEFINITION[i])) {
+                itemTypeFound ++;
+            }
+        }
+        return itemTypeFound > 1;
+    }
+    
     /*==================== Helper Methods for filtering CalendarItem name ======================*/
     
     /*
@@ -351,4 +369,5 @@ public class FilterUtil {
         }
         return false;
     }
+    
 }
