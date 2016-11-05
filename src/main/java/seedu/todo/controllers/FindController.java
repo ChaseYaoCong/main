@@ -30,9 +30,9 @@ public class FindController implements Controller {
     private static final String NAME = "Find";
     private static final String DESCRIPTION = "Find all tasks and events based on the provided keywords.\n" + 
         "This command will be searching with non-case sensitive keywords.";
-    private static final String COMMAND_SYNTAX = "find <name> [on <date>] [task/event]";
-    private static final String FIND_TASK_SYNTAX = "find <name> task [complete/incomplete]";
-    private static final String FIND_EVENT_SYNTAX = "find <name> event [over/ongoing]";
+    private static final String COMMAND_SYNTAX = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
+    private static final String FIND_TASK_SYNTAX = "find \"name\" task \"complete/incomplete\"";
+    private static final String FIND_EVENT_SYNTAX = "find \"name\" event \"over/ongoing\"";
     private static final String COMMAND_WORD = "find";
     
     private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
@@ -40,8 +40,8 @@ public class FindController implements Controller {
     private static final String MESSAGE_NO_KEYWORD_FOUND = "No keyword found!";
     private static final String MESSAGE_DATE_CONFLICT = "Unable to find!\nMore than 1 date criteria is provided!";
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to find!\nThe natural date entered is not supported.";
-    private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with [complete] or [incomplete]";
-    private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with [over] or [current]";
+    private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with complete or incomplete";
+    private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with over or current";
     private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
     
     private static final int COMMAND_INPUT_INDEX = 0;
