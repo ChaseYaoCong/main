@@ -29,6 +29,12 @@ public class ListCommandTest extends GuiTest {
     private static final int TASK_INDEX = 0;
     private static final int EVENT_INDEX = 1;
     
+    private static final String LIST_TASK_SYNTAX = "list task \"complete/incomplete\"";
+    private static final String LIST_EVENT_SYNTAX = "list event \"over/current\"";
+    private static final String LIST_DATE_SYNTAX = "list \"date\" [or from \"date\" to \"date\"]";
+    private static final String LIST_COMMAND_SYNTAX = "list \"task complete/incomplete\" or \"event over/ongoing\""
+            + "[on date] or [from date to date]";
+    
     @Test
     public void listAllTaskAndEvent() {
         String command = "list";
@@ -78,18 +84,45 @@ public class ListCommandTest extends GuiTest {
     }
     
     @Test
-    public void listWithItemStatus() {
-        
+    public void listByDate() {
+        String command = "list by today";
+        assertListByDate(command, TODAY_DATE);
+        command = "list today";
+        assertListByDate(command, TODAY_DATE);
     }
     
     @Test
     public void listWithInvalidDateSyntax() {
-        
+        String command = "list by todar";
+        assertListFailed(command, LIST_DATE_SYNTAX);
+        command = "list today over";
+        assertListFailed(command, LIST_DATE_SYNTAX);
+        command = "list todar";
+        assertListFailed(command, LIST_DATE_SYNTAX);
     }
     
     @Test
-    public void listWithInvalidSyntax() {
-        
+    public void listWithTaskSyntaxError() {
+        String command = "list task over";
+        assertListFailed(command, LIST_TASK_SYNTAX);
+        command = "list task current";
+        assertListFailed(command, LIST_TASK_SYNTAX);        
+    }
+    
+    @Test
+    public void listWithEventSyntaxError() {
+        String command = "list event complete";
+        assertListFailed(command, LIST_EVENT_SYNTAX);
+        command = "list event incomplete";
+        assertListFailed(command, LIST_EVENT_SYNTAX);
+    }
+    
+    @Test
+    public void listWithCommandSyntaxError() {
+        String command = "list task event";
+        assertListFailed(command, LIST_COMMAND_SYNTAX);
+        command = "list event task";
+        assertListFailed(command, LIST_COMMAND_SYNTAX);
     }
     
     /*========================================== Initalise DB Methods ==============================*/
@@ -194,6 +227,15 @@ public class ListCommandTest extends GuiTest {
             assertEquals(eventItem.getName(), calendarItems.get(EVENT_INDEX).getName());
         }
         console.runCommand("clear");
+    }
+    
+    /**
+     * Method for testing if task and events have failed to list.
+     * This runs a command and checks if the consoleInputTextField matches with the expect error message.
+     */
+    public void assertListFailed(String command, String expectedDisambiguation) {
+        console.runCommand(command);
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation); 
     }
     
 }
