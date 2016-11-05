@@ -332,13 +332,7 @@ public class FilterUtil {
      * @return true if more than 1 event type found, false, if only 1 or 0 event type found
      */
     public static boolean isItemTypeConflict(String input) {
-        int itemTypeFound = 0;
-        for (int i = 0; i < Tokenizer.EVENT_TYPE_DEFINITION.length; i ++) {
-            if(input.contains(Tokenizer.EVENT_TYPE_DEFINITION[i])) {
-                itemTypeFound ++;
-            }
-        }
-        return itemTypeFound > 1;
+        return input.contains("task") && input.contains("event");
     }
     
     /*==================== Helper Methods for filtering CalendarItem name ======================*/
