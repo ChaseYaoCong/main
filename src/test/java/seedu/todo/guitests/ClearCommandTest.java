@@ -1,239 +1,93 @@
 package seedu.todo.guitests;
 
-import static org.junit.Assert.*;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import seedu.todo.guitests.guihandles.TaskListDateItemHandle;
-import seedu.todo.models.CalendarItem;
+import seedu.todo.commons.util.DateUtil;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
-//@@author A0139922Y
+/*
+ * @@author A0093907W
+ */
 public class ClearCommandTest extends GuiTest {
-
-    // Variables to be use by Test Cases
-    private static final String TODAY = "today";
-    private static final LocalDateTime TODAY_DATE = LocalDateTime.now();
-    private static final String TOMORROW = "tomorrow";
-    private static final LocalDateTime TOMORROW_DATE = LocalDateTime.now().plusDays(1);
-    private static final String ADD = "add";
-    private final List<CalendarItem> calendarItems = getCalendarItems();
+    private final LocalDateTime oneDayFromNow = LocalDateTime.now().plusDays(1);
+    private final String oneDayFromNowString = DateUtil.formatDate(oneDayFromNow);
+    private final String oneDayFromNowIsoString = DateUtil.formatIsoDate(oneDayFromNow);
+    private final LocalDateTime twoDaysFromNow = LocalDateTime.now().plusDays(2);
+    private final String twoDaysFromNowString = DateUtil.formatDate(twoDaysFromNow);
+    private final String twoDaysFromNowIsoString = DateUtil.formatIsoDate(twoDaysFromNow);
     
-    @Test
-    public void clearAllTaskAndEvent() {
-        String command = "clear";
-        assertClearSuccess(command);
-    }
+    String commandAdd1 = String.format("add task Buy KOI by \"%s 8pm\"", oneDayFromNowString);
+    Task task1 = new Task();
+    String commandAdd2 = String.format("add task Buy Milk by \"%s 9pm\"", twoDaysFromNowString);
+    Task task2 = new Task();
     
-    @Test
-    public void clearAllTask() {
-        String command = "clear task";
-        assertClearSuccessByTask(command);
-    }
+    String commandAdd3 = String.format("add event Some Event from \"%s 4pm\" to \"%s 5pm\"",
+            oneDayFromNowString, oneDayFromNowString);
+    Event event3 = new Event();
+    String commandAdd4 = String.format("add event Another Event from \"%s 8pm\" to \"%s 9pm\"",
+            twoDaysFromNowString, twoDaysFromNowString);
+    Event event4 = new Event();
     
-    @Test
-    public void clearAllEvent() {
-        String command = "clear event";
-        assertClearSuccessByEvent(command);
-    }
-    
-    @Test
-    public void clearBySingleDate() {
-        String command = "clear today";
-        assertClearSuccessByDate(command, TODAY_DATE);
-        command = "clear by today";
-        assertClearSuccessByDate(command, TODAY_DATE);
-    }
-    
-    @Test
-    public void clearByDateRange() {
-        String command = "clear from today to today";
-        assertClearSuccessByDate(command, TODAY_DATE);
-        command = "clear from today to tomorrow";
-        assertClearSuccessByDate(command, TODAY_DATE);
-        assertClearSuccessByDate(command, TOMORROW_DATE); 
-    }
-    
-    @Test
-    public void clearWithInvalidDate() {
-        String command = "clear toda";
-        assertClearFailedByDate(command);
-    }
-    
-    @Test
-    public void clearWithInvalidDateSyntax() {
-        String command = "clear today on tomorrow";
-        assertClearFailedByDate(command);
-        command = "clear today to tomrrow";
-        assertClearFailedByDate(command);
-        command = "clear by today to tomorrow";
-        assertClearFailedByDate(command);
-    }
-    
-    @Test
-    public void clearWithInvalidStatus() {
-        String command = "clear over";
-        assertClearFailedBySyntax(command);
-        command = "clear complete";
-        assertClearFailedBySyntax(command);
-    }
-    
-    @Test
-    public void clearWithInvalidItemType() {
-        String command = "clear task event";
-        assertClearFailedBySyntax(command);
-        command = "clear event task";
-        assertClearFailedBySyntax(command);
-    }
-    
-    /*
-     * Use to generate data for Test DB
-     * 
-     */
-    private List<CalendarItem> getCalendarItems() {
-        Event event = new Event();
-        event.setName("Presentation in the Future");
-        event.setStartDate(TOMORROW_DATE);
-        event.setEndDate(TOMORROW_DATE);
-        Task task = new Task();
-        task.setName("Buy Milk");
-        task.setCalendarDateTime(TODAY_DATE);
-        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
-        calendarItems.add(task);
-        calendarItems.add(event);
-        return calendarItems;
-    }
-    
-    /*
-     * Use to initialise Test DB for all different test cases
-     * 
-     */
-    private void initialiseTestDB() {
-        String addCommand = "";
-        for (int i = 0; i < calendarItems.size(); i ++) {
-            CalendarItem calendarItem = calendarItems.get(i);
-            if (calendarItems.get(i) instanceof Task) {
-                addCommand = formatAddTaskCommand((Task) calendarItem);
-            }
-            else if (calendarItems.get(i) instanceof Event) {
-                addCommand = formatAddEventCommand((Event) calendarItem);
-            }
-            console.runCommand(addCommand);
-        }
-    }
-    
-    /*
-     * Formatting to the correct add Event command
-     * 
-     */
-    private String formatAddEventCommand(Event event) {
-        String dateFrom = "from";
-        String dateTo = "to";
-        String eventType = "event";
-        return String.format("%s %s %s %s %s %s %s", ADD, eventType, event.getName(), dateFrom, TOMORROW, dateTo, TOMORROW);
-    }
-    
-    /*
-     * Formatting to the correct add Task command
-     * 
-     */
-    private String formatAddTaskCommand(Task task) {
-        String dateBy = "by";
-        return String.format("%s %s %s %s", ADD, task.getName(), dateBy, TODAY);
-    }
-    
-    /**
-     * Method for testing if task and events have been cleared from the GUI.
-     * This runs a command and checks if TaskList based on date has been cleared by checking null.
-     */
-    private void assertClearSuccess(String command) {
-        // Run the command in the console.
-        getCalendarItems();
-        initialiseTestDB();
-        console.runCommand(command);
+    public ClearCommandTest() {
+        task1.setName("Buy KOI");
+        task1.setCalendarDateTime(DateUtil.parseDateTime(
+                String.format("%s 20:00:00", oneDayFromNowIsoString)));
+        task2.setName("Buy Milk");
         
-        for (int i = 0; i < calendarItems.size(); i ++) {
-            CalendarItem calendarItem = calendarItems.get(i);
-            LocalDate calendarItemStartDate = calendarItem.getCalendarDateTime().toLocalDate();
-            TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(calendarItemStartDate);
-            assertNull(dateItem);
-        }
+        task2.setDueDate(DateUtil.parseDateTime(
+                String.format("%s 21:00:00", twoDaysFromNowIsoString)));
+        
+        event3.setName("Some Event");
+        event3.setStartDate(DateUtil.parseDateTime(
+                String.format("%s 16:00:00", oneDayFromNowIsoString)));
+        event3.setEndDate(DateUtil.parseDateTime(
+                String.format("%s 17:00:00", oneDayFromNowIsoString)));
+        
+        event4.setName("Another Event");
+        event4.setStartDate(DateUtil.parseDateTime(
+                String.format("%s 20:00:00", twoDaysFromNowIsoString)));
+        event4.setEndDate(DateUtil.parseDateTime(
+                String.format("%s 21:00:00", twoDaysFromNowIsoString)));
     }
     
-    /**
-     * Method for testing if tasks have been cleared from the GUI.
-     * This runs a command and checks if TaskList based on Task's date has been cleared by checking null.
-     */
-    private void assertClearSuccessByTask(String command) {
-        getCalendarItems();
-        initialiseTestDB();
-        console.runCommand(command);
-        for (int i = 0; i < calendarItems.size(); i ++) {
-            CalendarItem calendarItem = calendarItems.get(i);
-            if (calendarItem instanceof Task) {
-                LocalDate calendarItemStartDate = calendarItem.getCalendarDateTime().toLocalDate();
-                TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(calendarItemStartDate);
-                assertNull(dateItem);
-            }
-        }
+    @Before
+    public void initFixtures() {
+        console.runCommand("clear");
+        assertTaskVisibleAfterCmd(commandAdd1, task1);
+        assertTaskVisibleAfterCmd(commandAdd2, task2);
+        assertEventVisibleAfterCmd(commandAdd3, event3);
+        assertEventVisibleAfterCmd(commandAdd4, event4);
     }
     
-    /**
-     * Method for testing if events have been cleared from the GUI.
-     * This runs a command and checks if TaskList based on Event's date has been cleared by checking null.
-     */
-    private void assertClearSuccessByEvent(String command) {
-        getCalendarItems();
-        initialiseTestDB();
-        console.runCommand(command);
-        for (int i = 0; i < calendarItems.size(); i ++) {
-            CalendarItem calendarItem = calendarItems.get(i);
-            if (calendarItem instanceof Event) {
-                LocalDate calendarItemStartDate = calendarItem.getCalendarDateTime().toLocalDate();
-                TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(calendarItemStartDate);
-                assertNull(dateItem);
-            }
-        }
+    @Test
+    public void fixtures_test() {
+        console.runCommand("clear");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskNotVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventNotVisibleAfterCmd("list", event4);
     }
     
-    /**
-     * Method for testing if all tasks and events have been cleared from the GUI by the particular date.
-     * This runs a command and checks if TaskList based on date has been cleared by checking null.
-     */
-    private void assertClearSuccessByDate(String command, LocalDateTime date) {
-        getCalendarItems();
-        initialiseTestDB();
-        console.runCommand(command);
-        LocalDate calendarItemStartDate = date.toLocalDate();
-        TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(calendarItemStartDate);
-        assertNull(dateItem);
+    @Test
+    public void clear_all_tasks() {
+        console.runCommand("clear tasks");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskNotVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
     }
     
-    /**
-     * Method for testing if task and events have been cleared from the GUI.
-     * This runs a command and checks if the consoleInputTextField matches the error matches
-     */
-    public void assertClearFailedByDate(String command) {
-        console.runCommand("add test"); //To initialise UI
-        console.runCommand(command);
-        String expectedDisambiguation = "clear \"date\" [or from \"date\" to \"date\"]";
-        assertEquals(console.getConsoleInputText(), expectedDisambiguation); 
+    @Test
+    public void clear_all_events() {
+        console.runCommand("clear events");
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventNotVisibleAfterCmd("list", event4);
     }
     
-    /**
-     * Method for testing if task and events have been cleared from the GUI.
-     * This runs a command and checks if the consoleInputTextField matches with the expect error message.
-     */
-    public void assertClearFailedBySyntax(String command) {
-        console.runCommand("add test"); //To initialise UI
-        console.runCommand(command);
-        String expectedDisambiguation = "clear \"task/event\" on \"date\"";
-        assertEquals(console.getConsoleInputText(), expectedDisambiguation); 
-    }
 }
