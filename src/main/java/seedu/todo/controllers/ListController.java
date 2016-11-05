@@ -138,12 +138,13 @@ public class ListController implements Controller {
     private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates, boolean isEventStatusProvided) {
         
         //date enter with COMMAND_WORD e.g list today
-        String date = ParseUtil.getTokenResult(parsedResult, "default");
+        String date = ParseUtil.getTokenResult(parsedResult, Tokenizer.DEFAULT_TOKEN);
+        
         if (date != null && parsedDates != null) {
             Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
             return null;
         }
-
+        
         LocalDateTime dateCriteria = null;
         LocalDateTime dateOn = null;
         LocalDateTime dateFrom = null;
@@ -151,7 +152,7 @@ public class ListController implements Controller {
         
         if (date != null) {
             try {
-                dateCriteria = DateUtil.floorDate(DateParser.parseNatural(date));
+                dateCriteria = DateParser.parseNatural(date);
             } catch (InvalidNaturalDateException e) {
                 Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
                 return null;
@@ -159,33 +160,30 @@ public class ListController implements Controller {
         }
         
         if (parsedDates != null) {
+            if (isEventStatusProvided) {
+                //detect date conflict
+                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+                return null;
+            }
+            
             String naturalOn = parsedDates[DATE_ON_INDEX];
             String naturalFrom = parsedDates[DATE_FROM_INDEX];
             String naturalTo = parsedDates[DATE_TO_INDEX];
-            
             if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
                 //date conflict detected
                 Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
                 return null;
             }
-    
             // Parse natural date using Natty.
             try {
                 dateOn = naturalOn == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalOn)); 
                 dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalFrom)); 
                 dateTo = naturalTo == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalTo));
             } catch (InvalidNaturalDateException e) {
-                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
-                return null;
-            }
+                    Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+                    return null;
+            }           
         }
-        
-        if (parsedDates != null && isEventStatusProvided) {
-            //detect date conflict
-            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-            return null;
-        }
-       
         return new LocalDateTime[] { dateCriteria, dateOn, dateFrom, dateTo };
     }
     
