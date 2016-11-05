@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import seedu.todo.commons.exceptions.InvalidNaturalDateException;
 import seedu.todo.commons.exceptions.ParseException;
 import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.FilterUtil;
 import seedu.todo.commons.util.ParseUtil;
 import seedu.todo.commons.util.StringUtil;
+import seedu.todo.controllers.concerns.DateParser;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.Event;
@@ -27,8 +29,8 @@ public class ClearController implements Controller {
     
     private static final String NAME = "Clear";
     private static final String DESCRIPTION = "Clear all tasks/events or by specify date.";
-    private static final String COMMAND_SYNTAX = "clear [task/event] [on date]";
-    private static final String CLEAR_DATE_SYNTAX = "clear [date] or [from <date> to <date>]";
+    private static final String COMMAND_SYNTAX = "clear \"task/event\" on \"date\"";
+    private static final String CLEAR_DATE_SYNTAX = "clear \"date\" [or from \"date\" to \"date\"]";
     private static final String COMMAND_WORD = "clear";
     
     private static final String MESSAGE_CLEAR_SELECTED_SUCCESS = "A total of %s deleted!";
@@ -119,8 +121,9 @@ public class ClearController implements Controller {
         LocalDateTime dateTo = null;
         
         if (date != null) {
-            dateCriteria = DateUtil.parseNatural(date);
-            if (dateCriteria == null) {
+            try {
+                dateCriteria = DateParser.parseNatural(date);
+            } catch (InvalidNaturalDateException e) {
                 Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
                 return ;
             }
@@ -136,17 +139,16 @@ public class ClearController implements Controller {
                 return;
             }
             // Parse natural date using Natty.
-            dateOn = naturalOn == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalOn)); 
-            dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalFrom)); 
-            dateTo = naturalTo == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalTo));
+            try {
+                dateOn = naturalOn == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalOn)); 
+                dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalFrom)); 
+                dateTo = naturalTo == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalTo));
+            } catch (InvalidNaturalDateException e) {
+                    Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+                    return ;
+            }
         }
-        
-        if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
-            //Natty failed to parse date
-            Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
-            return ;
-        }
-        
+        System.out.println(dateCriteria);
         deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
     }
 
@@ -165,7 +167,6 @@ public class ClearController implements Controller {
                 tasks = new ArrayList<Task>();
             }
         } 
-        
         if (dateCriteria != null) {
             tasks = FilterUtil.filterTaskBySingleDate(tasks, dateCriteria);
             events = FilterUtil.filterEventBySingleDate(events, dateCriteria);
