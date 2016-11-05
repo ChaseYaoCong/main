@@ -183,28 +183,13 @@ public class ClearController implements Controller {
             return true;
         }
         // Check if more than 1 item type is provided
-        if (isItemTypeConflict(input)) {
+        if (FilterUtil.isItemTypeConflict(input)) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_ITEM_TYPE_CONFLICT);
             return true;
         }
         return false;
     }
-
-    /*
-     * To be use to check if there are more than 1 event type entered by user 
-     * 
-     * @return true if more than 1 event type found, false, if only 1 or 0 event type found
-     */
-    private boolean isItemTypeConflict(String input) {
-        int itemTypeFound = 0;
-        for (int i = 0; i < Tokenizer.EVENT_TYPE_DEFINITION.length; i ++) {
-            if(input.contains(Tokenizer.EVENT_TYPE_DEFINITION[i])) {
-                itemTypeFound ++;
-            }
-        }
-        return itemTypeFound > 1;
-    }
-
+    
     /*
      * Delete the selected Tasks and Events based on the date criteria the user has input
      * 
