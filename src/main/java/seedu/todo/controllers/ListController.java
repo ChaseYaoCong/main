@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import seedu.todo.commons.exceptions.InvalidNaturalDateException;
 import seedu.todo.commons.exceptions.ParseException;
 import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.FilterUtil;
 import seedu.todo.commons.util.ParseUtil;
 import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Tokenizer;
+import seedu.todo.controllers.concerns.DateParser;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
@@ -112,13 +114,8 @@ public class ListController implements Controller {
         }
         
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        if (parsedDates != null && isEventStatusProvided) {
-            //detect date conflict
-            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-            return;
-        }
         
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates, isEventStatusProvided);
         if (validDates == null) {
             return; // Break out when date conflict found
         }
@@ -138,7 +135,7 @@ public class ListController implements Controller {
      * 
      * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates, boolean isEventStatusProvided) {
         
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, "default");
@@ -153,11 +150,12 @@ public class ListController implements Controller {
         LocalDateTime dateTo = null;
         
         if (date != null) {
-            dateCriteria = DateUtil.floorDate(DateUtil.parseNatural(date));
-            if (dateCriteria == null) {
+            try {
+                dateCriteria = DateUtil.floorDate(DateParser.parseNatural(date));
+            } catch (InvalidNaturalDateException e) {
                 Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
                 return null;
-            } 
+            }
         }
         
         if (parsedDates != null) {
@@ -172,14 +170,19 @@ public class ListController implements Controller {
             }
     
             // Parse natural date using Natty.
-            dateOn = naturalOn == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalOn)); 
-            dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalFrom)); 
-            dateTo = naturalTo == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalTo));
+            try {
+                dateOn = naturalOn == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalOn)); 
+                dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalFrom)); 
+                dateTo = naturalTo == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalTo));
+            } catch (InvalidNaturalDateException e) {
+                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+                return null;
+            }
         }
         
-        if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
-            //Natty failed to parse date
-            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+        if (parsedDates != null && isEventStatusProvided) {
+            //detect date conflict
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
             return null;
         }
        
