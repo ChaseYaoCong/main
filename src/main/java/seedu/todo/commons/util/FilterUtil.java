@@ -118,6 +118,7 @@ public class FilterUtil {
         while (iterator.hasNext()) {
             Task task = iterator.next();
             assert date != null;
+            date = DateUtil.floorDate(date);
             LocalDateTime taskDate = DateUtil.floorDate(task.getCalendarDateTime());
             
             //May have floating tasks
