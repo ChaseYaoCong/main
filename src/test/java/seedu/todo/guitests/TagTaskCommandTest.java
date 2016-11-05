@@ -26,11 +26,11 @@ public class TagTaskCommandTest extends GuiTest {
         //initializeTestCase(testCase1, task);
         command = "tag 1 CS3216";
         
-        //assertTaskTaggedSuccess(command, task);
+        assertTaskTaggedSuccess(command, task);
         
         task.setName("testcase2");
         command = "tag 1 CS3216, CS3217";
-        //assertTaskTaggedSuccess(command, task);
+        assertTaskTaggedSuccess(command, task);
         
         //adding multiple tags
 //        task = new Task();
@@ -45,18 +45,18 @@ public class TagTaskCommandTest extends GuiTest {
      * This runs a command and checks if TagList contains the list of tags
      * 
      * */
-//    private void assertTaskTaggedSuccess(String command, Task taskToCheck) {
-//        // Run the command in the console.
-//        console.runCommand(command);
-//        ArrayList<String> taskTagList = taskToCheck.getTagList();
-//        for (int i = 0; i < taskTagList.size(); i ++) {
-//            String currentTag = taskTagList.get(i);
-//            TagListItemHandle tagItem = sidebar.getTagListItem(currentTag);
-//            assertTrue(currentTag.equals(tagItem.getName()));
-//        }
-//        
-//
-//    }
+    private void assertTaskTaggedSuccess(String command, Task taskToCheck) {
+        // Run the command in the console.
+        console.runCommand(command);
+        ArrayList<String> taskTagList = taskToCheck.getTagList();
+        for (int i = 0; i < taskTagList.size(); i ++) {
+            String currentTag = taskTagList.get(i);
+            TagListItemHandle tagItem = sidebar.getTagListItem(currentTag);
+            assertTrue(currentTag.equals(tagItem.getName()));
+        }
+        
+
+    }
     
     /**
      * @@author A0139922Y
