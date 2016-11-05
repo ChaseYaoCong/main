@@ -137,14 +137,14 @@ public class AddController implements Controller {
         LocalDateTime parsedDateTo = DateUtil.parseTimeStamp(dateTo, dateFrom, false);
         dateFrom = parsedDateFrom;
         dateTo = parsedDateTo;
+        boolean isSuccessfullyTagged = false;
         
         if (isTask) {
             Task newTask = db.createTask();
             newTask.setName(name);
             newTask.setDueDate(dateFrom);
             if (tag != null) {
-                newTask.addTag(tag);
-                db.addIntoTagList(new String[] { tag });
+                isSuccessfullyTagged = newTask.addTag(tag);
             }
         } else {
             Event newEvent = db.createEvent();
@@ -152,9 +152,11 @@ public class AddController implements Controller {
             newEvent.setStartDate(dateFrom);
             newEvent.setEndDate(dateTo);
             if (tag != null) {
-                newEvent.addTag(tag);
-                db.addIntoTagList(new String[] { tag });
+                isSuccessfullyTagged = newEvent.addTag(tag);
             }
+        }
+        if (isSuccessfullyTagged) {
+            db.addIntoTagList(new String[] { tag });
         }
         db.save();
     }

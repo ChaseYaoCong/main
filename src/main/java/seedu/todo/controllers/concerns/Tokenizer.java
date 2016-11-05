@@ -20,7 +20,26 @@ public class Tokenizer {
 
     private static final String MESSAGE_UNMATCHED_QUOTES = "Unmatched double-quotes detected.";
     private final static String QUOTE = "\"";
-
+    
+    //token variables
+    public static final String DEFAULT_TOKEN = "default";
+    public static final String EVENT_TYPE_TOKEN = "eventType";
+    public static final String TIME_TOKEN = "time";
+    public static final String TASK_STATUS_TOKEN = "taskStatus";
+    public static final String EVENT_STATUS_TOKEN = "eventStatus";
+    public static final String TIME_FROM_TOKEN = "timeFrom";
+    public static final String TIME_TO_TOKEN = "timeTo";
+    public static final String ITEM_NAME_TOKEN = "itemName";
+    public static final String TAG_NAME_TOKEN = "tagName";
+    
+    //All token definition except for default definition
+    public static final String[] EVENT_TYPE_DEFINITION = new String[] { "event", "events", "task", "tasks" };
+    public static final String[] TIME_DEFINITION = new String[] { "at", "by", "on", "time", "date" };
+    public static final String[] TASK_STATUS_DEFINITION = new String[] { "complete" , "completed", "incomplete", "incompleted"};
+    public static final String[] EVENT_STATUS_DEFINITION = new String[] { "over" , "ongoing", "current", "schedule" , "scheduled"};
+    public static final String[] TIME_FROM_DEFINITION = new String[] { "from" };
+    public static final String[] TIME_TO_DEFINITION = new String[] { "to", "before", "until" };
+    
     /**
      * A private class to tag a string as a token or a quote.
      * @author louietyj

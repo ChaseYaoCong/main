@@ -123,7 +123,6 @@ public class ListController implements Controller {
             Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
             return;
         }
-        
 
         LocalDateTime dateCriteria = null;
         LocalDateTime dateOn = null;

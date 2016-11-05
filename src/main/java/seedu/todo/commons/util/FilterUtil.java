@@ -42,6 +42,7 @@ public class FilterUtil {
                 String matchingName = nameListIterator.next();
                 if (matchWithFullName(task, matchingName) || matchWithSubName(task, matchingName)) {
                     filteredTasks.add(task);
+                    break;
                 }
             }
             nameListIterator = nameList.iterator();
@@ -118,6 +119,7 @@ public class FilterUtil {
         while (iterator.hasNext()) {
             Task task = iterator.next();
             assert date != null;
+            date = DateUtil.floorDate(date);
             LocalDateTime taskDate = DateUtil.floorDate(task.getCalendarDateTime());
             
             //May have floating tasks
@@ -159,6 +161,8 @@ public class FilterUtil {
                 taskDate = DateUtil.floorDate(LocalDateTime.MIN);
             }
             
+            startDate = DateUtil.floorDate(startDate);
+            endDate = DateUtil.ceilDate(endDate);
             if (taskDate.compareTo(startDate) >= 0 && taskDate.compareTo(endDate) <= 0) {
                 filteredTasks.add(task);
             }
@@ -189,6 +193,7 @@ public class FilterUtil {
                 String matchingName = nameListIterator.next().toLowerCase();
                 if (matchWithFullName(event, matchingName) || matchWithSubName(event, matchingName)) {
                     filteredEvents.add(event);
+                    break;
                 }
             }
             nameListIterator = nameList.iterator();
@@ -203,7 +208,7 @@ public class FilterUtil {
      * @param namelist
      *             Search and filter based on the name list
      */
-    public static List<Event> filterEventByTags (List<Event> events, HashSet<String> nameList) {
+    public static List<Event> filterEventByTags(List<Event> events, HashSet<String> nameList) {
         List<Event> filteredEvents = new ArrayList<Event>();
         //if name list size is 0, means not searching by tags 
         if (nameList.size() == 0) {
@@ -264,8 +269,8 @@ public class FilterUtil {
         Iterator<Event> iterator = events.iterator();
         while (iterator.hasNext()) {
             Event event = iterator.next();
+            date = DateUtil.floorDate(date);
             LocalDateTime eventDate = DateUtil.floorDate(event.getStartDate());
-            //May have floating tasks
             if (eventDate != null && eventDate.equals(date)) {
                 filteredEvents.add(event);
             }
@@ -308,6 +313,9 @@ public class FilterUtil {
             if (eventEndDate == null) {
                 eventEndDate = DateUtil.floorDate(LocalDateTime.MAX);
             }
+            
+            startDate = DateUtil.floorDate(startDate);
+            endDate = DateUtil.ceilDate(endDate);
             if (eventStartDate.compareTo(startDate) >= 0 && eventEndDate.compareTo(endDate) <= 0) {
                 filteredEvents.add(event);
             }
