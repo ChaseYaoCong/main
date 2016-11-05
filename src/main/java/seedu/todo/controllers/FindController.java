@@ -29,7 +29,7 @@ public class FindController implements Controller {
     
     private static final String NAME = "Find";
     private static final String DESCRIPTION = "Find all tasks and events based on the provided keywords.\n" + 
-    "This command will be searching with non-case sensitive keywords.";
+        "This command will be searching with non-case sensitive keywords.";
     private static final String COMMAND_SYNTAX = "find <name> [on <date>] [task/event]";
     private static final String FIND_TASK_SYNTAX = "find <name> task [complete/incomplete]";
     private static final String FIND_EVENT_SYNTAX = "find <name> event [over/ongoing]";
@@ -60,7 +60,8 @@ public class FindController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        return (StringUtil.splitStringBySpace(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
+        String command = StringUtil.splitStringBySpace(input.toLowerCase())[COMMAND_INPUT_INDEX];
+        return (command).equals(COMMAND_WORD) ? 1 : 0;
     }
     
     private static Map<String, String[]> getTokenDefinitions() {
@@ -87,23 +88,26 @@ public class FindController implements Controller {
         HashSet<String> tagNameList = new HashSet<String>();
         HashSet<String> keywordList = new HashSet<String>();
         
-        //to be use to be either name or tag
+        // To be use to be filter out name and tag names
         updateHashList(parsedResult, keywordList, Tokenizer.DEFAULT_TOKEN);
         updateHashList(parsedResult, itemNameList, Tokenizer.ITEM_NAME_TOKEN);
         updateHashList(parsedResult, tagNameList, Tokenizer.TAG_NAME_TOKEN);
         itemNameList.addAll(keywordList);
         tagNameList.addAll(keywordList);
         
+        // Show console output message, since no keyword found
         if (keywordList.size() == 0 && itemNameList.size() == 0 && tagNameList.size() == 0) {
             //No keyword provided, display error
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_NO_KEYWORD_FOUND);
             return;
         }
         
+        // Check if input includes itemType and itemStatus
         boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_TYPE_TOKEN);
         boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.TASK_STATUS_TOKEN);
         boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_STATUS_TOKEN);
         
+        // Set item type
         boolean isTask = true; //default
         if (isItemTypeProvided) {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
@@ -113,6 +117,7 @@ public class FindController implements Controller {
             return; // Break out if found error
         }
         
+        // Set item status
         boolean isCompleted = false; //default 
         boolean isOver = false; //default
         if (isTaskStatusProvided) {
@@ -122,13 +127,14 @@ public class FindController implements Controller {
             isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
         }
         
+        // Get dates from input
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        
         LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
         if (validDates == null) {
             return; // Break out when date conflict found
         }
         
+        // Set dates found
         LocalDateTime dateOn = validDates[DATE_ON_INDEX];
         LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
         LocalDateTime dateTo = validDates[DATE_TO_INDEX];
@@ -164,8 +170,10 @@ public class FindController implements Controller {
             tasks = new ArrayList<Task>();
         }
         
+        // Filter Task and Event by date
         filterTasksAndEventsByDate(tasks, events, dateOn, dateFrom, dateTo);
         
+        // Show messaeg as no items had been found
         if (tasks.size() == 0 && events.size() == 0) {
             Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
             return;
@@ -177,8 +185,13 @@ public class FindController implements Controller {
     }
 
     /*
-     * Filter out the selected tasks and events based on the search criteria
+     * Filter out the selected tasks and events based on the date that has been parsed
+     * and update tasks and events accordingly
      * 
+     * @param tasks
+     *            List of Task items
+     * @param events           
+     *            List of Event items
      */
     private void filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, 
             LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
@@ -194,6 +207,16 @@ public class FindController implements Controller {
         }
     }  
 
+    /*
+     * Filter out all the events based on the name list that has been parsed.
+     * This method also ensure that no duplicate event will be return. 
+     * 
+     * @param itemNameList
+     *            a list of item name that has been parsed from input
+     * @param tagNameList           
+     *            a List of tag name that has been parsed from input
+     * @return a list of Event which names or tag names is filtered with the list
+     */
     private List<Event> filterByEventNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
             List<Event> events) {
         HashSet<Event> mergedEvents = new HashSet<Event>();
@@ -205,6 +228,16 @@ public class FindController implements Controller {
         return events;
     }
 
+    /*
+     * Filter out all the tasks based on the name list that has been parsed.
+     * This method also ensure that no duplicate task will be return. 
+     * 
+     * @param itemNameList
+     *            a list of item name that has been parsed from input
+     * @param tagNameList           
+     *            a List of tag name that has been parsed from input
+     * @return a list of Task which names or tag names is filtered with the list
+     */
     private List<Task> filterByTaskNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList, 
             List<Task> tasks) {
         HashSet<Task> mergedTasks = new HashSet<Task>();
@@ -217,7 +250,7 @@ public class FindController implements Controller {
     }
     
     /**
-     * Extract the parsed result and update the hash list
+     * Extract the parsed result and update into the hashlist
      * @param parsedResult
      */
     private void updateHashList(Map<String, String[]> parsedResult, HashSet<String> hashList, 
@@ -237,7 +270,7 @@ public class FindController implements Controller {
     /*
      * To be use to check if there are any command syntax error
      * 
-     * @return true, if there is error in command syntax, false if syntax is allowed
+     * @return true, if there is an error in the command syntax, false if syntax is allowed
      */
     private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, 
             boolean isTask, boolean isItemTypeProvided, String input) {
