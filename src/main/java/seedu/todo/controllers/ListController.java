@@ -163,7 +163,8 @@ public class ListController implements Controller {
      * @param events           
      *            List of Event items
      * @param parsedResult
-     *            Parsed result by Tokenizer, in order to filter out the dates           
+     *            Parsed result by Tokenizer, in order to filter out the dates   
+     * @return a List of CalendarItem that is been filtered by date(s)                   
      */
     private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
         // Get dates from input
@@ -206,10 +207,18 @@ public class ListController implements Controller {
     /*
      * Filter out the selected tasks and events based on the status and update tasks and events accordingly
      * 
+     * @param parsedResult
+     *            parsedResult by Tokenizer
+     * @param isTaskStatusProvided
+     *            true if complete or incomplete is found, else false
+     * @param isEventStatusProvided
+     *            true if over or current is found, else false                   
      * @param tasks
      *            List of Task items
      * @param events           
      *            List of Event items
+     * @return        
+     *            tasks and events in a list form by status
      */
     private List<CalendarItem> filterTasksAndEventsByStatus(Map<String, String[]> parsedResult, boolean isTaskStatusProvided,
             boolean isEventStatusProvided, List<Task> tasks, List<Event> events) {
@@ -238,60 +247,8 @@ public class ListController implements Controller {
         calendarItems.addAll(filteredEvents);
         return calendarItems;
     }
-
-    /*
-     * Filter out the selected tasks and events based on the search criteria
-     * 
-     */
-    private void filterTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTaskStatusProvided,
-            boolean isEventStatusProvided, boolean isTask, boolean isCompleted, boolean isOver,
-            LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        List<Task> tasks = db.getAllTasks(); 
-        List<Event> events = db.getAllEvents();
-        if (isItemTypeProvided) {
-            if (isTask) {
-                events = new ArrayList<Event>();
-            } else if (!isTask) {
-                tasks = new ArrayList<Task>();
-            }
-        } 
-        
-        if (isTaskStatusProvided) {
-            tasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
-            events = new ArrayList<Event>();
-        }
-        
-        if (isEventStatusProvided) {
-            events = FilterUtil.filterEventsByStatus(events, isOver);
-            tasks = new ArrayList<Task>();
-        }
-        
-        if (dateCriteria != null) {
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateCriteria);
-            events = FilterUtil.filterEventBySingleDate(events, dateCriteria);
-        }
-        
-        if (dateOn != null) {
-            //filter by single date
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
-            events = FilterUtil.filterEventBySingleDate(events, dateOn);
-        } else {
-            //filter by range
-            tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
-            events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
-        }
-        
-        if (tasks.size() == 0 && events.size() == 0) {
-            Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
-            return;
-        }
-        
-        String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
-                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
-        Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
-    }
     
-    /*============================ Helper Methods to check for Error/Syntax Command ===================*/
+    /*====================== Helper Methods to check for Error/Syntax Command ===================*/
     
     /*
      * To be use to check if there are any command syntax error
