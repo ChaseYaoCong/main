@@ -18,9 +18,8 @@ import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
 
 /**
- * Controller to list CalendarItems.
- * 
  * @@author A0139922Y
+ * Controller to list CalendarItems.
  *
  */
 public class ListController implements Controller {
@@ -113,7 +112,13 @@ public class ListController implements Controller {
         }
         
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates, isEventStatusProvided);
+        if (parsedDates != null && isEventStatusProvided) {
+            //detect date conflict
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+            return;
+        }
+        
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
         if (validDates == null) {
             return; // Break out when date conflict found
         }
@@ -133,8 +138,7 @@ public class ListController implements Controller {
      * 
      * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates, 
-            boolean isEventStatusProvided) {
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
         
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, "default");
@@ -178,12 +182,7 @@ public class ListController implements Controller {
             Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
             return null;
         }
-        
-        if (parsedDates != null && isEventStatusProvided) {
-            //detect date conflict
-            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-            return null;
-        }
+       
         return new LocalDateTime[] { dateCriteria, dateOn, dateFrom, dateTo };
     }
     
