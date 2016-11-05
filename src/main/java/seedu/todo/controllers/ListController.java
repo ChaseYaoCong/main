@@ -27,18 +27,18 @@ public class ListController implements Controller {
     
     private static final String NAME = "List";
     private static final String DESCRIPTION = "List all tasks and events by type or status.";
-    private static final String COMMAND_SYNTAX = "list [task complete/incomplete or event] [event over/ongoing] "
+    private static final String COMMAND_SYNTAX = "list \"task complete/incomplete\" or \"event over/ongoing\""
             + "[on date] or [from date to date]";
     private static final String COMMAND_WORD = "list";
-    private static final String LIST_TASK_SYNTAX = "list task [complete/incomplete]";
-    private static final String LIST_EVENT_SYNTAX = "list event [over/ongoing]";
-    private static final String LIST_DATE_SYNTAX = "list [date] or [from <date> to <date>]";
+    private static final String LIST_TASK_SYNTAX = "list task \"complete/incomplete\"";
+    private static final String LIST_EVENT_SYNTAX = "list event \"over/current\"";
+    private static final String LIST_DATE_SYNTAX = "list \"date\" [or from \"date\" to \"date\"]";
     
     private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
     private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
     private static final String MESSAGE_LIST_SUCCESS = "Listing Today's, incompleted tasks and ongoing events";
-    private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to list!\nTry listing with [complete] or [incomplete]";
-    private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to list!\nTry listing with [over] or [current]";
+    private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to list!\nTry listing with complete or incomplete";
+    private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to list!\nTry listing with over or current";
     private static final String MESSAGE_DATE_CONFLICT = "Unable to list!\nMore than 1 date criteria is provided!";
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to list!\nThe natural date entered is not supported.";
     private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
@@ -113,7 +113,7 @@ public class ListController implements Controller {
         }
         
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates, isEventStatusProvided);
         if (validDates == null) {
             return; // Break out when date conflict found
         }
@@ -123,60 +123,68 @@ public class ListController implements Controller {
         LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
         LocalDateTime dateTo = validDates[DATE_TO_INDEX];
         
-//        String[] parsedDates = ParseUtil.parseDates(parsedResult);
-//        
-//        //date enter with COMMAND_WORD e.g list today
-//        String date = ParseUtil.getTokenResult(parsedResult, "default");
-//        if (date != null && parsedDates != null) {
-//            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-//            return;
-//        }
-//
-//        LocalDateTime dateCriteria = null;
-//        LocalDateTime dateOn = null;
-//        LocalDateTime dateFrom = null;
-//        LocalDateTime dateTo = null;
-//        
-//        if (date != null) {
-//            dateCriteria = DateUtil.floorDate(DateUtil.parseNatural(date));
-//            if (dateCriteria == null) {
-//                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
-//                return ;
-//            } 
-//        }
-//        
-//        if (parsedDates != null) {
-//            String naturalOn = parsedDates[DATE_ON_INDEX];
-//            String naturalFrom = parsedDates[DATE_FROM_INDEX];
-//            String naturalTo = parsedDates[DATE_TO_INDEX];
-//            
-//            if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
-//                //date conflict detected
-//                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-//                return;
-//            }
-//    
-//            // Parse natural date using Natty.
-//            dateOn = naturalOn == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalOn)); 
-//            dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalFrom)); 
-//            dateTo = naturalTo == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalTo));
-//        }
-//        
-//        if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
-//            //Natty failed to parse date
-//            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
-//            return ;
-//        }
-//        
-//        if (parsedDates != null && isEventStatusProvided) {
-//            //detect date conflict
-//            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-//            return;
-//        }
-        
         //Setting up views
         filterTasksAndEvents(db, isItemTypeProvided, isTaskStatusProvided, isEventStatusProvided, isTask, isCompleted,
                 isOver, dateCriteria, dateOn, dateFrom, dateTo);
+    }
+    
+    /*
+     * To be used to parsed dates and check for any dates conflict
+     * 
+     * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
+     */
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates, 
+            boolean isEventStatusProvided) {
+        
+        //date enter with COMMAND_WORD e.g list today
+        String date = ParseUtil.getTokenResult(parsedResult, "default");
+        if (date != null && parsedDates != null) {
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+            return null;
+        }
+
+        LocalDateTime dateCriteria = null;
+        LocalDateTime dateOn = null;
+        LocalDateTime dateFrom = null;
+        LocalDateTime dateTo = null;
+        
+        if (date != null) {
+            dateCriteria = DateUtil.floorDate(DateUtil.parseNatural(date));
+            if (dateCriteria == null) {
+                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+                return null;
+            } 
+        }
+        
+        if (parsedDates != null) {
+            String naturalOn = parsedDates[DATE_ON_INDEX];
+            String naturalFrom = parsedDates[DATE_FROM_INDEX];
+            String naturalTo = parsedDates[DATE_TO_INDEX];
+            
+            if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
+                //date conflict detected
+                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+                return null;
+            }
+    
+            // Parse natural date using Natty.
+            dateOn = naturalOn == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalOn)); 
+            dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalFrom)); 
+            dateTo = naturalTo == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalTo));
+        }
+        
+        if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
+            //Natty failed to parse date
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+            return null;
+        }
+        
+        if (parsedDates != null && isEventStatusProvided) {
+            //detect date conflict
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+            return null;
+        }
+        return new LocalDateTime[] { dateCriteria, dateOn, dateFrom, dateTo };
     }
     
     /*
