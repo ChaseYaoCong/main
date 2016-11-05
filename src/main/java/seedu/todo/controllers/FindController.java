@@ -135,58 +135,36 @@ public class FindController implements Controller {
                 
         //setting up view
         TodoListDB db = TodoListDB.getInstance();
-        List<Task> tasks = db.getAllTasks(); //default
-        List<Event> events = db.getAllEvents(); //default
+        List<Task> tasks; //default
+        List<Event> events; //default
         
-        tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks);
-        events = filterByEventNameAndTagName(itemNameList, tagNameList, events);
-        
-        filterTasksAndEvents(itemNameList, tagNameList, isItemTypeProvided, isTaskStatusProvided, isEventStatusProvided,
-                isTask, isCompleted, isOver, dateOn, dateFrom, dateTo);
-    }
-
-    /*
-     * Filter out the selected tasks and events based on the search criteria
-     * 
-     */
-    private void filterTasksAndEvents(HashSet<String> itemNameList, HashSet<String> tagNameList,
-            boolean isItemTypeProvided, boolean isTaskStatusProvided, boolean isEventStatusProvided, boolean isTask,
-            boolean isCompleted, boolean isOver, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        TodoListDB db = TodoListDB.getInstance();
-        List<Task> tasks = db.getAllTasks();
-        List<Event> events = db.getAllEvents();
-        HashSet<Task> mergedTasks = new HashSet<Task>();
-        HashSet<Event> mergedEvents = new HashSet<Event>();
+        // Filter out the tasks and events based on type and names
         if (!isItemTypeProvided) {
-            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks);
-            events = filterByEventNameAndTagName(itemNameList, tagNameList, events);
-        } else if (isTask) {
-            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks);
-            events = new ArrayList<Event>();
-        } else if (!isTask) {
-            tasks = new ArrayList<Task>();
-            events = filterByEventNameAndTagName(itemNameList, tagNameList, events);
-        }
-        
-        if (isTaskStatusProvided) {
-            tasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
-            events = new ArrayList<Event>();
-        }
-        
-        if (isEventStatusProvided) {
-            events = FilterUtil.filterEventsByStatus(events, isOver);
-            tasks = new ArrayList<Task>();
-        }
-        
-        if (dateOn != null) {
-            //filter by single date
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
-            events = FilterUtil.filterEventBySingleDate(events, dateOn);
+            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, db.getAllTasks());
+            events = filterByEventNameAndTagName(itemNameList, tagNameList, db.getAllEvents());
         } else {
-            //filter by range
-            tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
-            events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+            if (isTask) {
+                events = new ArrayList<Event>();
+                tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, db.getAllTasks());
+            } else {
+                tasks = new ArrayList<Task>();
+                events = filterByEventNameAndTagName(itemNameList, tagNameList, db.getAllEvents());
+            }
         }
+        
+        // Filter out by Task Status if provided
+        if (isTaskStatusProvided) {
+            FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            events = new ArrayList<Event>();
+        }
+        
+        // Filter out by Event Status if provided
+        if (isEventStatusProvided) {
+            FilterUtil.filterEventsByStatus(events, isOver);
+            tasks = new ArrayList<Task>();
+        }
+        
+        filterTasksAndEventsByDate(tasks, events, dateOn, dateFrom, dateTo);
         
         if (tasks.size() == 0 && events.size() == 0) {
             Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
@@ -196,6 +174,24 @@ public class FindController implements Controller {
         String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
         Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
+    }
+
+    /*
+     * Filter out the selected tasks and events based on the search criteria
+     * 
+     */
+    private void filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, 
+            LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        
+        if (dateOn != null) {
+            //filter by single date
+            FilterUtil.filterTaskBySingleDate(tasks, dateOn);
+            FilterUtil.filterEventBySingleDate(events, dateOn);
+        } else {
+            //filter by range
+            FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
+            FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+        }
     }  
 
     private List<Event> filterByEventNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
@@ -228,7 +224,6 @@ public class FindController implements Controller {
             String token) {
       
         String result = ParseUtil.getTokenResult(parsedResult, token);
-        
         //if found any matching , update list
         if (result != null) {
             hashList.add(result);
