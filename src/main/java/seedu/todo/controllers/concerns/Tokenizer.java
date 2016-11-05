@@ -39,6 +39,9 @@ public class Tokenizer {
     public static final String[] EVENT_STATUS_DEFINITION = new String[] { "over" , "ongoing", "current", "schedule" , "scheduled"};
     public static final String[] TIME_FROM_DEFINITION = new String[] { "from" };
     public static final String[] TIME_TO_DEFINITION = new String[] { "to", "before", "until" };
+    public static final String[] ITEM_NAME_DEFINITION = new String[] { "name" };
+    public static final String[] TAG_NAME_DEFINITION = new String[] { "tagName" };
+    
     
     /**
      * A private class to tag a string as a token or a quote.

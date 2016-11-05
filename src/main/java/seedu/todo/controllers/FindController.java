@@ -20,10 +20,9 @@ import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
 
 /**
+ * @@author A0139922Y
  * Controller to find task/event by keyword
  * 
- * @@author A0139922Y
- *
  */
 public class FindController implements Controller {
     
@@ -42,6 +41,7 @@ public class FindController implements Controller {
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to find!\nThe natural date entered is not supported.";
     private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with [complete] or [incomplete]";
     private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with [over] or [current]";
+    private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
     
     private static final int COMMAND_INPUT_INDEX = 0;
     //use to access parsing of dates
@@ -64,15 +64,15 @@ public class FindController implements Controller {
     
     private static Map<String, String[]> getTokenDefinitions() {
         Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
-        tokenDefinitions.put("default", new String[] {"find"});
-        tokenDefinitions.put("eventType", new String[] { "event", "events", "task", "tasks"});
-        tokenDefinitions.put("taskStatus", new String[] { "complete" , "completed", "incomplete", "incompleted"});
-        tokenDefinitions.put("eventStatus", new String[] { "over" , "ongoing", "current", "schedule" , "scheduled"});
-        tokenDefinitions.put("time", new String[] { "at", "by", "on", "time", "date" });
-        tokenDefinitions.put("timeFrom", new String[] { "from" });
-        tokenDefinitions.put("timeTo", new String[] { "to", "before", "until" });
-        tokenDefinitions.put("itemName", new String[] { "name" });
-        tokenDefinitions.put("tagName", new String [] { "tag" }); 
+        tokenDefinitions.put(Tokenizer.DEFAULT_TOKEN, new String[] { COMMAND_WORD });
+        tokenDefinitions.put(Tokenizer.EVENT_TYPE_TOKEN, Tokenizer.EVENT_TYPE_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_TOKEN, Tokenizer.TIME_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TASK_STATUS_TOKEN, Tokenizer.TASK_STATUS_DEFINITION);
+        tokenDefinitions.put(Tokenizer.EVENT_STATUS_TOKEN, Tokenizer.EVENT_STATUS_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_FROM_TOKEN, Tokenizer.TIME_FROM_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_TO_TOKEN, Tokenizer.TIME_TO_DEFINITION);
+        tokenDefinitions.put(Tokenizer.ITEM_NAME_TOKEN, Tokenizer.ITEM_NAME_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TAG_NAME_TOKEN, Tokenizer.TAG_NAME_DEFINITION);
         return tokenDefinitions;
     }
 
@@ -87,9 +87,9 @@ public class FindController implements Controller {
         HashSet<String> keywordList = new HashSet<String>();
         
         //to be use to be either name or tag
-        updateHashList(parsedResult, keywordList, "default");
-        updateHashList(parsedResult, itemNameList, "itemName");
-        updateHashList(parsedResult, tagNameList, "tagName");
+        updateHashList(parsedResult, keywordList, Tokenizer.DEFAULT_TOKEN);
+        updateHashList(parsedResult, itemNameList, Tokenizer.ITEM_NAME_TOKEN);
+        updateHashList(parsedResult, tagNameList, Tokenizer.TAG_NAME_TOKEN);
         itemNameList.addAll(keywordList);
         tagNameList.addAll(keywordList);
         
@@ -99,29 +99,23 @@ public class FindController implements Controller {
             return;
         }
         
-        boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, "eventType");
-        boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, "taskStatus");
-        boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, "eventStatus");
+        boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_TYPE_TOKEN);
+        boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.TASK_STATUS_TOKEN);
+        boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_STATUS_TOKEN);
         
         boolean isTask = true; //default
         if (isItemTypeProvided) {
-            isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
-            
-            if (isTask && isEventStatusProvided) {
-                Renderer.renderDisambiguation(FIND_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
-                return;
-            }
-            
-            if (!isTask && isTaskStatusProvided) {
-                Renderer.renderDisambiguation(FIND_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
-                return;
-            }
+            isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
+        }
+        
+        if (isErrorCommand(isTaskStatusProvided, isEventStatusProvided, isTask, isItemTypeProvided, input)) {
+            return; // Break out if found error
         }
         
         boolean isCompleted = false; //default 
         boolean isOver = false; //default
         if (isTaskStatusProvided) {
-            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, "taskStatus", "incomplete");
+            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
         }
         if (isEventStatusProvided) {
             isOver = ParseUtil.doesTokenContainKeyword(parsedResult, "eventStatus", "over");
@@ -256,6 +250,33 @@ public class FindController implements Controller {
                 hashList.add(resultArray[i]);
             }
         }
+    }
+    
+    /*
+     * To be use to check if there are any command syntax error
+     * 
+     * @return true, if there is error in command syntax, false if syntax is allowed
+     */
+    private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, 
+            boolean isTask, boolean isItemTypeProvided, String input) {
+        // Check if more than 1 item type is provided
+        if (FilterUtil.isItemTypeConflict(input)) {
+            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_ITEM_TYPE_CONFLICT);
+            return true;
+        }
+        if (isItemTypeProvided) {
+            // Task and Event Command Syntax detected
+            if (isTask && isEventStatusProvided) {
+                Renderer.renderDisambiguation(FIND_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
+                return true;
+            }
+            
+            if (!isTask && isTaskStatusProvided) {
+                Renderer.renderDisambiguation(FIND_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
+                return true;
+            }
+        }
+        return false;
     }
 
 }
