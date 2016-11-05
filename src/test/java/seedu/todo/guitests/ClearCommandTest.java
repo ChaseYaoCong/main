@@ -17,6 +17,7 @@ import seedu.todo.models.Task;
 //@@author A0139922Y
 public class ClearCommandTest extends GuiTest {
 
+    // Variables to be use by Test Cases
     private static final String TODAY = "today";
     private static final LocalDateTime TODAY_DATE = LocalDateTime.now();
     private static final String TOMORROW = "tomorrow";
@@ -71,6 +72,8 @@ public class ClearCommandTest extends GuiTest {
         assertClearFailedByDate(command);
         command = "clear today to tomrrow";
         assertClearFailedByDate(command);
+        command = "clear by today to tomorrow";
+        assertClearFailedByDate(command);
     }
     
     @Test
@@ -89,6 +92,10 @@ public class ClearCommandTest extends GuiTest {
         assertClearFailedBySyntax(command);
     }
     
+    /*
+     * Use to generate data for Test DB
+     * 
+     */
     private List<CalendarItem> getCalendarItems() {
         Event event = new Event();
         event.setName("Presentation in the Future");
@@ -103,6 +110,10 @@ public class ClearCommandTest extends GuiTest {
         return calendarItems;
     }
     
+    /*
+     * Use to initialise Test DB for all different test cases
+     * 
+     */
     private void initialiseTestDB() {
         String addCommand = "";
         for (int i = 0; i < calendarItems.size(); i ++) {
@@ -117,6 +128,10 @@ public class ClearCommandTest extends GuiTest {
         }
     }
     
+    /*
+     * Formatting to the correct add Event command
+     * 
+     */
     private String formatAddEventCommand(Event event) {
         String dateFrom = "from";
         String dateTo = "to";
@@ -124,6 +139,10 @@ public class ClearCommandTest extends GuiTest {
         return String.format("%s %s %s %s %s %s %s", ADD, eventType, event.getName(), dateFrom, TOMORROW, dateTo, TOMORROW);
     }
     
+    /*
+     * Formatting to the correct add Task command
+     * 
+     */
     private String formatAddTaskCommand(Task task) {
         String dateBy = "by";
         return String.format("%s %s %s %s", ADD, task.getName(), dateBy, TODAY);
@@ -131,7 +150,7 @@ public class ClearCommandTest extends GuiTest {
     
     /**
      * Method for testing if task and events have been cleared from the GUI.
-     * This runs a command and checks if TaskList has been cleared by checking null.
+     * This runs a command and checks if TaskList based on date has been cleared by checking null.
      */
     private void assertClearSuccess(String command) {
         // Run the command in the console.
@@ -147,8 +166,13 @@ public class ClearCommandTest extends GuiTest {
         }
     }
     
+    /**
+     * Method for testing if tasks have been cleared from the GUI.
+     * This runs a command and checks if TaskList based on Task's date has been cleared by checking null.
+     */
     private void assertClearSuccessByTask(String command) {
         getCalendarItems();
+        initialiseTestDB();
         console.runCommand(command);
         for (int i = 0; i < calendarItems.size(); i ++) {
             CalendarItem calendarItem = calendarItems.get(i);
@@ -160,8 +184,13 @@ public class ClearCommandTest extends GuiTest {
         }
     }
     
+    /**
+     * Method for testing if events have been cleared from the GUI.
+     * This runs a command and checks if TaskList based on Event's date has been cleared by checking null.
+     */
     private void assertClearSuccessByEvent(String command) {
         getCalendarItems();
+        initialiseTestDB();
         console.runCommand(command);
         for (int i = 0; i < calendarItems.size(); i ++) {
             CalendarItem calendarItem = calendarItems.get(i);
@@ -173,6 +202,10 @@ public class ClearCommandTest extends GuiTest {
         }
     }
     
+    /**
+     * Method for testing if all tasks and events have been cleared from the GUI by the particular date.
+     * This runs a command and checks if TaskList based on date has been cleared by checking null.
+     */
     private void assertClearSuccessByDate(String command, LocalDateTime date) {
         getCalendarItems();
         initialiseTestDB();
@@ -184,7 +217,7 @@ public class ClearCommandTest extends GuiTest {
     
     /**
      * Method for testing if task and events have been cleared from the GUI.
-     * This runs a command and checks if TaskList has been cleared by checking null.
+     * This runs a command and checks if the consoleInputTextField matches the error matches
      */
     public void assertClearFailedByDate(String command) {
         console.runCommand("add test"); //To initialise UI
@@ -195,7 +228,7 @@ public class ClearCommandTest extends GuiTest {
     
     /**
      * Method for testing if task and events have been cleared from the GUI.
-     * This runs a command and checks if TaskList has been cleared by checking null.
+     * This runs a command and checks if the consoleInputTextField matches the error matches
      */
     public void assertClearFailedBySyntax(String command) {
         console.runCommand("add test"); //To initialise UI
