@@ -119,29 +119,7 @@ public class FindController implements Controller {
         if (isErrorCommand(isTaskStatusProvided, isEventStatusProvided, isTask, isItemTypeProvided, input)) {
             return; // Break out if found error
         }
-        
-        // Set item status
-        boolean isCompleted = false; //default 
-        boolean isOver = false; //default
-        if (isTaskStatusProvided) {
-            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
-        }
-        if (isEventStatusProvided) {
-            isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
-        }
-        
-        // Get dates from input
-        String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
-        if (validDates == null) {
-            return; // Break out when date conflict found
-        }
-        
-        // Set dates that are found, if not found value will be null
-        LocalDateTime dateOn = validDates[DATE_ON_INDEX];
-        LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
-        LocalDateTime dateTo = validDates[DATE_TO_INDEX];
-                
+       
         //setting up view
         TodoListDB db = TodoListDB.getInstance();
         List<Task> tasks; //default
@@ -161,20 +139,11 @@ public class FindController implements Controller {
             }
         }
         
-        // Filter out by Task Status if provided
-        if (isTaskStatusProvided) {
-            FilterUtil.filterTasksByStatus(tasks, isCompleted);
-            events = new ArrayList<Event>();
-        }
-        
-        // Filter out by Event Status if provided
-        if (isEventStatusProvided) {
-            FilterUtil.filterEventsByStatus(events, isOver);
-            tasks = new ArrayList<Task>();
-        }
+        // Filter Task and Event by Status
+        filterTasksAndEventsByStatus(parsedResult, isTaskStatusProvided, isEventStatusProvided, tasks, events);
         
         // Filter Task and Event by date
-        filterTasksAndEventsByDate(tasks, events, dateOn, dateFrom, dateTo);
+        filterTasksAndEventsByDate(tasks, events, parsedResult);
         
         // Show messaeg as no items had been found
         if (tasks.size() == 0 && events.size() == 0) {
@@ -187,8 +156,40 @@ public class FindController implements Controller {
         Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
     }
 
+    /*======================== Helper Methods to filter tasks and events ========================================*/
+    
     /*
-     * Filter out the selected tasks and events based on the date that has been parsed
+     * Filter out the selected tasks and events based on the status and update tasks and events accordingly
+     * 
+     * @param tasks
+     *            List of Task items
+     * @param events           
+     *            List of Event items
+     */
+    private void filterTasksAndEventsByStatus(Map<String, String[]> parsedResult, boolean isTaskStatusProvided,
+            boolean isEventStatusProvided, List<Task> tasks, List<Event> events) {
+        
+        // Set item status
+        boolean isCompleted = false; //default 
+        boolean isOver = false; //default
+        
+        // Filter out by Task Status if provided
+        if (isTaskStatusProvided) {
+            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
+            FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            events = new ArrayList<Event>();
+        }
+        
+        // Filter out by Event Status if provided
+        if (isEventStatusProvided) {
+            isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
+            FilterUtil.filterEventsByStatus(events, isOver);
+            tasks = new ArrayList<Task>();
+        }
+    }
+
+    /*
+     * Filter out the selected tasks and events based on the dates
      * and update tasks and events accordingly
      * 
      * @param tasks
@@ -196,8 +197,18 @@ public class FindController implements Controller {
      * @param events           
      *            List of Event items
      */
-    private void filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, 
-            LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
+    private void filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
+        // Get dates from input
+        String[] parsedDates = ParseUtil.parseDates(parsedResult);
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        if (validDates == null) {
+            return; // Break out when date conflict found
+        }
+        
+        // Set dates that are found, if not found value will be null
+        LocalDateTime dateOn = validDates[DATE_ON_INDEX];
+        LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
+        LocalDateTime dateTo = validDates[DATE_TO_INDEX];
         
         if (dateOn != null) {
             //filter by single date
@@ -209,8 +220,6 @@ public class FindController implements Controller {
             FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
         }
     }  
-
-    /*======================== Helper Methods for filtering by names and tags =============================*/
     
     /*
      * Filter out all the events based on the name list that has been parsed.
@@ -304,7 +313,7 @@ public class FindController implements Controller {
     /*
      * To be used to parsed dates and check for any dates conflict
      * 
-     * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
+     * @return null if dates conflict detected, else return { null, dateOn, dateFrom, dateTo }
      */
     private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
         
