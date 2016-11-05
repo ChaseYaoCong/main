@@ -1,6 +1,6 @@
 # GetShitDone
 [![Build Status](https://travis-ci.org/ChaseYaoCong/main.svg?branch=master)](https://travis-ci.org/ChaseYaoCong/main)
-[![Coverage Status](https://coveralls.io/repos/github/CS2103AUG2016-F11-C1/main/badge.svg?branch=master)](https://coveralls.io/github/CS2103AUG2016-F11-C1/main?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ChaseYaoCong/main/badge.svg?branch=master)](https://coveralls.io/github/ChaseYaoCong/main?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bb54debec79f4383924b89c9131865fc)](https://www.codacy.com/app/CS2103AUG2016-F11-C1/main?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CS2103AUG2016-F11-C1/main&amp;utm_campaign=Badge_Grade)
 
 <img src="docs/images/GetShitDone-Ui.png" width="600">
