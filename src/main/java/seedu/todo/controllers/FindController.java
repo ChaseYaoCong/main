@@ -143,16 +143,16 @@ public class FindController implements Controller {
         
         // Filter Task and Event by Status
         calendarItems = filterTasksAndEventsByStatus(parsedResult, isTaskStatusProvided, isEventStatusProvided, tasks, events);
-        tasks = filterOutTask(calendarItems);
-        events = filterOutEvent(calendarItems);
+        tasks = FilterUtil.filterOutTask(calendarItems);
+        events = FilterUtil.filterOutEvent(calendarItems);
         
         // Filter Task and Event by date
         calendarItems = filterTasksAndEventsByDate(tasks, events, parsedResult);
         if (calendarItems == null) {
             return; // Date conflict detected
         }
-        tasks = filterOutTask(calendarItems);
-        events = filterOutEvent(calendarItems);
+        tasks = FilterUtil.filterOutTask(calendarItems);
+        events = FilterUtil.filterOutEvent(calendarItems);
         
         // Show message if no items had been found
         if (tasks.size() == 0 && events.size() == 0) {
@@ -166,42 +166,6 @@ public class FindController implements Controller {
     }
 
     /*======================== Helper Methods to filter tasks and events ========================================*/
-    
-    /*
-     * Use to filter out Task items from calendarItems
-     * 
-     * @param calendarItems
-     *              List of mixture of Task and Event
-     * @return filteredTasks
-     *              List containing only Task             
-     */
-    private List<Task> filterOutTask(List<CalendarItem> calendarItems) {
-        List<Task> filteredTasks = new ArrayList<Task>();
-        for (int i = 0; i < calendarItems.size(); i ++) {
-            if (calendarItems.get(i) instanceof Task) {
-                filteredTasks.add((Task) calendarItems.get(i));
-            }
-        }
-        return filteredTasks;
-    }
-    
-    /*
-     * Use to filter out Event items from calendarItems
-     * 
-     * @param calendarItems
-     *              List of mixture of Task and Event
-     * @return filteredTasks
-     *              List containing only Event             
-     */
-    private List<Event> filterOutEvent(List<CalendarItem> calendarItems) {
-        List<Event> filteredEvents = new ArrayList<Event>();
-        for (int i = 0; i < calendarItems.size(); i ++) {
-            if (calendarItems.get(i) instanceof Event) {
-                filteredEvents.add((Event) calendarItems.get(i));
-            }
-        }
-        return filteredEvents;
-    }
     
     /*
      * Filter out the selected tasks and events based on the status and update tasks and events accordingly
@@ -221,7 +185,7 @@ public class FindController implements Controller {
      */
     private List<CalendarItem> filterTasksAndEventsByStatus(Map<String, String[]> parsedResult, boolean isTaskStatusProvided,
             boolean isEventStatusProvided, List<Task> tasks, List<Event> events) {
-        
+        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
         // Set item status
         boolean isCompleted = false; //default 
         boolean isOver = false; //default
@@ -229,20 +193,14 @@ public class FindController implements Controller {
         // Filter out by Task Status if provided
         if (isTaskStatusProvided) {
             isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
-            tasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
-            System.out.println(tasks.size());
-            events = new ArrayList<Event>();
+            calendarItems.addAll(FilterUtil.filterTasksByStatus(tasks, isCompleted));
         }
         
         // Filter out by Event Status if provided
         if (isEventStatusProvided) {
             isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
-            events = FilterUtil.filterEventsByStatus(events, isOver);
-            tasks = new ArrayList<Task>();
+            calendarItems.addAll(events = FilterUtil.filterEventsByStatus(events, isOver));
         }
-        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
-        calendarItems.addAll(tasks);
-        calendarItems.addAll(events);
         return calendarItems;
     }
 
@@ -261,6 +219,7 @@ public class FindController implements Controller {
      */
     private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
         // Get dates from input
+        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
         LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
         if (validDates == null) {
@@ -274,16 +233,13 @@ public class FindController implements Controller {
         
         if (dateOn != null) {
             // Filter by single date
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
-            events = FilterUtil.filterEventBySingleDate(events, dateOn);
+            calendarItems.addAll(FilterUtil.filterTaskBySingleDate(tasks, dateOn));
+            calendarItems.addAll(FilterUtil.filterEventBySingleDate(events, dateOn));
         } else {
             // Filter by range
-            tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
-            events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+            calendarItems.addAll(FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo));
+            calendarItems.addAll(FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo));
         }
-        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
-        calendarItems.addAll(tasks);
-        calendarItems.addAll(events);
         return calendarItems;
     }  
     

@@ -22,6 +22,24 @@ public class FilterUtil {
     
     /*==================== Filtering Methods for Tasks ======================*/
     
+    /*
+     * Use to filter out Task items from calendarItems
+     * 
+     * @param calendarItems
+     *              List of mixture of Task and Event
+     * @return filteredTasks
+     *              List containing only Task             
+     */
+    public static List<Task> filterOutTask(List<CalendarItem> calendarItems) {
+        List<Task> filteredTasks = new ArrayList<Task>();
+        for (int i = 0; i < calendarItems.size(); i ++) {
+            if (calendarItems.get(i) instanceof Task) {
+                filteredTasks.add((Task) calendarItems.get(i));
+            }
+        }
+        return filteredTasks;
+    }
+    
     /**
      * Filter the task list based on matching task name list
      * @param tasks 
@@ -172,6 +190,24 @@ public class FilterUtil {
     }
     
     /*==================== Filtering Methods for Events ======================*/
+    
+    /*
+     * Use to filter out Event items from calendarItems
+     * 
+     * @param calendarItems
+     *              List of mixture of Task and Event
+     * @return filteredTasks
+     *              List containing only Event             
+     */
+    public static List<Event> filterOutEvent(List<CalendarItem> calendarItems) {
+        List<Event> filteredEvents = new ArrayList<Event>();
+        for (int i = 0; i < calendarItems.size(); i ++) {
+            if (calendarItems.get(i) instanceof Event) {
+                filteredEvents.add((Event) calendarItems.get(i));
+            }
+        }
+        return filteredEvents;
+    }
     
     /**
      * Filter the event list based on event name list
