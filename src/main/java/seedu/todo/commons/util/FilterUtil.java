@@ -160,6 +160,8 @@ public class FilterUtil {
                 taskDate = DateUtil.floorDate(LocalDateTime.MIN);
             }
             
+            startDate = DateUtil.floorDate(startDate);
+            endDate = DateUtil.ceilDate(endDate);
             if (taskDate.compareTo(startDate) >= 0 && taskDate.compareTo(endDate) <= 0) {
                 filteredTasks.add(task);
             }
@@ -309,6 +311,9 @@ public class FilterUtil {
             if (eventEndDate == null) {
                 eventEndDate = DateUtil.floorDate(LocalDateTime.MAX);
             }
+            
+            startDate = DateUtil.floorDate(startDate);
+            endDate = DateUtil.ceilDate(endDate);
             if (eventStartDate.compareTo(startDate) >= 0 && eventEndDate.compareTo(endDate) <= 0) {
                 filteredEvents.add(event);
             }
