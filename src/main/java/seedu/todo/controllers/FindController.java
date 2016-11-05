@@ -16,6 +16,7 @@ import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.controllers.concerns.DateParser;
 import seedu.todo.controllers.concerns.Renderer;
+import seedu.todo.models.CalendarItem;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
@@ -120,10 +121,11 @@ public class FindController implements Controller {
             return; // Break out if found error
         }
        
-        //setting up view
+        // Setting up view
         TodoListDB db = TodoListDB.getInstance();
         List<Task> tasks; //default
         List<Event> events; //default
+        List<CalendarItem> calendarItems;
         
         // Filter out the tasks and events based on type and names
         if (!isItemTypeProvided) {
@@ -140,12 +142,19 @@ public class FindController implements Controller {
         }
         
         // Filter Task and Event by Status
-        filterTasksAndEventsByStatus(parsedResult, isTaskStatusProvided, isEventStatusProvided, tasks, events);
+        calendarItems = filterTasksAndEventsByStatus(parsedResult, isTaskStatusProvided, isEventStatusProvided, tasks, events);
+        tasks = filterOutTask(calendarItems);
+        events = filterOutEvent(calendarItems);
         
         // Filter Task and Event by date
-        filterTasksAndEventsByDate(tasks, events, parsedResult);
+        calendarItems = filterTasksAndEventsByDate(tasks, events, parsedResult);
+        if (calendarItems == null) {
+            return; // Date conflict detected
+        }
+        tasks = filterOutTask(calendarItems);
+        events = filterOutEvent(calendarItems);
         
-        // Show messaeg as no items had been found
+        // Show message if no items had been found
         if (tasks.size() == 0 && events.size() == 0) {
             Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
             return;
@@ -159,14 +168,58 @@ public class FindController implements Controller {
     /*======================== Helper Methods to filter tasks and events ========================================*/
     
     /*
+     * Use to filter out Task items from calendarItems
+     * 
+     * @param calendarItems
+     *              List of mixture of Task and Event
+     * @return filteredTasks
+     *              List containing only Task             
+     */
+    private List<Task> filterOutTask(List<CalendarItem> calendarItems) {
+        List<Task> filteredTasks = new ArrayList<Task>();
+        for (int i = 0; i < calendarItems.size(); i ++) {
+            if (calendarItems.get(i) instanceof Task) {
+                filteredTasks.add((Task) calendarItems.get(i));
+            }
+        }
+        return filteredTasks;
+    }
+    
+    /*
+     * Use to filter out Event items from calendarItems
+     * 
+     * @param calendarItems
+     *              List of mixture of Task and Event
+     * @return filteredTasks
+     *              List containing only Event             
+     */
+    private List<Event> filterOutEvent(List<CalendarItem> calendarItems) {
+        List<Event> filteredEvents = new ArrayList<Event>();
+        for (int i = 0; i < calendarItems.size(); i ++) {
+            if (calendarItems.get(i) instanceof Event) {
+                filteredEvents.add((Event) calendarItems.get(i));
+            }
+        }
+        return filteredEvents;
+    }
+    
+    /*
      * Filter out the selected tasks and events based on the status and update tasks and events accordingly
      * 
+     * @param parsedResult
+     *            parsedResult by Tokenizer
+     * @param isTaskStatusProvided
+     *            true if complete or incomplete is found, else false
+     * @param isEventStatusProvided
+     *            true if over or current is found, else false                   
      * @param tasks
      *            List of Task items
      * @param events           
      *            List of Event items
+     * @return        
+     *            tasks and events in a list form by status
      */
-    private void filterTasksAndEventsByStatus(Map<String, String[]> parsedResult, boolean isTaskStatusProvided,
+    private List<CalendarItem> filterTasksAndEventsByStatus(Map<String, String[]> parsedResult, boolean isTaskStatusProvided,
             boolean isEventStatusProvided, List<Task> tasks, List<Event> events) {
         
         // Set item status
@@ -176,16 +229,21 @@ public class FindController implements Controller {
         // Filter out by Task Status if provided
         if (isTaskStatusProvided) {
             isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
-            FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            tasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            System.out.println(tasks.size());
             events = new ArrayList<Event>();
         }
         
         // Filter out by Event Status if provided
         if (isEventStatusProvided) {
             isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
-            FilterUtil.filterEventsByStatus(events, isOver);
+            events = FilterUtil.filterEventsByStatus(events, isOver);
             tasks = new ArrayList<Task>();
         }
+        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
+        calendarItems.addAll(tasks);
+        calendarItems.addAll(events);
+        return calendarItems;
     }
 
     /*
@@ -196,13 +254,17 @@ public class FindController implements Controller {
      *            List of Task items
      * @param events           
      *            List of Event items
+     * @param parsedResult
+     *            parsedResult by Tokenizer
+     * @return        
+     *            tasks and events in a list form by date or null when date conflict found
      */
-    private void filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
+    private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
         // Get dates from input
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
         LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
         if (validDates == null) {
-            return; // Break out when date conflict found
+            return null; // Break out when date conflict found
         }
         
         // Set dates that are found, if not found value will be null
@@ -211,14 +273,18 @@ public class FindController implements Controller {
         LocalDateTime dateTo = validDates[DATE_TO_INDEX];
         
         if (dateOn != null) {
-            //filter by single date
-            FilterUtil.filterTaskBySingleDate(tasks, dateOn);
-            FilterUtil.filterEventBySingleDate(events, dateOn);
+            // Filter by single date
+            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
+            events = FilterUtil.filterEventBySingleDate(events, dateOn);
         } else {
-            //filter by range
-            FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
-            FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+            // Filter by range
+            tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
+            events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
         }
+        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
+        calendarItems.addAll(tasks);
+        calendarItems.addAll(events);
+        return calendarItems;
     }  
     
     /*
@@ -229,6 +295,8 @@ public class FindController implements Controller {
      *            a list of item name that has been parsed from input
      * @param tagNameList           
      *            a List of tag name that has been parsed from input
+     * @param events
+     *            all the events in the DB           
      * @return a list of Event which names or tag names is filtered with the list
      */
     private List<Event> filterByEventNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
@@ -250,6 +318,8 @@ public class FindController implements Controller {
      *            a list of item name that has been parsed from input
      * @param tagNameList           
      *            a List of tag name that has been parsed from input
+     * @param tasks
+     *            all the tasks in the DB           
      * @return a list of Task which names or tag names is filtered with the list
      */
     private List<Task> filterByTaskNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList, 
@@ -271,7 +341,7 @@ public class FindController implements Controller {
             String token) {
       
         String result = ParseUtil.getTokenResult(parsedResult, token);
-        //if found any matching , update list
+        // If found any matching , update list
         if (result != null) {
             hashList.add(result);
             String[] resultArray = StringUtil.splitStringBySpace(result);
@@ -327,7 +397,7 @@ public class FindController implements Controller {
             String naturalTo = parsedDates[DATE_TO_INDEX];
             
             if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
-                //date conflict detected
+                // Date conflict detected
                 Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_DATE_CONFLICT);
                 return null;
             }
