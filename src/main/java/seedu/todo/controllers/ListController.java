@@ -100,7 +100,7 @@ public class ListController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
         }
         
-        if (isErrorCommand(isTaskStatusProvided, isEventStatusProvided, isTask, input)) {
+        if (isErrorCommand(isTaskStatusProvided, isEventStatusProvided, isTask, isItemTypeProvided, input)) {
             return; // Break out if found error
         }
         
@@ -160,15 +160,15 @@ public class ListController implements Controller {
         }
         
         if (parsedDates != null) {
-            if (isEventStatusProvided) {
+            String naturalOn = parsedDates[DATE_ON_INDEX];
+            String naturalFrom = parsedDates[DATE_FROM_INDEX];
+            String naturalTo = parsedDates[DATE_TO_INDEX];
+            if (isEventStatusProvided && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) != 0) {
                 //detect date conflict
                 Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
                 return null;
             }
             
-            String naturalOn = parsedDates[DATE_ON_INDEX];
-            String naturalFrom = parsedDates[DATE_FROM_INDEX];
-            String naturalTo = parsedDates[DATE_TO_INDEX];
             if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
                 //date conflict detected
                 Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
@@ -192,22 +192,24 @@ public class ListController implements Controller {
      * 
      * @return true, if there is error in command syntax, false if syntax is allowed
      */
-    private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, boolean isTask, String input) {
+    private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, 
+            boolean isTask, boolean isItemTypeProvided, String input) {
         // Check if more than 1 item type is provided
         if (FilterUtil.isItemTypeConflict(input)) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_ITEM_TYPE_CONFLICT);
             return true;
         }
-        
-        // Task and Event Command Syntax detected
-        if (isTask && isEventStatusProvided) {
-            Renderer.renderDisambiguation(LIST_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
-            return true;
-        }
-        
-        if (!isTask && isTaskStatusProvided) {
-            Renderer.renderDisambiguation(LIST_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
-            return true;
+        if (isItemTypeProvided) {
+            // Task and Event Command Syntax detected
+            if (isTask && isEventStatusProvided) {
+                Renderer.renderDisambiguation(LIST_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
+                return true;
+            }
+            
+            if (!isTask && isTaskStatusProvided) {
+                Renderer.renderDisambiguation(LIST_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
+                return true;
+            }
         }
         return false;
     }
