@@ -13,9 +13,8 @@ import seedu.todo.models.CalendarItem;
 import seedu.todo.models.TodoListDB;
 
 /**
- * Controller to destroy a CalendarItem.
- * 
  * @@author A0139922Y
+ * Controller to untag a CalendarItem.
  *
  */
 public class UntagController implements Controller {
@@ -60,7 +59,7 @@ public class UntagController implements Controller {
      */
     private static Map<String, String[]> getTokenDefinitions() {
         Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
-        tokenDefinitions.put("default", new String[] {"untag"});
+        tokenDefinitions.put(Tokenizer.DEFAULT_TOKEN, new String[] { COMMAND_WORD });
         return tokenDefinitions;
     }
 
@@ -70,7 +69,7 @@ public class UntagController implements Controller {
         Map<String, String[]> parsedResult;
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         
-        String param = parsedResult.get("default")[TOKENIZER_DEFAULT_INDEX];
+        String param = parsedResult.get(Tokenizer.DEFAULT_TOKEN)[TOKENIZER_DEFAULT_INDEX];
         
         if (param.length() <= 0) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
@@ -79,7 +78,7 @@ public class UntagController implements Controller {
         
         assert param.length() > 0;
         
-        String[] parameters = parseParam(param);
+        String[] parameters = StringUtil.splitStringBySpace(param);
         
         // Get index.
         int index = 0;
@@ -97,27 +96,11 @@ public class UntagController implements Controller {
         CalendarItem calendarItem = edb.getCalendarItemsByDisplayedId(index);
         TodoListDB db = TodoListDB.getInstance();
         
-        if (calendarItem == null) {
-            Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_INDEX_OUT_OF_RANGE);
-            return;
-        }
-        
-        // Check if tag name is provided
-        if (parameters.length <= 1) {
-            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_TAG_NAME_NOT_FOUND);
-            return;
-        }
-        
         String[] parsedTagNames = parseTags(tagNames);
         
-        boolean isTagNameExist = checkTagNameExist(parsedTagNames, calendarItem);
-        
-        if (isTagNameExist) {
-            Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_TAG_NAME_EXIST);
-            return;
+        if (isErrorCommand(parameters, index, calendarItem, parsedTagNames)) {
+            return; // Break out once error
         }
-        
-        assert calendarItem != null;
                
         boolean resultOfUntagging = removingTagNames(parsedTagNames, calendarItem);
         
@@ -129,6 +112,32 @@ public class UntagController implements Controller {
         } else {
             Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_TAG_NAME_DOES_NOT_EXIST);
         }
+    }
+    
+    /*
+     * To be used to check if there are any command syntax errors
+     * 
+     * @return true if error detected, else false.
+     */
+    private boolean isErrorCommand(String[] parameters, int index, CalendarItem calendarItem, String[] parsedTagNames) {
+        // Check if index is out of range
+        if (calendarItem == null) {
+            Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_INDEX_OUT_OF_RANGE);
+            return true;
+        }
+        
+        // Check if tag name is provided
+        if (parameters.length <= 1) {
+            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_TAG_NAME_NOT_FOUND);
+            return true;
+        }
+        
+        // Check if tag name exist
+        if (tagNameDoesNotExist(parsedTagNames, calendarItem)) {
+            Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_TAG_NAME_EXIST);
+            return true;
+        }
+        return false;
     }
     
     /*
@@ -160,7 +169,7 @@ public class UntagController implements Controller {
      * 
      * @return true if tag name does not exist or is entered more than once, false if it exist in the tag list
      */
-    private boolean checkTagNameExist(String[] parsedTagNames, CalendarItem calendarItem) {
+    private boolean tagNameDoesNotExist(String[] parsedTagNames, CalendarItem calendarItem) {
         HashSet<String> parsedTagNamesList = new HashSet<String>();
         for (int i = 0; i < parsedTagNames.length; i ++) {
             //checking with overall tag list in db
@@ -173,19 +182,7 @@ public class UntagController implements Controller {
         }
         return parsedTagNamesList.size() != parsedTagNames.length;
     }
-    
-    /*
-     * To be used to split index and tag names entered by user
-     * @param param
-     *            parameter enter by user
-     * 
-     * @return an array with the index 0 containing edb index
-     * and index 1 containing tag names
-     */
-    private String[] parseParam(String param) {
-        return param.split(" ");
-    }
-    
+
     /*
      * To be used to split tag names by comma if more than one is entered
      * @param tags

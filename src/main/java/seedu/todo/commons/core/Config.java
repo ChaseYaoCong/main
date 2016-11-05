@@ -21,9 +21,6 @@ public class Config {
     private String databaseFilePath = "database.json";
     private Map<String, String> aliases = new HashMap<String, String>();
 
-    public Config() {
-    }
-
     public String getAppTitle() {
         return appTitle;
     }

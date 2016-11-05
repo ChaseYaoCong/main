@@ -224,7 +224,7 @@ public class ListController implements Controller {
             boolean isEventStatusProvided, boolean isTask, boolean isCompleted, boolean isOver,
             LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Task> tasks = db.getAllTasks(); 
-        List<Event> events = db.getAllEvents();; 
+        List<Event> events = db.getAllEvents();
         if (isItemTypeProvided) {
             if (isTask) {
                 events = new ArrayList<Event>();

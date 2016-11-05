@@ -7,23 +7,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-
+import seedu.todo.commons.exceptions.InvalidNaturalDateException;
 import seedu.todo.commons.exceptions.ParseException;
 import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.FilterUtil;
 import seedu.todo.commons.util.ParseUtil;
 import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Tokenizer;
+import seedu.todo.controllers.concerns.DateParser;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
 
 /**
+ * @@author A0139922Y
  * Controller to find task/event by keyword
  * 
- * @@author A0139922Y
- *
  */
 public class FindController implements Controller {
     
@@ -42,6 +42,7 @@ public class FindController implements Controller {
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to find!\nThe natural date entered is not supported.";
     private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with [complete] or [incomplete]";
     private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with [over] or [current]";
+    private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
     
     private static final int COMMAND_INPUT_INDEX = 0;
     //use to access parsing of dates
@@ -64,15 +65,15 @@ public class FindController implements Controller {
     
     private static Map<String, String[]> getTokenDefinitions() {
         Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
-        tokenDefinitions.put("default", new String[] {"find"});
-        tokenDefinitions.put("eventType", new String[] { "event", "events", "task", "tasks"});
-        tokenDefinitions.put("taskStatus", new String[] { "complete" , "completed", "incomplete", "incompleted"});
-        tokenDefinitions.put("eventStatus", new String[] { "over" , "ongoing", "current", "schedule" , "scheduled"});
-        tokenDefinitions.put("time", new String[] { "at", "by", "on", "time", "date" });
-        tokenDefinitions.put("timeFrom", new String[] { "from" });
-        tokenDefinitions.put("timeTo", new String[] { "to", "before", "until" });
-        tokenDefinitions.put("itemName", new String[] { "name" });
-        tokenDefinitions.put("tagName", new String [] { "tag" }); 
+        tokenDefinitions.put(Tokenizer.DEFAULT_TOKEN, new String[] { COMMAND_WORD });
+        tokenDefinitions.put(Tokenizer.EVENT_TYPE_TOKEN, Tokenizer.EVENT_TYPE_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_TOKEN, Tokenizer.TIME_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TASK_STATUS_TOKEN, Tokenizer.TASK_STATUS_DEFINITION);
+        tokenDefinitions.put(Tokenizer.EVENT_STATUS_TOKEN, Tokenizer.EVENT_STATUS_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_FROM_TOKEN, Tokenizer.TIME_FROM_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_TO_TOKEN, Tokenizer.TIME_TO_DEFINITION);
+        tokenDefinitions.put(Tokenizer.ITEM_NAME_TOKEN, Tokenizer.ITEM_NAME_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TAG_NAME_TOKEN, Tokenizer.TAG_NAME_DEFINITION);
         return tokenDefinitions;
     }
 
@@ -87,9 +88,9 @@ public class FindController implements Controller {
         HashSet<String> keywordList = new HashSet<String>();
         
         //to be use to be either name or tag
-        updateHashList(parsedResult, keywordList, "default");
-        updateHashList(parsedResult, itemNameList, "itemName");
-        updateHashList(parsedResult, tagNameList, "tagName");
+        updateHashList(parsedResult, keywordList, Tokenizer.DEFAULT_TOKEN);
+        updateHashList(parsedResult, itemNameList, Tokenizer.ITEM_NAME_TOKEN);
+        updateHashList(parsedResult, tagNameList, Tokenizer.TAG_NAME_TOKEN);
         itemNameList.addAll(keywordList);
         tagNameList.addAll(keywordList);
         
@@ -99,115 +100,71 @@ public class FindController implements Controller {
             return;
         }
         
-        boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, "eventType");
-        boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, "taskStatus");
-        boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, "eventStatus");
+        boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_TYPE_TOKEN);
+        boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.TASK_STATUS_TOKEN);
+        boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_STATUS_TOKEN);
         
         boolean isTask = true; //default
         if (isItemTypeProvided) {
-            isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
-            
-            if (isTask && isEventStatusProvided) {
-                Renderer.renderDisambiguation(FIND_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
-                return;
-            }
-            
-            if (!isTask && isTaskStatusProvided) {
-                Renderer.renderDisambiguation(FIND_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
-                return;
-            }
+            isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
+        }
+        
+        if (isErrorCommand(isTaskStatusProvided, isEventStatusProvided, isTask, isItemTypeProvided, input)) {
+            return; // Break out if found error
         }
         
         boolean isCompleted = false; //default 
         boolean isOver = false; //default
         if (isTaskStatusProvided) {
-            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, "taskStatus", "incomplete");
+            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
         }
         if (isEventStatusProvided) {
-            isOver = ParseUtil.doesTokenContainKeyword(parsedResult, "eventStatus", "over");
+            isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
         }
         
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        LocalDateTime dateOn = null;
-        LocalDateTime dateFrom = null;
-        LocalDateTime dateTo = null;
         
-        if (parsedDates != null) {
-            String naturalOn = parsedDates[DATE_ON_INDEX];
-            String naturalFrom = parsedDates[DATE_FROM_INDEX];
-            String naturalTo = parsedDates[DATE_TO_INDEX];
-            
-            if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
-                //date conflict detected
-                Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_DATE_CONFLICT);
-                return;
-            }
-    
-            // Parse natural date using Natty.
-            dateOn = naturalOn == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalOn)); 
-            dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalFrom)); 
-            dateTo = naturalTo == null ? null : DateUtil.floorDate(DateUtil.parseNatural(naturalTo));
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        if (validDates == null) {
+            return; // Break out when date conflict found
         }
         
-        if (parsedDates != null && dateOn == null && dateFrom == null && dateTo == null) {
-            //Natty failed to parse date
-            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_NO_DATE_DETECTED);
-            return ;
-        }
-        
-        if (parsedDates != null && isEventStatusProvided) {
-            //detect date conflict
-            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_DATE_CONFLICT);
-            return;
-        }
+        LocalDateTime dateOn = validDates[DATE_ON_INDEX];
+        LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
+        LocalDateTime dateTo = validDates[DATE_TO_INDEX];
                 
         //setting up view
-        filterTasksAndEvents(itemNameList, tagNameList, isItemTypeProvided, isTaskStatusProvided, isEventStatusProvided,
-                isTask, isCompleted, isOver, dateOn, dateFrom, dateTo);
-    }
-
-    /*
-     * Filter out the selected tasks and events based on the search criteria
-     * 
-     */
-    private void filterTasksAndEvents(HashSet<String> itemNameList, HashSet<String> tagNameList,
-            boolean isItemTypeProvided, boolean isTaskStatusProvided, boolean isEventStatusProvided, boolean isTask,
-            boolean isCompleted, boolean isOver, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
         TodoListDB db = TodoListDB.getInstance();
-        List<Task> tasks = db.getAllTasks();
-        List<Event> events = db.getAllEvents();
-        HashSet<Task> mergedTasks = new HashSet<Task>();
-        HashSet<Event> mergedEvents = new HashSet<Event>();
+        List<Task> tasks; //default
+        List<Event> events; //default
+        
+        // Filter out the tasks and events based on type and names
         if (!isItemTypeProvided) {
-            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks, mergedTasks);
-            events = filterByEventNameAndTagName(itemNameList, tagNameList, events, mergedEvents);
-        } else if (isTask) {
-            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, tasks, mergedTasks);
-            events = new ArrayList<Event>();
-        } else if (!isTask) {
-            tasks = new ArrayList<Task>();
-            events = filterByEventNameAndTagName(itemNameList, tagNameList, events, mergedEvents);
-        }
-        
-        if (isTaskStatusProvided) {
-            tasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
-            events = new ArrayList<Event>();
-        }
-        
-        if (isEventStatusProvided) {
-            events = FilterUtil.filterEventsByStatus(events, isOver);
-            tasks = new ArrayList<Task>();
-        }
-        
-        if (dateOn != null) {
-            //filter by single date
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
-            events = FilterUtil.filterEventBySingleDate(events, dateOn);
+            tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, db.getAllTasks());
+            events = filterByEventNameAndTagName(itemNameList, tagNameList, db.getAllEvents());
         } else {
-            //filter by range
-            tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
-            events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+            if (isTask) {
+                events = new ArrayList<Event>();
+                tasks = filterByTaskNameAndTagName(itemNameList, tagNameList, db.getAllTasks());
+            } else {
+                tasks = new ArrayList<Task>();
+                events = filterByEventNameAndTagName(itemNameList, tagNameList, db.getAllEvents());
+            }
         }
+        
+        // Filter out by Task Status if provided
+        if (isTaskStatusProvided) {
+            FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            events = new ArrayList<Event>();
+        }
+        
+        // Filter out by Event Status if provided
+        if (isEventStatusProvided) {
+            FilterUtil.filterEventsByStatus(events, isOver);
+            tasks = new ArrayList<Task>();
+        }
+        
+        filterTasksAndEventsByDate(tasks, events, dateOn, dateFrom, dateTo);
         
         if (tasks.size() == 0 && events.size() == 0) {
             Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
@@ -219,8 +176,27 @@ public class FindController implements Controller {
         Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
     }
 
+    /*
+     * Filter out the selected tasks and events based on the search criteria
+     * 
+     */
+    private void filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, 
+            LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
+        
+        if (dateOn != null) {
+            //filter by single date
+            FilterUtil.filterTaskBySingleDate(tasks, dateOn);
+            FilterUtil.filterEventBySingleDate(events, dateOn);
+        } else {
+            //filter by range
+            FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
+            FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+        }
+    }  
+
     private List<Event> filterByEventNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
-            List<Event> events, HashSet<Event> mergedEvents) {
+            List<Event> events) {
+        HashSet<Event> mergedEvents = new HashSet<Event>();
         List<Event> eventsByNames = FilterUtil.filterEventByNames(events, itemNameList);
         List<Event> eventsByTags = FilterUtil.filterEventByTags(events, tagNameList);
         mergedEvents.addAll(eventsByNames);
@@ -229,8 +205,9 @@ public class FindController implements Controller {
         return events;
     }
 
-    private List<Task> filterByTaskNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList,
-            List<Task> tasks, HashSet<Task> mergedTasks) {
+    private List<Task> filterByTaskNameAndTagName(HashSet<String> itemNameList, HashSet<String> tagNameList, 
+            List<Task> tasks) {
+        HashSet<Task> mergedTasks = new HashSet<Task>();
         List<Task> tasksByNames = FilterUtil.filterTaskByNames(tasks, itemNameList);
         List<Task> tasksByTags = FilterUtil.filterTaskByTags(tasks, tagNameList);
         mergedTasks.addAll(tasksByNames);
@@ -247,7 +224,6 @@ public class FindController implements Controller {
             String token) {
       
         String result = ParseUtil.getTokenResult(parsedResult, token);
-        
         //if found any matching , update list
         if (result != null) {
             hashList.add(result);
@@ -257,5 +233,66 @@ public class FindController implements Controller {
             }
         }
     }
-
+    
+    /*
+     * To be use to check if there are any command syntax error
+     * 
+     * @return true, if there is error in command syntax, false if syntax is allowed
+     */
+    private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, 
+            boolean isTask, boolean isItemTypeProvided, String input) {
+        // Check if more than 1 item type is provided
+        if (FilterUtil.isItemTypeConflict(input)) {
+            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_ITEM_TYPE_CONFLICT);
+            return true;
+        }
+        if (isItemTypeProvided) {
+            // Task and Event Command Syntax detected
+            if (isTask && isEventStatusProvided) {
+                Renderer.renderDisambiguation(FIND_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
+                return true;
+            }
+            
+            if (!isTask && isTaskStatusProvided) {
+                Renderer.renderDisambiguation(FIND_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /*
+     * To be used to parsed dates and check for any dates conflict
+     * 
+     * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
+     */
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
+        
+        LocalDateTime dateOn = null;
+        LocalDateTime dateFrom = null;
+        LocalDateTime dateTo = null;
+        
+        if (parsedDates != null) {
+            String naturalOn = parsedDates[DATE_ON_INDEX];
+            String naturalFrom = parsedDates[DATE_FROM_INDEX];
+            String naturalTo = parsedDates[DATE_TO_INDEX];
+            
+            if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
+                //date conflict detected
+                Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_DATE_CONFLICT);
+                return null;
+            }
+            // Parse natural date using Natty.
+            try {
+                dateOn = naturalOn == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalOn)); 
+                dateFrom = naturalFrom == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalFrom)); 
+                dateTo = naturalTo == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalTo));
+            } catch (InvalidNaturalDateException e) {
+                    Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_NO_DATE_DETECTED);
+                    return null;
+            }           
+        }
+        
+        return new LocalDateTime[] { null, dateOn, dateFrom, dateTo };
+    }
 }

@@ -37,8 +37,6 @@ public class MainApp extends Application {
     
     protected UiManager ui;
 
-    public MainApp() {}
-
     @Override
     public void init() throws Exception {
         super.init();
