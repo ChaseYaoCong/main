@@ -265,8 +265,8 @@ public class FilterUtil {
         Iterator<Event> iterator = events.iterator();
         while (iterator.hasNext()) {
             Event event = iterator.next();
+            date = DateUtil.floorDate(date);
             LocalDateTime eventDate = DateUtil.floorDate(event.getStartDate());
-            //May have floating tasks
             if (eventDate != null && eventDate.equals(date)) {
                 filteredEvents.add(event);
             }
