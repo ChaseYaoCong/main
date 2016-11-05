@@ -197,11 +197,11 @@ public class ListCommandTest extends GuiTest {
         //To check for both dates
         LocalDate date = TODAY_DATE.toLocalDate();
         TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(date);
-        TaskListTaskItemHandle taskItem = dateItem.getTaskListTaskItem(calendarItems.get(TASK_INDEX).getName());
+        TaskListTaskItemHandle taskItem = dateItem.getTaskListTaskItem((Task) calendarItems.get(TASK_INDEX));
         assertEquals(taskItem.getName(), calendarItems.get(TASK_INDEX).getName());
         date = TOMORROW_DATE.toLocalDate();
         dateItem = taskList.getTaskListDateItem(date);
-        TaskListEventItemHandle eventItem = dateItem.getTaskListEventItem(calendarItems.get(EVENT_INDEX).getName());
+        TaskListEventItemHandle eventItem = dateItem.getTaskListEventItem((Event) calendarItems.get(EVENT_INDEX));
         assertEquals(eventItem.getName(), calendarItems.get(EVENT_INDEX).getName());
         console.runCommand("clear");
     }
@@ -218,12 +218,12 @@ public class ListCommandTest extends GuiTest {
         if (TODAY_DATE.equals(date)) {
             LocalDate localDate = date.toLocalDate();
             TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(localDate);
-            TaskListTaskItemHandle taskItem = dateItem.getTaskListTaskItem(calendarItems.get(TASK_INDEX).getName());
+            TaskListTaskItemHandle taskItem = dateItem.getTaskListTaskItem((Task) calendarItems.get(TASK_INDEX));
             assertEquals(taskItem.getName(), calendarItems.get(TASK_INDEX).getName());
         } else if (TOMORROW_DATE.equals(date)){
             LocalDate localDate = date.toLocalDate();
             TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(localDate);
-            TaskListEventItemHandle eventItem = dateItem.getTaskListEventItem(calendarItems.get(EVENT_INDEX).getName());
+            TaskListEventItemHandle eventItem = dateItem.getTaskListEventItem((Event) calendarItems.get(EVENT_INDEX));
             assertEquals(eventItem.getName(), calendarItems.get(EVENT_INDEX).getName());
         }
         console.runCommand("clear");
