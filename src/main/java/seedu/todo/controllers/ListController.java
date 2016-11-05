@@ -163,11 +163,6 @@ public class ListController implements Controller {
             String naturalOn = parsedDates[DATE_ON_INDEX];
             String naturalFrom = parsedDates[DATE_FROM_INDEX];
             String naturalTo = parsedDates[DATE_TO_INDEX];
-            if (isEventStatusProvided && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) != 0) {
-                //detect date conflict
-                Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-                return null;
-            }
             
             if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
                 //date conflict detected
@@ -184,6 +179,13 @@ public class ListController implements Controller {
                     return null;
             }           
         }
+        
+        if ((parsedDates != null || dateCriteria != null) && isEventStatusProvided ) {
+            //detect date conflict
+            Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
+            return null;
+        }
+        
         return new LocalDateTime[] { dateCriteria, dateOn, dateFrom, dateTo };
     }
     
