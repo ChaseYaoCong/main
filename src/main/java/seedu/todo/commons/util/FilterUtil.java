@@ -42,6 +42,7 @@ public class FilterUtil {
                 String matchingName = nameListIterator.next();
                 if (matchWithFullName(task, matchingName) || matchWithSubName(task, matchingName)) {
                     filteredTasks.add(task);
+                    break;
                 }
             }
             nameListIterator = nameList.iterator();
@@ -192,6 +193,7 @@ public class FilterUtil {
                 String matchingName = nameListIterator.next().toLowerCase();
                 if (matchWithFullName(event, matchingName) || matchWithSubName(event, matchingName)) {
                     filteredEvents.add(event);
+                    break;
                 }
             }
             nameListIterator = nameList.iterator();
@@ -206,7 +208,7 @@ public class FilterUtil {
      * @param namelist
      *             Search and filter based on the name list
      */
-    public static List<Event> filterEventByTags (List<Event> events, HashSet<String> nameList) {
+    public static List<Event> filterEventByTags(List<Event> events, HashSet<String> nameList) {
         List<Event> filteredEvents = new ArrayList<Event>();
         //if name list size is 0, means not searching by tags 
         if (nameList.size() == 0) {
