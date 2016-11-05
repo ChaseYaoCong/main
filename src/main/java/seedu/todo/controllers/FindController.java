@@ -124,7 +124,7 @@ public class FindController implements Controller {
         
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
         
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates, isEventStatusProvided);
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
         if (validDates == null) {
             return; // Break out when date conflict found
         }
@@ -266,7 +266,7 @@ public class FindController implements Controller {
      * 
      * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates, boolean isEventStatusProvided) {
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
         
         LocalDateTime dateOn = null;
         LocalDateTime dateFrom = null;
