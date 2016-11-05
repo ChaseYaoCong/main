@@ -68,13 +68,13 @@ public class ClearController implements Controller {
      */
     private static Map<String, String[]> getTokenDefinitions() {
         Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
-        tokenDefinitions.put("default", new String[] {"clear"});
-        tokenDefinitions.put("eventType", new String[] { "event", "events", "task", "tasks" });
-        tokenDefinitions.put("time", new String[] { "at", "by", "on", "time", "date" });
-        tokenDefinitions.put("taskStatus", new String[] { "complete" , "completed", "incomplete", "incompleted"});
-        tokenDefinitions.put("eventStatus", new String[] { "over" , "ongoing", "current", "schedule" , "scheduled"});
-        tokenDefinitions.put("timeFrom", new String[] { "from" });
-        tokenDefinitions.put("timeTo", new String[] { "to", "before", "until" });
+        tokenDefinitions.put(Tokenizer.DEFAULT_TOKEN, new String[] {"clear"});
+        tokenDefinitions.put(Tokenizer.EVENT_TYPE_TOKEN, Tokenizer.EVENT_TYPE_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_TOKEN, Tokenizer.TIME_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TASK_STATUS_TOKEN, Tokenizer.TASK_STATUS_DEFINITION);
+        tokenDefinitions.put(Tokenizer.EVENT_STATUS_TOKEN, Tokenizer.EVENT_STATUS_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_FROM_TOKEN, Tokenizer.TIME_FROM_DEFINITION);
+        tokenDefinitions.put(Tokenizer.TIME_TO_TOKEN, Tokenizer.TIME_TO_DEFINITION);
         return tokenDefinitions;
     }
     
@@ -91,9 +91,9 @@ public class ClearController implements Controller {
             return;
         }
         
-        boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, "eventType");
-        boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, "taskStatus");
-        boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, "eventStatus");
+        boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_TYPE_TOKEN);
+        boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.TASK_STATUS_TOKEN);
+        boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_STATUS_TOKEN);
         
         if (isTaskStatusProvided || isEventStatusProvided) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_CLEAR_UNABLE_TO_SUPPORT);
@@ -102,13 +102,13 @@ public class ClearController implements Controller {
         
         boolean isTask = true; //default
         if (isItemTypeProvided) {
-            isTask = ParseUtil.doesTokenContainKeyword(parsedResult, "eventType", "task");
+            isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
         }
         
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
         
         //date enter with COMMAND_WORD e.g list today
-        String date = ParseUtil.getTokenResult(parsedResult, "default");
+        String date = ParseUtil.getTokenResult(parsedResult, Tokenizer.DEFAULT_TOKEN);
         
         if (date != null && parsedDates != null) {
             Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
@@ -148,7 +148,6 @@ public class ClearController implements Controller {
                     return ;
             }
         }
-        System.out.println(dateCriteria);
         deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
     }
 
