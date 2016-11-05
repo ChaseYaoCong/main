@@ -13,9 +13,8 @@ import seedu.todo.models.CalendarItem;
 import seedu.todo.models.TodoListDB;
 
 /**
- * Controller to destroy a CalendarItem.
- * 
  * @@author A0139922Y
+ * Controller to Tag a CalendarItem.
  *
  */
 public class TagController implements Controller {
@@ -59,7 +58,7 @@ public class TagController implements Controller {
      */
     private static Map<String, String[]> getTokenDefinitions() {
         Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
-        tokenDefinitions.put("default", new String[] {"tag"});
+        tokenDefinitions.put(Tokenizer.DEFAULT_TOKEN, new String[] { COMMAND_WORD });
         return tokenDefinitions;
     }
 
@@ -68,18 +67,16 @@ public class TagController implements Controller {
         
         Map<String, String[]> parsedResult;
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
-        String param = parsedResult.get("default")[TOKENIZER_DEFAULT_INDEX];
+        String param = parsedResult.get(Tokenizer.DEFAULT_TOKEN)[TOKENIZER_DEFAULT_INDEX];
         
         if (param.length() <= 0) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
             return;
         }
         
-        assert param.length() > 0;
+        String[] parameters = StringUtil.splitStringBySpace(param);
         
-        String[] parameters = parseParam(param);
-        
-        // Get index.
+        // Get index and tag names.
         int index = 0;
         String tagNames = null;
         
@@ -96,26 +93,10 @@ public class TagController implements Controller {
         CalendarItem calendarItem = edb.getCalendarItemsByDisplayedId(index);
         TodoListDB db = TodoListDB.getInstance();
         
-        if (calendarItem == null) {
-            Renderer.renderDisambiguation(String.format(TAG_FORMAT, index), MESSAGE_INDEX_OUT_OF_RANGE);
-            return;
-        }
-        
-        // Check if tag name is provided
-        if (parameters.length <= 1) {
-            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_TAG_NAME_NOT_FOUND);
-            return;
-        }
-        
-        assert calendarItem != null;
-        
         String[] parsedTagNames = parseTags(tagNames);
         
-        boolean isTagNameDuplicate = checkDuplicateTagName(parsedTagNames, calendarItem);
-        
-        if (isTagNameDuplicate) {
-            Renderer.renderDisambiguation(String.format(TAG_FORMAT, index), MESSAGE_TAG_NAME_EXIST);
-            return;
+        if (isErrorCommand(parameters, index, calendarItem, parsedTagNames)) {
+            return; // Break out once error
         }
         
         boolean resultOfTagging = addingTagNames(parsedTagNames, calendarItem);
@@ -128,6 +109,35 @@ public class TagController implements Controller {
         } else {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_EXCEED_TAG_SIZE);
         }
+    }
+
+    /*
+     * To be used to check if there are any command syntax errors
+     * 
+     * @return true if error detected, else false.
+     */
+    private boolean isErrorCommand(String[] parameters, int index, CalendarItem calendarItem, String[] parsedTagNames) {
+        // Check if index is out of range
+        if (calendarItem == null) {
+            Renderer.renderDisambiguation(String.format(TAG_FORMAT, index), MESSAGE_INDEX_OUT_OF_RANGE);
+            return true;
+        }
+        
+        // Check if tag name is provided
+        if (parameters.length <= 1) {
+            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_TAG_NAME_NOT_FOUND);
+            return true;
+        }
+        
+        // Check if tag name already exist
+        boolean isTagNameDuplicate = checkDuplicateTagName(parsedTagNames, calendarItem);
+        
+        if (isTagNameDuplicate) {
+            Renderer.renderDisambiguation(String.format(TAG_FORMAT, index), MESSAGE_TAG_NAME_EXIST);
+            return true;
+        }
+        
+        return false;
     }
 
     /*
@@ -178,18 +188,6 @@ public class TagController implements Controller {
             return true;
         }
         return false;
-    }
-    
-    /*
-     * To be used to split index and tag names entered by user
-     * @param param
-     *            parameter enter by user
-     * 
-     * @return an array with the index 0 containing edb index
-     * and index 1 containing tag names
-     */
-    private String[] parseParam(String param) {
-        return param.split(" ");
     }
     
     /*
