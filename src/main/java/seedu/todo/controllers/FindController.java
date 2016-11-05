@@ -189,18 +189,24 @@ public class FindController implements Controller {
         // Set item status
         boolean isCompleted = false; //default 
         boolean isOver = false; //default
+        List<Task> filteredTasks = tasks;
+        List<Event> filteredEvents = events;
         
         // Filter out by Task Status if provided
         if (isTaskStatusProvided) {
             isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
-            calendarItems.addAll(FilterUtil.filterTasksByStatus(tasks, isCompleted));
+            filteredTasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            filteredEvents = new ArrayList<Event>();
         }
         
         // Filter out by Event Status if provided
         if (isEventStatusProvided) {
             isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
-            calendarItems.addAll(events = FilterUtil.filterEventsByStatus(events, isOver));
+            filteredEvents = FilterUtil.filterEventsByStatus(events, isOver);
+            filteredTasks = new ArrayList<Task>();
         }
+        calendarItems.addAll(filteredTasks);
+        calendarItems.addAll(filteredEvents);
         return calendarItems;
     }
 
@@ -217,11 +223,14 @@ public class FindController implements Controller {
      * @return        
      *            tasks and events in a list form by date or null when date conflict found
      */
-    private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
+    private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, 
+            Map<String, String[]> parsedResult) {
         // Get dates from input
         List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
         LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        List<Task> filteredTasks;
+        List<Event> filteredEvents;
         if (validDates == null) {
             return null; // Break out when date conflict found
         }
@@ -233,13 +242,15 @@ public class FindController implements Controller {
         
         if (dateOn != null) {
             // Filter by single date
-            calendarItems.addAll(FilterUtil.filterTaskBySingleDate(tasks, dateOn));
-            calendarItems.addAll(FilterUtil.filterEventBySingleDate(events, dateOn));
+            filteredTasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
+            filteredEvents = FilterUtil.filterEventBySingleDate(events, dateOn);
         } else {
             // Filter by range
-            calendarItems.addAll(FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo));
-            calendarItems.addAll(FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo));
+            filteredTasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
+            filteredEvents = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
         }
+        calendarItems.addAll(filteredTasks);
+        calendarItems.addAll(filteredEvents);
         return calendarItems;
     }  
     
