@@ -36,13 +36,15 @@ public class ClearController implements Controller {
     private static final String MESSAGE_CLEAR_SELECTED_SUCCESS = "A total of %s deleted!";
     private static final String MESSAGE_CLEAR_NO_ITEM_FOUND = "No item found!";
     private static final String MESSAGE_CLEAR_ALL_SUCCESS = "All tasks and events have been deleted!\n" + "To undo, type \"undo\".";
+    private static final String MESSAGE_CLEAR_UNABLE_TO_SUPPORT = "Unable to clear!\nCannot clear by status!";
     private static final String MESSAGE_DATE_CONFLICT = "Unable to clear!\nMore than 1 date criteria is provided!";
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to clear!\nThe natural date entered is not supported.";
-    private static final String MESSAGE_CLEAR_UNABLE_TO_SUPPORT = "Unable to clear!\nCannot clear by status!";
+    private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to clear!\nMore than 1 item type is provided!";
     
     //use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
     private static final int COMMAND_INPUT_INDEX = 0;
+    private static final int DATE_CRITERIA_INDEX = 0;
     private static final int DATE_ON_INDEX = 1;
     private static final int DATE_FROM_INDEX = 2;
     private static final int DATE_TO_INDEX = 3;
@@ -68,7 +70,7 @@ public class ClearController implements Controller {
      */
     private static Map<String, String[]> getTokenDefinitions() {
         Map<String, String[]> tokenDefinitions = new HashMap<String, String[]>();
-        tokenDefinitions.put(Tokenizer.DEFAULT_TOKEN, new String[] {"clear"});
+        tokenDefinitions.put(Tokenizer.DEFAULT_TOKEN, new String[] { COMMAND_WORD });
         tokenDefinitions.put(Tokenizer.EVENT_TYPE_TOKEN, Tokenizer.EVENT_TYPE_DEFINITION);
         tokenDefinitions.put(Tokenizer.TIME_TOKEN, Tokenizer.TIME_DEFINITION);
         tokenDefinitions.put(Tokenizer.TASK_STATUS_TOKEN, Tokenizer.TASK_STATUS_DEFINITION);
@@ -88,16 +90,15 @@ public class ClearController implements Controller {
         if (input.trim().equals(COMMAND_WORD)) {
             db.destroyAllTaskAndEvents();
             Renderer.renderIndex(db, MESSAGE_CLEAR_ALL_SUCCESS);
-            return;
+            return; // Clear all
         }
         
         boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_TYPE_TOKEN);
         boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.TASK_STATUS_TOKEN);
         boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_STATUS_TOKEN);
         
-        if (isTaskStatusProvided || isEventStatusProvided) {
-            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_CLEAR_UNABLE_TO_SUPPORT);
-            return;
+        if (isErrorCommand(isTaskStatusProvided, isEventStatusProvided, input)) {
+            return; // Break out if found error
         }
         
         boolean isTask = true; //default
@@ -105,6 +106,25 @@ public class ClearController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
         }
         
+        LocalDateTime [] parsedDates = parsingDates(parsedResult);
+        if (parsedDates == null) {
+            return; // Break out when date conflict found
+        }
+        
+        LocalDateTime dateCriteria = parsedDates[DATE_CRITERIA_INDEX];
+        LocalDateTime dateOn = parsedDates[DATE_ON_INDEX];
+        LocalDateTime dateFrom = parsedDates[DATE_FROM_INDEX];
+        LocalDateTime dateTo = parsedDates[DATE_TO_INDEX];
+        
+        deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
+    }
+    
+    /*
+     * To be used to parsed dates and check for any dates conflict
+     * 
+     * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
+     */
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult) {
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
         
         //date enter with COMMAND_WORD e.g list today
@@ -112,7 +132,7 @@ public class ClearController implements Controller {
         
         if (date != null && parsedDates != null) {
             Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-            return;
+            return null;
         }
         
         LocalDateTime dateCriteria = null;
@@ -125,7 +145,7 @@ public class ClearController implements Controller {
                 dateCriteria = DateParser.parseNatural(date);
             } catch (InvalidNaturalDateException e) {
                 Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
-                return ;
+                return null;
             }
         }
         
@@ -136,7 +156,7 @@ public class ClearController implements Controller {
             if (naturalOn != null && Integer.parseInt(parsedDates[NUM_OF_DATES_FOUND_INDEX]) > 1) {
                 //date conflict detected
                 Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
-                return;
+                return null;
             }
             // Parse natural date using Natty.
             try {
@@ -145,10 +165,44 @@ public class ClearController implements Controller {
                 dateTo = naturalTo == null ? null : DateUtil.floorDate(DateParser.parseNatural(naturalTo));
             } catch (InvalidNaturalDateException e) {
                     Renderer.renderDisambiguation(CLEAR_DATE_SYNTAX, MESSAGE_NO_DATE_DETECTED);
-                    return ;
+                    return null;
             }
         }
-        deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
+        return new LocalDateTime[] { dateCriteria, dateOn, dateFrom, dateTo };
+    }
+    
+    /*
+     * To be use to check if there are any command syntax error
+     * 
+     * @return true, if there is error in command syntax, false if syntax is allowed
+     */
+    private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, String input) {
+        // Check if any status is provided
+        if (isTaskStatusProvided || isEventStatusProvided) {
+            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_CLEAR_UNABLE_TO_SUPPORT);
+            return true;
+        }
+        // Check if more than 1 item type is provided
+        if (isItemTypeConflict(input)) {
+            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_ITEM_TYPE_CONFLICT);
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * To be use to check if there are more than 1 event type entered by user 
+     * 
+     * @return true if more than 1 event type found, false, if only 1 or 0 event type found
+     */
+    private boolean isItemTypeConflict(String input) {
+        int itemTypeFound = 0;
+        for (int i = 0; i < Tokenizer.EVENT_TYPE_DEFINITION.length; i ++) {
+            if(input.contains(Tokenizer.EVENT_TYPE_DEFINITION[i])) {
+                itemTypeFound ++;
+            }
+        }
+        return itemTypeFound > 1;
     }
 
     /*
@@ -158,7 +212,8 @@ public class ClearController implements Controller {
     private void deleteSelectedTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTask,
             LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
         List<Task> tasks = db.getAllTasks(); 
-        List<Event> events = db.getAllEvents();; 
+        List<Event> events = db.getAllEvents();
+
         if (isItemTypeProvided) {
             if (isTask) {
                 events = new ArrayList<Event>();
