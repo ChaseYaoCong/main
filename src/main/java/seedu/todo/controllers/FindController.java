@@ -30,11 +30,14 @@ public class FindController implements Controller {
     private static final String NAME = "Find";
     private static final String DESCRIPTION = "Find all tasks and events based on the provided keywords.\n" + 
         "This command will be searching with non-case sensitive keywords.";
+    private static final String COMMAND_WORD = "find";
+    
+    // Syntax correction to console input
     private static final String COMMAND_SYNTAX = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
     private static final String FIND_TASK_SYNTAX = "find \"name\" task \"complete/incomplete\"";
     private static final String FIND_EVENT_SYNTAX = "find \"name\" event \"over/ongoing\"";
-    private static final String COMMAND_WORD = "find";
     
+    // Message output to console text area
     private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
     private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
     private static final String MESSAGE_NO_KEYWORD_FOUND = "No keyword found!";
@@ -134,7 +137,7 @@ public class FindController implements Controller {
             return; // Break out when date conflict found
         }
         
-        // Set dates found
+        // Set dates that are found, if not found value will be null
         LocalDateTime dateOn = validDates[DATE_ON_INDEX];
         LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
         LocalDateTime dateTo = validDates[DATE_TO_INDEX];
@@ -207,6 +210,8 @@ public class FindController implements Controller {
         }
     }  
 
+    /*======================== Helper Methods for filtering by names and tags =============================*/
+    
     /*
      * Filter out all the events based on the name list that has been parsed.
      * This method also ensure that no duplicate event will be return. 
@@ -267,6 +272,8 @@ public class FindController implements Controller {
         }
     }
     
+    /*============================ Helper Methods to check for Error/Syntax Command ===================*/
+    
     /*
      * To be use to check if there are any command syntax error
      * 
@@ -325,7 +332,6 @@ public class FindController implements Controller {
                     return null;
             }           
         }
-        
         return new LocalDateTime[] { null, dateOn, dateFrom, dateTo };
     }
 }
