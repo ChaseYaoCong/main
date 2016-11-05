@@ -132,8 +132,8 @@ public class UntagController implements Controller {
             return true;
         }
         
-        // Check if tag name already exist
-        if (checkTagNameExist(parsedTagNames, calendarItem)) {
+        // Check if tag name exist
+        if (tagNameDoesNotExist(parsedTagNames, calendarItem)) {
             Renderer.renderDisambiguation(String.format(UNTAG_FORMAT, index), MESSAGE_TAG_NAME_EXIST);
             return true;
         }
@@ -169,7 +169,7 @@ public class UntagController implements Controller {
      * 
      * @return true if tag name does not exist or is entered more than once, false if it exist in the tag list
      */
-    private boolean checkTagNameExist(String[] parsedTagNames, CalendarItem calendarItem) {
+    private boolean tagNameDoesNotExist(String[] parsedTagNames, CalendarItem calendarItem) {
         HashSet<String> parsedTagNamesList = new HashSet<String>();
         for (int i = 0; i < parsedTagNames.length; i ++) {
             //checking with overall tag list in db
