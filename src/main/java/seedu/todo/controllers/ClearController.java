@@ -106,15 +106,16 @@ public class ClearController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
         }
         
-        LocalDateTime [] parsedDates = parsingDates(parsedResult);
-        if (parsedDates == null) {
+        String[] parsedDates = ParseUtil.parseDates(parsedResult);
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        if (validDates == null) {
             return; // Break out when date conflict found
         }
         
-        LocalDateTime dateCriteria = parsedDates[DATE_CRITERIA_INDEX];
-        LocalDateTime dateOn = parsedDates[DATE_ON_INDEX];
-        LocalDateTime dateFrom = parsedDates[DATE_FROM_INDEX];
-        LocalDateTime dateTo = parsedDates[DATE_TO_INDEX];
+        LocalDateTime dateCriteria = validDates[DATE_CRITERIA_INDEX];
+        LocalDateTime dateOn = validDates[DATE_ON_INDEX];
+        LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
+        LocalDateTime dateTo = validDates[DATE_TO_INDEX];
         
         deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
     }
@@ -124,8 +125,7 @@ public class ClearController implements Controller {
      * 
      * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult) {
-        String[] parsedDates = ParseUtil.parseDates(parsedResult);
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
         
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, Tokenizer.DEFAULT_TOKEN);
