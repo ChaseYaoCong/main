@@ -550,11 +550,11 @@ Use case ends.
 Use case ends.
 
 3b. The given details are invalid.
-> 3b1. User specify invalid date format.  
+> 3b1. User specifies an invalid date format.  
 > Application shows an error message.  
 Use case ends.
 
-> 3b2. User specify more than one date.  
+> 3b2. User specifies more than one date.  
 > Application shows an error message.  
 Use case ends.
 
@@ -578,7 +578,7 @@ Use case ends.
 Use case ends.
 
 3b. The given details are invalid.
-> 3b1. User specify invalid date format.  
+> 3b1. User specifies an invalid date format.  
 > Application shows an error message.  
 Use case ends.
 
