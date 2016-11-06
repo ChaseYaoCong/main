@@ -1,5 +1,7 @@
 package seedu.todo.guitests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.time.LocalDateTime;
 
 import org.junit.Before;
@@ -89,5 +91,132 @@ public class ClearCommandTest extends GuiTest {
         assertEventNotVisibleAfterCmd("list", event3);
         assertEventNotVisibleAfterCmd("list", event4);
     }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_tasks_by_single_date() {
+        console.runCommand("clear tasks on tmr");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_tasks_by_date_range() {
+        console.runCommand("clear tasks from today to tmr");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_tasks_by_date_range_with_single_date() {
+        console.runCommand("clear tasks from today");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskNotVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_events_by_single_date() {
+        console.runCommand("clear events on tmr");
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_events_by_date_range() {
+        console.runCommand("clear events from today to tmr");
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_events_by_date_range_with_single_date() {
+        console.runCommand("clear events from today");
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventNotVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_by_single_date() {
+        console.runCommand("clear on tmr");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_by_date_range() {
+        console.runCommand("clear from today to tmr");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_by_date_range_with_single_date() {
+        console.runCommand("clear from today");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskNotVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventNotVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_with_invalid_date_syntax() {
+        console.runCommand("clear from todar");
+        String expectedDisambiguation = "clear \"date\" [or from \"date\" to \"date\"]";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_with_invalid_command_syntax_by_event_status() {
+        console.runCommand("clear current events");
+        String expectedDisambiguation = "clear \"task/event\" on \"date\"";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void clear_with_invalid_command_syntax_by_task_status() {
+        console.runCommand("clear completed tasks");
+        String expectedDisambiguation = "clear \"task/event\" on \"date\"";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
     
 }
