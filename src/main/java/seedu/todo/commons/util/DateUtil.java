@@ -33,6 +33,7 @@ public class DateUtil {
     private static final String DAYS = "days";
     
     /**
+     * @@author A0139812A
      * Converts a LocalDateTime object to a legacy java.util.Date object.
      * 
      * @param dateTime   LocalDateTime object.
@@ -43,6 +44,7 @@ public class DateUtil {
     }
 
     /**
+     * @@author A0139812A
      * Performs a "floor" operation on a LocalDateTime, and returns a new LocalDateTime
      * with time set to 00:00.
      * 
@@ -58,6 +60,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139922Y
      * Performs a "ceiling" operation on a LocalDateTime, and returns a new LocalDateTime
      * with time set to 23:59.
      * 
@@ -73,6 +76,7 @@ public class DateUtil {
     }
 
     /**
+     * @@author A0139812A
      * Formats a LocalDateTime to a relative date. 
      * Prefers DayOfWeek format, for dates up to 6 days from today.
      * Otherwise, returns a relative time (e.g. 13 days from now).
@@ -109,6 +113,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Formats a LocalDateTime to a formatted date, following the dd MMM yyyy format.
      * 
      * @param dateTime   LocalDateTime to format.
@@ -119,6 +124,7 @@ public class DateUtil {
     }
 
     /**
+     * @@author A0139812A
      * Formats a LocalDateTime to a ISO formatted date, following the ISO yyyy-MM-dd format.
      * 
      * @param dateTime   LocalDateTime to format.
@@ -129,6 +135,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Formats a LocalDateTime to a short date. Excludes the day of week only if
      * the date is within 2-6 days from now.
      * 
@@ -155,6 +162,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Parses a short date (as defined in {@link formatShortDate}) back to a LocalDateTime.
      * We ignore the day of week portion for simplicity, since the shortDate can optionally omit it.
      * 
@@ -183,6 +191,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Formats a LocalDateTime to a 24-hour time.
      * 
      * @param dateTime   LocalDateTime to format.
@@ -197,6 +206,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Parses a ISO-format time string ({@code HH:mm}) into a LocalTime.
      */
     public static LocalTime parseTime(String timeString) {
@@ -204,6 +214,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Formats a LocalDateTime into short date + time format.
      * @param dateTime   LocalDateTime to format.
      * @return           Short date + time formatted string.
@@ -213,6 +224,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Formats a start date and end date to a date range, which will display only as much info as necessary.
      * @param dateFrom   LocalDateTime from.
      * @param dateTo     LocalDateTime to.
@@ -235,6 +247,7 @@ public class DateUtil {
     }
     
     /**
+     * @@author A0139812A
      * Parses a dateTime string with the standard ISO format {@code yyyy-MM-dd HH:mm:ss}.
      * 
      * @param dateTimeString
@@ -246,6 +259,7 @@ public class DateUtil {
     }
     
     /*
+     * @@author A0139922Y
      * Check a LocalDateTime if the time is the same as the current time
      * 
      * @param date
@@ -257,6 +271,7 @@ public class DateUtil {
     }
     
     /*
+     * @@author A0139922Y
      * Check a LocalDateTime if the date is the same as the current date
      * 
      * @param date
@@ -268,25 +283,8 @@ public class DateUtil {
                 currentDate.getYear() != date.getYear();
     }
     
-    /*
-     * To be used to parse natural date into LocalDateTime 
-     * @parser Natty
-     * 
-     * */
-    public static LocalDateTime parseNatural(String natural) {
-        Parser parser = new Parser();
-        List<DateGroup> groups = parser.parse(natural);
-        Date date = null;
-        try {
-            date = groups.get(0).getDates().get(0);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-        LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        return ldt;
-    }
-    
-    /* @@author A0139922Y
+    /* 
+     * @@author A0139922Y
      * To convert LocalDateTime to 00:00 or 23:59 if not specified
      * @param actualDate 
      *                  is the date that that is require for checking
@@ -298,13 +296,13 @@ public class DateUtil {
      * @return the correct date format
      */
     public static LocalDateTime parseTimeStamp(LocalDateTime actualDate, LocalDateTime checkedDate, boolean isDateFrom) {
-        //check for date
+        // Check for date
         if (checkedDate != null && actualDate != null && checkIfDateExist(checkedDate) && !checkIfDateExist(actualDate)) {
             if (!isDateFrom) {
                 actualDate = checkedDate.toLocalDate().atTime(actualDate.getHour(), actualDate.getMinute());
             }
         }
-        //check for time
+        // Check for time
         if (checkedDate != null && actualDate != null && checkIfTimeExist(checkedDate) && !checkIfTimeExist(actualDate)) {
             actualDate = actualDate.toLocalDate().atTime(checkedDate.getHour(), checkedDate.getMinute());            
         }

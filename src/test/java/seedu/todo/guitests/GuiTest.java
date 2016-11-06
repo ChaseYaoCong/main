@@ -281,7 +281,7 @@ public abstract class GuiTest {
      * @@author A0139922Y
      * Utility method for testing if tag is not successfully added into the GUI side panel.
      * This runs a command and checks if TagList contains tag that matches
-     * the tag that was just been added.
+     * the tag that is attempt to be added.
      * 
      * Assumption : No tags can have the same name
      * 
@@ -304,9 +304,17 @@ public abstract class GuiTest {
         assertEquals(expected_tag_list_size, taskTagList.size());
     }
     
+    /*
+     * @@author A0139922Y
+     * Extract out the tag name that is been parsed in the command
+     *  
+     * Assumption only 1 tag name is provided and tag name wil be provided
+     * @return tagName
+     */
     private String getTagNameFromCommand(String command) {
         int tagName_index = 2;
         String tagName = StringUtil.splitStringBySpace(command)[tagName_index];
+        assert tagName != null;
         return tagName;
     }
 }
