@@ -109,7 +109,7 @@ public class TagControllerTest extends GuiTest {
     }
     
     @Test
-    public void tag_with_invalid_index() {
+    public void tag_with_invalid_index_out_of_range() {
         // To run command
         String command = "tag 2";
         console.runCommand(command);
@@ -120,6 +120,22 @@ public class TagControllerTest extends GuiTest {
         
         // For console text area to check error message
         String tag_controller_message = "Could not tag task/event: Invalid index provided!";
+        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
+    }
+    
+    @Test
+    public void tag_with_invalid_index_as_alphabets() {
+        // To run command
+        String command = "tag personal";
+        console.runCommand(command);
+        
+        // For console input 
+        String expectedDisambiguationForConsoleInput = "tag <index> <tag name>";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
+        
+        // For console text area to check error message
+        String tag_controller_message = "Index has to be a number!";
         String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
