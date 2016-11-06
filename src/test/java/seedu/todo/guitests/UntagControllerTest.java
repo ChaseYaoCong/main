@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seedu.todo.commons.util.DateUtil;
-import seedu.todo.controllers.concerns.Renderer;
+import seedu.todo.controllers.UntagController;
 import seedu.todo.models.Task;
 
 /*
@@ -65,12 +65,12 @@ public class UntagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "untag 1";
+        int tag_index = 1;
+        String expectedDisambiguationForConsoleInput = String.format(UntagController.UNTAG_FORMAT, tag_index);
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Could not untag task/event : Tag name does not exist or Duplicate Tag name detected!";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(UntagController.MESSAGE_TAG_NAME_EXIST);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -81,12 +81,11 @@ public class UntagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "untag <index> <tag name>";
+        String expectedDisambiguationForConsoleInput = UntagController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Could not untag task/event: Tag name not provided!";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(UntagController.MESSAGE_TAG_NAME_NOT_FOUND);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -97,12 +96,11 @@ public class UntagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "untag <index> <tag name>";
+        String expectedDisambiguationForConsoleInput = UntagController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Please specify the index of the item and the tag name to untag.";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(UntagController.MESSAGE_MISSING_INDEX_AND_TAG_NAME);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -113,12 +111,12 @@ public class UntagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "untag 2";
+        int index_out_of_range = 2;
+        String expectedDisambiguationForConsoleInput = String.format(UntagController.UNTAG_FORMAT, index_out_of_range);
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Could not untag task/event: Invalid index provided!";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(UntagController.MESSAGE_INDEX_OUT_OF_RANGE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
 }

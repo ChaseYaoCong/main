@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seedu.todo.commons.util.DateUtil;
+import seedu.todo.commons.util.StringUtil;
+import seedu.todo.controllers.FindController;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
@@ -37,6 +39,9 @@ public class FindCommandTest extends GuiTest {
     private String commandAdd4 = String.format("add event buying workshop from \"%s 8pm\" to \"%s 9pm\" tag buy",
             THE_DAY_AFTER_TOMORROW_STRING, THE_DAY_AFTER_TOMORROW_STRING);
     private Event event4 = new Event();
+    
+    private int expectedNumOfTasks;
+    private int expectedNumOfEvents;
     
     // Set up DB
     public FindCommandTest() {
@@ -93,6 +98,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -102,6 +112,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -111,6 +126,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -120,6 +140,7 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        assertEquals(console.getConsoleTextArea(), FindController.MESSAGE_NO_RESULT_FOUND);
     }
     
     @Test
@@ -129,6 +150,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -138,6 +164,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -147,8 +178,12 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
-    
     @Test
     public void find_by_invalid_tag() {
         String command = "find tagName tester";
@@ -156,6 +191,7 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        assertEquals(console.getConsoleTextArea(), FindController.MESSAGE_NO_RESULT_FOUND);
     }
     
     @Test
@@ -165,6 +201,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -174,6 +215,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -183,6 +229,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -192,6 +243,7 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        assertEquals(console.getConsoleTextArea(), FindController.MESSAGE_NO_RESULT_FOUND);
     }
     
     @Test
@@ -202,6 +254,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -211,6 +268,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -220,6 +282,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -229,6 +296,7 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        assertEquals(console.getConsoleTextArea(), FindController.MESSAGE_NO_RESULT_FOUND);
     }
     
     @Test
@@ -238,6 +306,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -247,6 +320,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -256,6 +334,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test 
@@ -265,6 +348,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -274,6 +362,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -283,6 +376,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -292,6 +390,11 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -301,45 +404,70 @@ public class FindCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(FindController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void find_missingKeywords_disambiguate() {
         String command = "find";
         console.runCommand(command);
-        String expectedDisambiguation = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
+        String expectedDisambiguation = FindController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(FindController.MESSAGE_NO_KEYWORD_FOUND);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void find_invalidTaskSyntax_disambiguate() {
         String command = "find buy task over";
         console.runCommand(command);
-        String expectedDisambiguation = "find \"name\" task \"complete/incomplete\"";
+        String expectedDisambiguation = FindController.FIND_TASK_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(FindController.MESSAGE_INVALID_TASK_STATUS);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void find_invalidEventSyntax_disambiguate() {
         String command = "find buy event complete";
         console.runCommand(command);
-        String expectedDisambiguation = "find \"name\" event \"over/ongoing\"";
+        String expectedDisambiguation = FindController.FIND_EVENT_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(FindController.MESSAGE_INVALID_EVENT_STATUS);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void find_with_invalid_single_date() {
         String command = "find buy by todar";
         console.runCommand(command);
-        String expectedDisambiguation = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
+        String expectedDisambiguation = FindController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(FindController.MESSAGE_NO_DATE_DETECTED);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
+    }
+    
+    @Test
+    public void find_with_date_conflict() {
+        String command = "find buy by today from tmr";
+        console.runCommand(command);
+        String expectedDisambiguation = FindController.COMMAND_SYNTAX;
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(FindController.MESSAGE_DATE_CONFLICT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void find_with_invalid_date_range() {
         String command = "find buy from today to tml";
         console.runCommand(command);
-        String expectedDisambiguation = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
+        String expectedDisambiguation = FindController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(FindController.MESSAGE_NO_DATE_DETECTED);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
 }

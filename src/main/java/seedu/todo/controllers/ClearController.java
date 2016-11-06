@@ -31,17 +31,17 @@ public class ClearController implements Controller {
     private static final String COMMAND_WORD = "clear";
     
     // Syntax correction to console input
-    private static final String COMMAND_SYNTAX = "clear \"task/event\" on \"date\"";
-    private static final String CLEAR_DATE_SYNTAX = "clear \"date\" [or from \"date\" to \"date\"]";
+    public static final String COMMAND_SYNTAX = "clear \"task/event\" on \"date\"";
+    public static final String CLEAR_DATE_SYNTAX = "clear \"date\" [or from \"date\" to \"date\"]";
     
     // Message output to console text area
-    private static final String MESSAGE_CLEAR_SELECTED_SUCCESS = "A total of %s deleted!";
-    private static final String MESSAGE_CLEAR_NO_ITEM_FOUND = "No item found!";
-    private static final String MESSAGE_CLEAR_ALL_SUCCESS = "All tasks and events have been deleted!\n" + "To undo, type \"undo\".";
-    private static final String MESSAGE_CLEAR_UNABLE_TO_SUPPORT = "Unable to clear!\nCannot clear by status!";
-    private static final String MESSAGE_DATE_CONFLICT = "Unable to clear!\nMore than 1 date criteria is provided!";
-    private static final String MESSAGE_NO_DATE_DETECTED = "Unable to clear!\nThe natural date entered is not supported.";
-    private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to clear!\nMore than 1 item type is provided!";
+    public static final String MESSAGE_CLEAR_SUCCESS_FORMAT = "A total of %s deleted!";
+    public static final String MESSAGE_CLEAR_NO_ITEM_FOUND = "No item found!";
+    public static final String MESSAGE_CLEAR_ALL_SUCCESS = "All tasks and events have been deleted!\n" + "To undo, type \"undo\".";
+    public static final String MESSAGE_CLEAR_UNABLE_TO_SUPPORT = "Unable to clear!\nCannot clear by status!";
+    public static final String MESSAGE_DATE_CONFLICT = "Unable to clear!\nMore than 1 date criteria is provided!";
+    public static final String MESSAGE_NO_DATE_DETECTED = "Unable to clear!\nThe natural date entered is not supported.";
+    public static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to clear!\nMore than 1 item type is provided!";
     
     // Use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
@@ -289,7 +289,7 @@ public class ClearController implements Controller {
      */
     private void deleteSelectedTasksAndEvents(List<Task> tasks, List<Event> events, TodoListDB db) {
         db.destroyAllTaskAndEventsByList(tasks, events);
-        String consoleMessage = String.format(MESSAGE_CLEAR_SELECTED_SUCCESS, 
+        String consoleMessage = String.format(MESSAGE_CLEAR_SUCCESS_FORMAT, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
         Renderer.renderIndex(db, consoleMessage);
     }

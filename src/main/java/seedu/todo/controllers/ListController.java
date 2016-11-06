@@ -33,19 +33,19 @@ public class ListController implements Controller {
     private static final String COMMAND_WORD = "list";
     
     // Syntax correction to console input
-    private static final String LIST_TASK_SYNTAX = "list task \"complete/incomplete\"";
-    private static final String LIST_EVENT_SYNTAX = "list event \"over/current\"";
-    private static final String LIST_DATE_SYNTAX = "list \"date\" [or from \"date\" to \"date\"]";
+    public static final String LIST_TASK_SYNTAX = "list task \"complete/incomplete\"";
+    public static final String LIST_EVENT_SYNTAX = "list event \"over/current\"";
+    public static final String LIST_DATE_SYNTAX = "list \"date\" [or from \"date\" to \"date\"]";
     
     // Message output to console text area
-    private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
-    private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
-    private static final String MESSAGE_LIST_SUCCESS = "Listing Today's, incompleted tasks and ongoing events";
-    private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to list!\nTry listing with complete or incomplete";
-    private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to list!\nTry listing with over or current";
-    private static final String MESSAGE_DATE_CONFLICT = "Unable to list!\nMore than 1 date criteria is provided!";
-    private static final String MESSAGE_NO_DATE_DETECTED = "Unable to list!\nThe natural date entered is not supported.";
-    private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
+    public static final String MESSAGE_RESULT_FOUND_FORMAT = "A total of %s found!";
+    public static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
+    public static final String MESSAGE_LIST_SUCCESS = "Listing Today's, incompleted tasks and ongoing events";
+    public static final String MESSAGE_INVALID_TASK_STATUS = "Unable to list!\nTry listing with complete or incomplete";
+    public static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to list!\nTry listing with over or current";
+    public static final String MESSAGE_DATE_CONFLICT = "Unable to list!\nMore than 1 date criteria is provided!";
+    public static final String MESSAGE_NO_DATE_DETECTED = "Unable to list!\nThe natural date entered is not supported.";
+    public static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
     
     //use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
@@ -145,7 +145,7 @@ public class ListController implements Controller {
             return;
         }
         
-        String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
+        String consoleMessage = String.format(MESSAGE_RESULT_FOUND_FORMAT, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
         Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
     }

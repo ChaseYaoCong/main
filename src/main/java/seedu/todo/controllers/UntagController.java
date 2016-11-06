@@ -21,17 +21,17 @@ public class UntagController implements Controller {
     
     private static final String NAME = "Untag";
     private static final String DESCRIPTION = "Untag a task/event by listed index";
-    private static final String COMMAND_SYNTAX = "untag <index> <tag name>";
+    public static final String COMMAND_SYNTAX = "untag <index> <tag name>";
     private static final String COMMAND_WORD = "untag";
     
-    private static final String UNTAG_FORMAT = "untag %d";
-    private static final String MESSAGE_UNTAG_SUCCESS = "Item has been untagged successfully.";
-    private static final String MESSAGE_INDEX_OUT_OF_RANGE = "Could not untag task/event: Invalid index provided!";
-    private static final String MESSAGE_MISSING_INDEX_AND_TAG_NAME = "Please specify the index of the item and the tag name to untag.";
-    private static final String MESSAGE_INDEX_NOT_NUMBER = "Index has to be a number!";
-    private static final String MESSAGE_TAG_NAME_NOT_FOUND = "Could not untag task/event: Tag name not provided!";
-    private static final String MESSAGE_TAG_NAME_DOES_NOT_EXIST = "Could not untag task/event: Tag name does not exist!";
-    private static final String MESSAGE_TAG_NAME_EXIST = "Could not untag task/event : Tag name does not exist or Duplicate Tag name detected!";
+    public static final String UNTAG_FORMAT = "untag %d";
+    public static final String MESSAGE_UNTAG_SUCCESS = "Item has been untagged successfully.";
+    public static final String MESSAGE_INDEX_OUT_OF_RANGE = "Could not untag task/event: Invalid index provided!";
+    public static final String MESSAGE_MISSING_INDEX_AND_TAG_NAME = "Please specify the index of the item and the tag name to untag.";
+    public static final String MESSAGE_INDEX_NOT_NUMBER = "Index has to be a number!";
+    public static final String MESSAGE_TAG_NAME_NOT_FOUND = "Could not untag task/event: Tag name not provided!";
+    public static final String MESSAGE_TAG_NAME_DOES_NOT_EXIST = "Could not untag task/event: Tag name does not exist!";
+    public static final String MESSAGE_TAG_NAME_EXIST = "Could not untag task/event : Tag name does not exist or Duplicate Tag name detected!";
     
     private static final int COMMAND_INPUT_INDEX = 0;
     private static final int ITEM_INDEX = 0;

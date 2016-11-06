@@ -104,6 +104,7 @@ public class DateUtilTest {
         assertEquals(null, DateUtil.ceilDate(nullDate));
     }
 	
+    //@@author A0139812A
 	@Test
 	public void formatDayTests() {
 	    LocalDateTime now = LocalDateTime.now();
@@ -121,6 +122,7 @@ public class DateUtilTest {
 	    assertEquals(DateUtil.formatDay(now.minus(14, ChronoUnit.DAYS)), "14 days ago");
 	}
 	
+	//@@author A0139812A
 	@Test
 	public void formatShortDateTests() {
 	    LocalDateTime now = LocalDateTime.now();
@@ -148,11 +150,13 @@ public class DateUtilTest {
         assertNotNull(DateUtil.formatShortDate(LocalDateTime.now()));
     }
 	
+    //@@author A0139812A
 	@Test
 	public void parseShortDateTests() {
 	    // TODO
 	}
 	
+	//@@author A0139812A
 	@Test
 	public void parseTimeTests() {
 	    assertEquals(DateUtil.parseTime("00:00"), LocalTime.of(0, 0));
@@ -164,6 +168,7 @@ public class DateUtilTest {
 	    assertEquals(DateUtil.parseTime("24:00"), LocalTime.of(0, 0));
 	}
 	
+	//@@author A0139812A
 	@Test
 	public void formatTimeTests() {
 	    assertEquals(DateUtil.formatTime(LocalDateTime.of(2016, 1, 1, 0, 0)), "00:00");
@@ -180,6 +185,7 @@ public class DateUtilTest {
 	    assertNotNull(DateUtil.formatTime(LocalDateTime.now()));
 	}
 	
+	//@@author A0139812A
 	private static LocalDateTime fromEpoch(long epoch) {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault());
 	}

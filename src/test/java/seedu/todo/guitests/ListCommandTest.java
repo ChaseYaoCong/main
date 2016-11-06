@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seedu.todo.commons.util.DateUtil;
+import seedu.todo.commons.util.StringUtil;
+import seedu.todo.controllers.ListController;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
@@ -37,6 +39,8 @@ public class ListCommandTest extends GuiTest {
     private String commandAdd4 = String.format("add event buying workshop from \"%s 8pm\" to \"%s 9pm\"",
             THE_DAY_AFTER_TOMORROW_STRING, THE_DAY_AFTER_TOMORROW_STRING);
     private Event event4 = new Event();
+    private int expectedNumOfTasks;
+    private int expectedNumOfEvents;
     
     // Set up DB
     public ListCommandTest() {
@@ -84,11 +88,13 @@ public class ListCommandTest extends GuiTest {
     
     @Test
     public void list_all() {
-        String command = "liast";
+        String command = "list";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        String expectedOutputMessage = ListController.MESSAGE_LIST_SUCCESS;
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -98,6 +104,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -108,6 +119,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test 
@@ -117,6 +133,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -126,6 +147,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 2;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     
@@ -136,6 +162,8 @@ public class ListCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        String expectedOutputMessage = ListController.MESSAGE_NO_RESULT_FOUND;
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -145,6 +173,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 2;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -154,6 +187,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -163,6 +201,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 2;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -172,6 +215,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test 
@@ -181,6 +229,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test 
@@ -190,6 +243,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -199,6 +257,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -208,6 +271,11 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 2;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
@@ -217,45 +285,80 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 2;
+        String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void list_invalidTaskSyntax_disambiguate() {
         String command = "list task over";
         console.runCommand(command);
-        String expectedDisambiguation = "list task \"complete/incomplete\"";
+        String expectedDisambiguation = ListController.LIST_TASK_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ListController.MESSAGE_INVALID_TASK_STATUS);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void list_invalidEventSyntax_disambiguate() {
         String command = "list event complete";
         console.runCommand(command);
-        String expectedDisambiguation = "list event \"over/current\"";
+        String expectedDisambiguation = ListController.LIST_EVENT_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ListController.MESSAGE_INVALID_EVENT_STATUS);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void list_invalidDateSyntax_disambiguate_with_date_range() {
         String command = "list by today to tml";
         console.runCommand(command);
-        String expectedDisambiguation = "list \"date\" [or from \"date\" to \"date\"]";
+        String expectedDisambiguation = ListController.LIST_DATE_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ListController.MESSAGE_DATE_CONFLICT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void list_invalidDateSyntax_disambiguate_with_single_date_by_keyword() {
         String command = "list by todar";
         console.runCommand(command);
-        String expectedDisambiguation = "list \"date\" [or from \"date\" to \"date\"]";
+        String expectedDisambiguation = ListController.LIST_DATE_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ListController.MESSAGE_NO_DATE_DETECTED);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
     
     @Test
     public void list_invalidDateSyntax_disambiguate_with_single_date() {
         String command = "list todar";
         console.runCommand(command);
-        String expectedDisambiguation = "list \"date\" [or from \"date\" to \"date\"]";
+        String expectedDisambiguation = ListController.LIST_DATE_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ListController.MESSAGE_NO_DATE_DETECTED);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
+    }
+    
+    @Test
+    public void list_invalidDateSyntax_disambiguate_with_date_conflict() {
+        String command = "list today by tmr";
+        console.runCommand(command);
+        String expectedDisambiguation = ListController.LIST_DATE_SYNTAX;
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ListController.MESSAGE_DATE_CONFLICT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
+    }
+    
+    @Test
+    public void list_invalidDateSyntax_disambiguate_with_date_conflict_by_status() {
+        String command = "list today over";
+        console.runCommand(command);
+        String expectedDisambiguation = ListController.LIST_DATE_SYNTAX;
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ListController.MESSAGE_DATE_CONFLICT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
 }
