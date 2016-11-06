@@ -737,7 +737,7 @@ Use case ends.
 Use case ends.
 
 2c. Invalid tag name
-> 2c1. Tag name is not specified.  
+> 2c1. Tag name is not specified.
 > Application shows an error message.  
 Use case ends.
 
@@ -797,9 +797,10 @@ Use case ends.
 2. Should be able to hold up to 1000 tasks and events.
 3. Should come with automated unit tests and open source code.
 4. Should favor DOS style commands over Unix-style commands.
-5. User-friendly interface
-
-{More to be added}
+<!-- @@author A0139922Y -->
+5. Should be able to respond to any command within 3 seconds.
+6. User-friendly interface
+<!-- @@author -->
 
 ## Appendix D : Glossary
 
@@ -808,5 +809,16 @@ Use case ends.
 > Windows, Linux, Unix, OS-X
 
 ## Appendix E : Product Survey
+
+<!-- @@author A0139922Y -->
+Todoist: Strength and Weaknesses
+
+> Todoist is a task management application, with access to over ten different platforms and the ability to collaborate on tasks. The application is straightforward and quick in providing the user with easy access to the important details of the to-do item. It also encourages people to keep up the habit of clearing existing tasks with its Karam Mode. 
+
+> Moreover, its ease of use and its integration with other services are its true strength. It can integrate with the latest technologies such as Trello and Amazon Echo to keep every to-do item in a single place.
+
+> However, one flaw with Todoist is that it does not possess any capabilities of having subproject hierarchy. Hence, it would make complex projects' task to be split among the team in an orderly fashion.
+
+<!-- @@author -->
 
 **{TODO: Add a summary of competing products}**
