@@ -18,12 +18,12 @@
 
 1. **JDK `1.8.0_60`**  or later<br>
 
-    > Having any Java 8 version is not enough. <br>
-    This app will not work with earlier versions of Java 8.
-    
+> Having any Java 8 version is not enough. <br>
+This app will not work with earlier versions of Java 8.
+
 2. **Eclipse** IDE
 3. **e(fx)clipse** plugin for Eclipse (Do the steps 2 onwards given in
-   [this page](http://www.eclipse.org/efxclipse/install.html#for-the-ambitious))
+[this page](http://www.eclipse.org/efxclipse/install.html#for-the-ambitious))
 4. **Buildship Gradle Integration** plugin from the Eclipse Marketplace
 
 
@@ -31,16 +31,16 @@
 
 0. Fork this repo, and clone the fork to your computer
 1. Open Eclipse (Note: Ensure you have installed the **e(fx)clipse** and **buildship** plugins as given 
-   in the prerequisites above)
+in the prerequisites above)
 2. Click `File` > `Import`
 3. Click `Gradle` > `Gradle Project` > `Next` > `Next`
 4. Click `Browse`, then locate the project's directory
 5. Click `Finish`
 
-  > * If you are asked whether to 'keep' or 'overwrite' config files, choose to 'keep'.
-  > * Depending on your connection speed and server load, it can even take up to 30 minutes for the set up to finish
-      (This is because Gradle downloads library files from servers during the project set up process)
-  > * If Eclipse auto-changed any settings files during the import process, you can discard those changes.
+> * If you are asked whether to 'keep' or 'overwrite' config files, choose to 'keep'.
+> * Depending on your connection speed and server load, it can even take up to 30 minutes for the set up to finish
+(This is because Gradle downloads library files from servers during the project set up process)
+> * If Eclipse auto-changed any settings files during the import process, you can discard those changes.
 
 ## Design
 
@@ -58,7 +58,7 @@ Given below is a quick overview of each component.
 Three of those classes play important roles at the architecture level.
 
 * `EventsCenter` : This class (written using [Google's Event Bus library](https://github.com/google/guava/wiki/EventBusExplained))
-  is used by components to communicate with other components using events (i.e. a form of _Event Driven_ design)
+is used by components to communicate with other components using events (i.e. a form of _Event Driven_ design)
 * `LogsCenter` : Used by many classes to write log messages to the App's log file.
 * `EphemeralDB` : Used by the UI as well as the Controller, so that the Controller is able to refer to items in the UI level. One example would be for the controller to get the index each item was listed, since the ordering of items is only determined at the UI level.
 
@@ -136,13 +136,13 @@ Example usage:
 
 ``` java
 public void componentDidMount() {
-    // Set Text field value
-    textField.setText(textProp);
+// Set Text field value
+textField.setText(textProp);
 
-    // Load and render sub-components
-    SubComponent sub = load(primaryStage, placeholderPane, SubComponent.class);
-    sub.value = subTextValue;
-    sub.render();
+// Load and render sub-components
+SubComponent sub = load(primaryStage, placeholderPane, SubComponent.class);
+sub.value = subTextValue;
+sub.render();
 }
 ```
 
@@ -160,15 +160,15 @@ Example usage:
 
 ``` java
 public void componentDidMount() {
-    // Reset items
-    TaskItem.reset(placeholder);
+// Reset items
+TaskItem.reset(placeholder);
 
-    // Load multiple components
-    for (Task task : tasks) {
-        TaskItem item = load(primaryStage, placeholder, TaskItem.class);
-        item.value = task.value;
-        item.render();
-    }
+// Load multiple components
+for (Task task : tasks) {
+TaskItem item = load(primaryStage, placeholder, TaskItem.class);
+item.value = task.value;
+item.render();
+}
 }
 ```
 
@@ -177,7 +177,7 @@ public void componentDidMount() {
 **API** : [`InputHandler.java`](../src/main/java/seedu/todo/ui/components/InputHandler.java)
 
 1. The console input field will pass the user commands to the relevant controller, and according to the `Controller` 
-   method `inputConfidence()`, a `Controller` will be best selected and returned based on the input.
+method `inputConfidence()`, a `Controller` will be best selected and returned based on the input.
 2. The `Controller` selected will process the commands accordingly.
 
 ### Controller component
@@ -191,7 +191,7 @@ public void componentDidMount() {
 3. After invoking `process()`, a new `View` will be created and loaded to `MainWindow` whether it was successful or an exception occured.
 
 Given below is the Sequence Diagram for interactions within the `Logic` component for the `execute("delete 1")`
- API call.<br>
+API call.<br>
 <img src="images/DeletePersonSdForLogic.png" width="800"><br>
 
 <!--- @@author A0093907W -->
@@ -243,9 +243,9 @@ We are using `java.util.logging` package for logging. The `LogsCenter` class is 
 and logging destinations.
 
 * The logging level can be controlled using the `logLevel` setting in the configuration file
-  (See [Configuration](#configuration))
+(See [Configuration](#configuration))
 * The `Logger` for a class can be obtained using `LogsCenter.getLogger(Class)` which will log messages according to
-  the specified logging level
+the specified logging level
 * Currently log messages are output through: `Console` and to a `.log` file.
 
 **Logging Levels**
@@ -254,7 +254,7 @@ and logging destinations.
 * `WARNING` : Can continue, but with caution
 * `INFO` : Information showing the noteworthy actions by the App
 * `FINE` : Details that is not usually noteworthy but may be useful in debugging
-  e.g. print the actual list instead of just its size
+e.g. print the actual list instead of just its size
 
 ### Configuration
 
@@ -268,12 +268,12 @@ Tests can be found in the `./src/test/java` folder.
 
 **In Eclipse**:
 > If you are not using a recent Eclipse version (i.e. _Neon_ or later), enable assertions in JUnit tests
-  as described [here](http://stackoverflow.com/questions/2522897/eclipse-junit-ea-vm-option).
+as described [here](http://stackoverflow.com/questions/2522897/eclipse-junit-ea-vm-option).
 
 * To run all tests, right-click on the `src/test/java` folder and choose
-  `Run as` > `JUnit Test`
+`Run as` > `JUnit Test`
 * To run a subset of tests, you can right-click on a test package, test class, or a test and choose
-  to run as a JUnit test.
+to run as a JUnit test.
 
 **Using Gradle**:
 * See [UsingGradle.md](UsingGradle.md) for how to run tests using Gradle.
@@ -281,25 +281,25 @@ Tests can be found in the `./src/test/java` folder.
 We have two types of tests:
 
 1. **GUI Tests** - These are _System Tests_ that test the entire App by simulating user actions on the GUI. 
-   These are in the `guitests` package.
-  
+These are in the `guitests` package.
+
 2. **Non-GUI Tests** - These are tests not involving the GUI. They include,
-   1. _Unit tests_ targeting the lowest level methods/classes. <br>
-      e.g. `seedu.address.commons.UrlUtilTest`
-   2. _Integration tests_ that are checking the integration of multiple code units 
-     (those code units are assumed to be working).<br>
-      e.g. `seedu.address.storage.StorageManagerTest`
-   3. Hybrids of unit and integration tests. These test are checking multiple code units as well as 
-      how the are connected together.<br>
-      e.g. `seedu.address.logic.LogicManagerTest`
-  
+1. _Unit tests_ targeting the lowest level methods/classes. <br>
+e.g. `seedu.address.commons.UrlUtilTest`
+2. _Integration tests_ that are checking the integration of multiple code units 
+(those code units are assumed to be working).<br>
+e.g. `seedu.address.storage.StorageManagerTest`
+3. Hybrids of unit and integration tests. These test are checking multiple code units as well as 
+how the are connected together.<br>
+e.g. `seedu.address.logic.LogicManagerTest`
+
 **Headless GUI Testing** :
 Thanks to the [TestFX](https://github.com/TestFX/TestFX) library we use,
- our GUI tests can be run in the _headless_ mode. 
- In the headless mode, GUI tests do not show up on the screen.
- That means the developer can do other things on the Computer while the tests are running.<br>
- See [UsingGradle.md](UsingGradle.md#running-tests) to learn how to run tests in headless mode.
-  
+our GUI tests can be run in the _headless_ mode. 
+In the headless mode, GUI tests do not show up on the screen.
+That means the developer can do other things on the Computer while the tests are running.<br>
+See [UsingGradle.md](UsingGradle.md#running-tests) to learn how to run tests in headless mode.
+
 ## Dev Ops
 
 ### Build Automation
@@ -314,12 +314,12 @@ See [UsingTravis.md](UsingTravis.md) for more details.
 ### Making a Release
 
 Here are the steps to create a new release.
- 
- 1. Generate a JAR file [using Gradle](UsingGradle.md#creating-the-jar-file).
- 2. Tag the repo with the version number. e.g. `v0.1`
- 2. [Crete a new release using GitHub](https://help.github.com/articles/creating-releases/) 
-    and upload the JAR file your created.
-   
+
+1. Generate a JAR file [using Gradle](UsingGradle.md#creating-the-jar-file).
+2. Tag the repo with the version number. e.g. `v0.1`
+2. [Crete a new release using GitHub](https://help.github.com/articles/creating-releases/) 
+and upload the JAR file your created.
+
 ### Managing Dependencies
 
 A project often depends on third-party libraries. For example, Address Book depends on the
@@ -336,17 +336,16 @@ Priorities: High (must have) - `* * *`, Medium (nice to have)  - `* *`,  Low (un
 Priority | As a ... | I want to ... | So that I can...
 -------- | :-------- | :--------- | :-----------
 `* * *` | new user | see usage instructions | refer to instructions when I forget how to use the App
-`* * *` | user | add a new task/event |
-`* * *` | user | delete an item | remove tasks/events that I no longer need
-`* * *` | user | edit an item | edit tasks/events that need to be updated
-`* * *` | user | list all items | list all the tasks/events that are created
+`* * *` | user | add a new task/event | remind myself on the incomplete tasks and upcoming events
 `* * *` | user | find items by name | search for tasks/events without looking through the entire list
+`* * *` | user | list all items | list all the tasks/events that are created
+`* * *` | user | delete an item | remove tasks/events that I no longer need
+`* * *` | user | update an item | update tasks/events that need to be updated
 `* * *` | user | exit | save and quit the application
 `* * ` | user | mark a task as complete | keep track of what I have already completed
 `* * ` | user | mark a task as incomplete | reset marking of task as complete
 `* * ` | user | add tag to item | organise my tasks/events
 `* * ` | user | untag from item | organise my tasks/events
-`* * ` | user | delete a tag | organise my tasks/events
 `* * ` | user | undo | undo the previous command
 `* * ` | user | redo | redo the previous undo
 `* * ` | user | clear the list | quickly clear all my items
@@ -364,7 +363,7 @@ Priority | As a ... | I want to ... | So that I can...
 
 1. User want to view all the available commands in the application.
 2. Application show a list of available commands and instructions for all commands.
-    Use Case ends
+Use Case ends
 
 #### Use case : Add task
 
@@ -379,94 +378,210 @@ Use case ends.
 1a. User specify with start date and end date.
 
 > 1a1. User specify invalid date format.
-  Application shows an error message.
-  Use case ends.
-  
+Application shows an error message.
+Use case ends.
+
 1b. User specify with deadline.  
 
 > 1b1. User specify invalid date deadline format.
-   Application shows an error message.
-   Use case ends.
+Application shows an error message.
+Use case ends.
 
-#### Use case : Find tasks with specific keyword
+<!--@@author A0139922Y -->
+#### Use case : Add Event
+
+**MSS**
+
+1. User request to add new events with its details.
+2. Application add the events with specified details.  
+3. Application display successful message.
+Use case ends.  
+
+**Extensions**  
+1a. User specify with start date and end date.
+
+> 1a1. User specify invalid date format.
+Application shows an error message.
+Use case ends.
+
+1b. User specify with a single date. 
+
+>   Application shows an error message.
+Use case ends.
+
+#### Use case : Find with specific keyword
 
 **MSS**
 
 1. User request to find task with specific keyword.
-2. Application show the list of task that its names & tag contain the keyword.
+2. Application show the list of task that its names & tag containing the specific keyword.
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
-
 > 2a1. Application show an error message.
-   Use case ends.
+Use case ends.
 
-#### Use case : List all task
+2b. User did not provided any keyword
+> 2b1. Application show an error message.
+Use case ends.
+
+2c. User specify with start date and end date
+> 2c1. User specify invalid date format for either start or end date.
+Application shows an error message.
+Use case ends.
+
+2d. User specify with a single date
+> 2d1. User specify invalid date format.
+Application shows an error message.
+Use case ends.
+
+2e. User did not follow command syntax
+> 2e1. .Application shows an error message.
+Use case ends.
+
+<!-- @@author -->
+
+#### Use case : List all task and events
 
 **MSS**
 
-1. User request to list all the tasks.
-2. Application show the list of task with respective details.  
+1. User request to list all the tasks and events.
+2. Application show the list of task and events with respective details.  
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
 
 > 2a1. Application show error message.
-   Use case ends.
-   
-#### Use case: Delete task
+Use case ends.
+
+<!-- @@author A0139922Y -->
+
+#### Use case : List by date
 
 **MSS**
 
-1. User requests a list of tasks or find task with keyword.
-2. Application shows a list of tasks.
-3. User requests to delete a specific task in the list.
-4. Application request confirmation from the user.
-5. User confirm the confirmation.
-4. Application deletes the task. <br>
+1. User request to list all the tasks and events by date.
+2. Application show the list of task and events by the date with respective details.  
+Use case ends.  
+
+**Extensions**  
+2a. The list is empty.
+
+> 2a1. Application show error message.
+Use case ends.
+
+2b. User did not provide any date.
+> Use case ends.
+
+2c. User provide a single date.
+> 2c1. User specify invalid date format.
+> Application show error message.
+> User case ends.
+
+2d. User provide a start date and date.
+> 2c1. User specify invalid date format for either start or end date.
+> Application show error message.
+> User case ends.
+
+#### Use case : List by status
+
+**MSS**
+
+1. User request to list all the tasks and events by status.
+2. Application show the list of task or events by status with respective details.  
+Use case ends.  
+
+**Extensions**  
+2a. The list is empty.
+
+> 2a1. Application show error message.
+Use case ends.
+
+2b. User specify status
+>2b1. User specify invalid task/event status.
+Use case ends.
+
+#### Use case: Delete task/event
+
+**MSS**
+
+1. Application shows a list of tasks and events.
+2. User requests to delete a specific task or event in the list by its respective index.
+3. Application deletes the task or event.  
+4. Application show a updated list of task and events.
 Use case ends.  
 
 **Extensions**  
 
 2a. The list is empty.
-
 > Use case ends.
 
 3a. The given index is invalid.
-
 > 3a1. Application shows an error message.  
-  Use case ends.
+Use case ends.
 
-#### Use case: edit task
+#### Use case: Update task
 
 **MSS**
 
-1. User requests a list of tasks or find task with keyword.
-2. Application shows a list of tasks.
-3. User requests to edit a specific task in the list.
-4. Application edit the task. <br>
+1. Application shows a list of tasks and events.
+2. User requests to update a specific task in the list by respective index.
+3. Application edit the task.  
+4. Application shows a updated list of tasks and events.
 Use case ends.  
 
 **Extensions**  
 
 2a. The list is empty.
-
 > Use case ends.
 
 3a. The given index is invalid.
-
 > 3a1. Application shows an error message.  
-  Use case ends.
+Use case ends.
+
+3b. The given details are invalid.
+> 3b1. User specify invalid date format.
+> Application shows an error message.
+Use case ends.
+
+> 3b2. User specify more than one date.
+> Application shows an error message.
+Use case ends.
+
+#### Use case: Update Events
+
+**MSS**
+
+1. Application shows a list of tasks and events.
+2. User requests to update a specific event in the list by respective index.
+3. Application edit the event.  
+4. Application shows a updated list of tasks and events.
+Use case ends.  
+
+**Extensions**  
+
+2a. The list is empty.
+> Use case ends.
+
+3a. The given index is invalid.
+> 3a1. Application shows an error message.  
+Use case ends.
+
+3b. The given details are invalid.
+> 3b1. User specify invalid date format.
+> Application shows an error message.
+Use case ends.
+
+<!--@@author-->
 
 #### Use case : Undo command
 
-**MSS**
+**MSS**  
+
 1. User request to undo command by a specific number.
-2. Application request confirmation from the user.
-3. User confirm the confirmation.
-2. Application undo the command repeatedly based on the given number.
+2. Application undo the command repeatedly based on the given number
 Use case ends.
 
 **Extensions**
@@ -476,11 +591,10 @@ Use case ends.
 
 #### Use case : Redo command
 
-**MSS**
+**MSS**  
+
 1. User request to redo command by a specific number.
-2. Application request confirmation from the user.
-3. User confirm the confirmation.
-4. Application redo the command repeatedly based on the given number.
+2. Application redo the command repeatedly based on the given number.
 Use case ends.
 
 **Extensions**
@@ -488,14 +602,16 @@ Use case ends.
 > Application will show an error message.
 Use case ends.
 
+<!-- @@author A0139922Y -->
+
 #### Use case: Complete task
 
 **MSS**
 
-1. User requests a list of tasks or find task with keyword.
-2. Application shows a list of tasks.
-3. User requests to complete a task.
-4. Application complete the task and remove it from the current task list and add into the completed task list.<br>
+1. Application shows a list of tasks and events.
+2. User requests to complete a specific task in the list by respective index.
+3. Application complete the task. 
+4. Application shows a updated list of tasks and events.
 Use case ends.  
 
 **Extensions**  
@@ -504,21 +620,30 @@ Use case ends.
 
 > Use case ends.
 
-3a. The given index is invalid.
+2a. The given index is invalid.
 
-> 3a1. Application shows an error message.  
-  Use case ends.
-  
+> 2a1. The given index is out of range.
+> Application shows an error message.  
+Use case ends. 
+
+>2a2. The given index belongs to an event.
+> Application shows an error message.
+Use case ends.
+
+2b. Index is not specified.
+
+> 3b1. Application shows an error message.
+> Use case ends.
+
 #### Use case: Uncomplete task
 
 **MSS**
 
-1. User requests a list of completed tasks or find compelted task with keyword.
+1. User requests a list of completed tasks or find completed task with keyword.
 2. Application shows a list of completed tasks.
-3.  User requests to uncomplete a task.
-4. Application request confirmation from the user.
-5. User confirm the confirmation.
-6. Application uncomplete the task and remove it from the completed task list and add it back to the current task list. <br>
+3.  User requests to uncomplete a task by respective index.
+4. Application uncomplete the task.
+5. Application show the updated list of tasks and events.
 Use case ends.  
 
 **Extensions**  
@@ -529,19 +654,23 @@ Use case ends.
 
 3a. The given index is invalid.
 
-> 3a1. Application shows an error message.
-  Use case ends.
+> 3a1. The given index is out of range.
+> Application shows an error message.  
+Use case ends. 
 
-#### Use case: Remove tag from a task
+3b. Index is not specified.
+
+> 3b1. Application shows an error message.
+> Use case ends.
+
+#### Use case: Add tag to a task/event
 
 **MSS**
 
-1. User requests a list of tasks or find task with keyword.
-2. Application shows a list of tasks.
-3. User requests to remove the tag of a specific task in the list.
-4. Application request confirmation from the user.
-5. User confirm the confirmation.
-6. Application deletes the tag that is associated to the task. <br>
+1. Application shows a list of tasks and events.
+2. User requests to tag a specific task/event in the list by respective index.
+3. Application add the tag and associated it with the task/event.
+4. Application shows a updated list of tasks and events.
 Use case ends.  
 
 **Extensions**  
@@ -550,18 +679,70 @@ Use case ends.
 
 > Use case ends
 
-3a. The given index is invalid.
+2a. The given index is invalid.
 
-> 3a1. Application shows an error message  
-  Use case ends.
+> 2a1. The given index is out of range.
+> Application shows an error message.  
+Use case ends. 
 
-#### Use case: Sorting of tasks
+2b. Index is not specified.
+
+> 2b1. Application shows an error message.
+> Use case ends.
+
+2c. Invalid tag name
+> 2c1. Tag name is not specified
+> Application shows an error message.
+> Use case ends.
+
+>2c2. Tag name specified is already associated to the task/event.
+> Application shows an error message.
+> Use case ends.
+
+2d. Tag list size is full
+>2d1. Application shows an error message.
+> Use case ends.
+
+#### Use case: Untag tag from a task/event
 
 **MSS**
 
-1. User request to sort the list of tasks based on either start date, end date, deadline or alphabetical order.
-2. Application sort the tasks according to the user preference. <br>
-Use case ends.
+1. Application shows a list of tasks and events.
+2. User requests to untag the tag of a specific task/event in the list by respective index.
+3. Application deletes the tag that is associated to the task/event.
+Use case ends.  
+4. Application shows a updated list of tasks and events.
+
+**Extensions**  
+
+2a. The list is empty.
+
+> Use case ends
+
+2a. The given index is invalid.
+
+> 2a1. The given index is out of range.
+> Application shows an error message.  
+Use case ends. 
+
+2b. Index is not specified.
+
+> 2b1. Application shows an error message.
+> Use case ends.
+
+2c. Invalid tag name
+> 2c1. Tag name is not specified
+> Application shows an error message.
+> Use case ends.
+
+>2c2. Tag name specified does not belong to the task/event.
+> Application shows and error message.
+> Use case ends.
+
+<!--@@author -->
+
+#### Use case : Config
+*To be filled*
 
 #### Use case : Alias
 
@@ -607,7 +788,7 @@ Use case ends.
 ## Appendix C : Non Functional Requirements
 
 1. Should work on any [mainstream OS](#mainstream-os) as long as it has Java `1.8.0_60` or higher installed.
-2. Should be able to hold up to 1000 persons.
+2. Should be able to hold up to 1000 tasks and events.
 3. Should come with automated unit tests and open source code.
 4. Should favor DOS style commands over Unix-style commands.
 5. User-friendly interface
