@@ -516,7 +516,7 @@ Use case ends.
 **Extensions**  
 
 2a. The list is empty.  
-Use case ends.
+> Use case ends.
 
 3a. The given index is invalid.
 > 3a1. Application shows an error message.  
@@ -535,7 +535,7 @@ Use case ends.
 **Extensions**  
 
 2a. The list is empty.  
-Use case ends.
+> Use case ends.
 
 3a. The given index is invalid.
 > 3a1. Application shows an error message.  
@@ -563,7 +563,7 @@ Use case ends.
 **Extensions**  
 
 2a. The list is empty.  
-Use case ends.
+> Use case ends.
 
 3a. The given index is invalid.
 > 3a1. Application shows an error message.  
@@ -617,7 +617,6 @@ Use case ends.
 **Extensions**  
 
 2a. The list is empty.
-
 > Use case ends.
 
 2a. The given index is invalid.
@@ -632,7 +631,7 @@ Use case ends.
 
 2b. Index is not specified.
 
-> 3b1. Application shows an error message.  
+> 2b1. Application shows an error message.  
 Use case ends.
 
 #### Use case: UC15 - Uncomplete task
@@ -649,7 +648,6 @@ Use case ends.
 **Extensions**  
 
 2a. The list is empty.
-
 > Use case ends.
 
 3a. The given index is invalid.
@@ -676,7 +674,6 @@ Use case ends.
 **Extensions**  
 
 2a. The list is empty.
-
 > Use case ends
 
 2a. The given index is invalid.
@@ -687,21 +684,21 @@ Use case ends.
 
 2b. Index is not specified.
 
-> 2b1. Application shows an error message.
-> Use case ends.
+> 2b1. Application shows an error message.  
+Use case ends.
 
 2c. Invalid tag name
 > 2c1. Tag name is not specified
-> Application shows an error message.
-> Use case ends.
+> Application shows an error message.  
+Use case ends.
 
 > 2c2. Tag name specified is already associated to the task/event.
-> Application shows an error message.
-> Use case ends.
+> Application shows an error message.  
+Use case ends.
 
 2d. Tag list size is full
-> 2d1. Application shows an error message.
-> Use case ends.
+> 2d1. Application shows an error message.  
+Use case ends.
 
 #### Use case: UC17 - Untag tag from a task/event
 
@@ -716,7 +713,6 @@ Use case ends.
 **Extensions**  
 
 2a. The list is empty.
-
 > Use case ends
 
 2a. The given index is invalid.
@@ -727,8 +723,8 @@ Use case ends.
 
 2b. Index is not specified.
 
-> 2b1. Application shows an error message.
-> Use case ends.
+> 2b1. Application shows an error message.  
+Use case ends.
 
 2c. Invalid tag name
 > 2c1. Tag name is not specified
@@ -749,7 +745,7 @@ Use case ends.
 **MSS**
 
 1. User request to set alias for specific command.
-2. Application set the Alias for the command.<br>  
+2. Application set the Alias for the command.
 Use case ends.
 
 **Extensions**
@@ -769,7 +765,7 @@ Use case ends.
 1. User request for a list of alias that is currently set.
 2. Application show a list of alias and its respective command.
 3. User request to remove alias from the specific command.
-4. Application remove the alias of the specific command.<br>  
+4. Application remove the alias of the specific command.
 Use case ends.
 
 **Extensions**
@@ -783,7 +779,6 @@ Use case ends.
 3b. The given command is invalid.
 > 3b1. Application will show an error message.  
 Use case ends.
-
 
 ## Appendix C : Non Functional Requirements
 
