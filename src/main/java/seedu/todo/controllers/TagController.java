@@ -69,7 +69,7 @@ public class TagController implements Controller {
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         String param = parsedResult.get(Tokenizer.DEFAULT_TOKEN)[TOKENIZER_DEFAULT_INDEX];
         
-        if (param.length() <= 0) {
+        if (param == null) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
             return;
         }

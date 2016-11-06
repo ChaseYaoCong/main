@@ -5,6 +5,7 @@ import static seedu.todo.testutil.AssertUtil.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
@@ -20,9 +21,11 @@ import seedu.todo.TestApp;
 import seedu.todo.commons.core.EventsCenter;
 import seedu.todo.commons.events.BaseEvent;
 import seedu.todo.commons.util.DateUtil;
+import seedu.todo.commons.util.StringUtil;
 import seedu.todo.guitests.guihandles.ConsoleHandle;
 import seedu.todo.guitests.guihandles.MainGuiHandle;
 import seedu.todo.guitests.guihandles.SideBarHandle;
+import seedu.todo.guitests.guihandles.TagListItemHandle;
 import seedu.todo.guitests.guihandles.TaskListDateItemHandle;
 import seedu.todo.guitests.guihandles.TaskListEventItemHandle;
 import seedu.todo.guitests.guihandles.TaskListHandle;
@@ -215,5 +218,95 @@ public abstract class GuiTest {
         // If there's a date item, then we make sure that there isn't an event in the date item with the same name.
         TaskListEventItemHandle eventItem = dateItem.getTaskListEventItem(eventToAdd);
         assertNull(eventItem);
+    }
+    
+    /**
+     * @@author A0139922Y
+     * Utility method for testing if tag has been successfully added to the GUI side panel.
+     * This runs a command and checks if TagList contains tag that matches
+     * the tag that was just added.
+     * 
+     * Assumption : No tags can have the same name
+     * 
+     */
+    protected void assertTaskTagVisibleAfterCmd(String command, Task taskToAdd) {
+        // Run the command in the console.
+        console.runCommand(command);
+        int tag_index = 0;
+        
+        // Get the Tag List
+        ArrayList<String> taskTagList = taskToAdd.getTagList();
+        
+        // Assumption each task only got 1 tag
+        String tagName = taskTagList.get(tag_index);
+        
+        // Check if tag exist in the side panel tag list
+        TagListItemHandle tagItem = sidebar.getTagListItem(tagName);
+        assertNotNull(tagItem);
+        
+        // Check if the tag found is equal to the tag name of the task
+        String tagItemName = tagItem.getName();
+        assertEquals(tagItemName, tagName);
+    }
+    
+    /**
+     * @@author A0139922Y
+     * Utility method for testing if tag has been successfully removed from the GUI side panel.
+     * This runs a command and checks if TagList contains tag that matches
+     * the tag that was just removed.
+     * 
+     * Assumption : No tags can have the same name
+     * 
+     */
+    protected void assertTaskTagNotVisibleAfterCmd(String command, Task taskToAdd) {
+        // Get the Tag List
+        ArrayList<String> taskTagList = taskToAdd.getTagList();
+        
+        // Get the tag name with assumption each task only got 1 tag
+        String tagName = getTagNameFromCommand(command);
+        
+        // Run the command in the console.
+        console.runCommand(command);
+        
+        // Check if tag exist in the side panel tag list
+        TagListItemHandle tagItem = sidebar.getTagListItem(tagName);
+        assertNull(tagItem);
+        
+        // Check if tag has been removed
+        int expected_tag_list_size = 0;
+        assertEquals(taskTagList.size(), expected_tag_list_size);
+    }
+    
+    /**
+     * @@author A0139922Y
+     * Utility method for testing if tag is not successfully added into the GUI side panel.
+     * This runs a command and checks if TagList contains tag that matches
+     * the tag that was just been added.
+     * 
+     * Assumption : No tags can have the same name
+     * 
+     */
+    protected void assertTaskTagListFull(String command, Task taskToAdd) {
+        // Get the Tag List
+        ArrayList<String> taskTagList = taskToAdd.getTagList();
+        
+        // Get the next tag name from command
+        String tagName = getTagNameFromCommand(command);
+        
+        // Run the command in the console.
+        console.runCommand(command);
+        int expected_tag_list_size = 20;
+        
+        // Check if tag exist in the side panel tag list
+        TagListItemHandle tagItem = sidebar.getTagListItem(tagName);
+        assertNull(tagItem);
+        
+        assertEquals(expected_tag_list_size, taskTagList.size());
+    }
+    
+    private String getTagNameFromCommand(String command) {
+        int tagName_index = 2;
+        String tagName = StringUtil.splitStringBySpace(command)[tagName_index];
+        return tagName;
     }
 }
