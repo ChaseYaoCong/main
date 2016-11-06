@@ -550,11 +550,11 @@ Use case ends.
 Use case ends.
 
 3b. The given details are invalid.
-> 3b1. User specify invalid date format.
+> 3b1. User specify invalid date format.  
 > Application shows an error message.  
 Use case ends.
 
-> 3b2. User specify more than one date.
+> 3b2. User specify more than one date.  
 > Application shows an error message.  
 Use case ends.
 
@@ -564,7 +564,7 @@ Use case ends.
 
 1. Application shows a list of tasks and events.
 2. User requests to update a specific event in the list by respective index.
-3. Application edit the event.  
+3. Application edits the event.  
 4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
@@ -578,7 +578,7 @@ Use case ends.
 Use case ends.
 
 3b. The given details are invalid.
-> 3b1. User specify invalid date format.
+> 3b1. User specify invalid date format.  
 > Application shows an error message.  
 Use case ends.
 
