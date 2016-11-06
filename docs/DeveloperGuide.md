@@ -811,7 +811,7 @@ Use case ends.
 ## Appendix E : Product Survey
 
 <!-- @@author A0139922Y -->
-Todoist: Strength and Weaknesses
+#### Todoist: Strength and Weaknesses
 
 > Todoist is a task management application, with access to over ten different platforms and the ability to collaborate on tasks. The application is straightforward and quick in providing the user with easy access to the important details of the to-do item. It also encourages people to keep up the habit of clearing existing tasks with its Karam Mode. 
 
