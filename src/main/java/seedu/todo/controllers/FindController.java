@@ -227,8 +227,7 @@ public class FindController implements Controller {
             Map<String, String[]> parsedResult) {
         // Get dates from input
         List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
-        String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        LocalDateTime [] validDates = parsingDates(parsedResult);
         List<Task> filteredTasks;
         List<Event> filteredEvents;
         if (validDates == null) {
@@ -350,8 +349,8 @@ public class FindController implements Controller {
      * 
      * @return null if dates conflict detected, else return { null, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
-        
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult) {
+        String[] parsedDates = ParseUtil.parseDates(parsedResult);
         LocalDateTime dateOn = null;
         LocalDateTime dateFrom = null;
         LocalDateTime dateTo = null;
