@@ -79,8 +79,15 @@ public class StringUtilTest {
     
     //@@author A0139922Y
     @Test
-    public void testSplitStringBySpace_null_test() {
+    public void testSplitStringBySpace_null() {
         assertNull(StringUtil.splitStringBySpace(null));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testSplitStringBySpace_not_null() {
+        String testcase1 = "TEST TEST";
+        assertNotNull(StringUtil.splitStringBySpace(testcase1));
     }
 
     //@@author A0139922Y
@@ -88,9 +95,7 @@ public class StringUtilTest {
     public void testSplitStringBySpace_equals() {
         String testcase1 = "TEST";
         String testcase2 = "TEST TEST";
-        assertNotNull(StringUtil.splitStringBySpace(testcase1));
         assertArrayEquals(testcase1.split(" "), StringUtil.splitStringBySpace(testcase1));
-        assertNotNull(StringUtil.splitStringBySpace(testcase2));
         assertArrayEquals(testcase2.split(" "),StringUtil.splitStringBySpace(testcase2));
     }
     

@@ -123,8 +123,8 @@ public class StringUtil {
     }
     
     /*
+     * @@author A0139922Y
      * Convert input into individual input by splitting with space  
-     * 
      */
     public static String[] splitStringBySpace(String input) {
         return (input == null) ? null : input.trim().split(" ");
