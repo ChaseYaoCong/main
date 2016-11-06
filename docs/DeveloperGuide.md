@@ -483,12 +483,12 @@ Use case ends.
 > Use case ends.
 
 2c. User provides a single date.
-> 2c1. User specifies an invalid date format.
+> 2c1. User specifies an invalid date format.  
 > Application shows error message.  
 > Use case ends.
 
 2d. User provide a start date and end date.
-> 2c1. User specifies invalid date format for either start or end date.
+> 2c1. User specifies invalid date format for either start or end date.  
 > Application shows error message.  
 Use case ends.
 
