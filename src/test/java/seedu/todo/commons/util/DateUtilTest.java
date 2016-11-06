@@ -183,14 +183,6 @@ public class DateUtilTest {
 	private static LocalDateTime fromEpoch(long epoch) {
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault());
 	}
-	
-    //@@author A0139922Y	
-    @Test
-    public void testParseNatural() {
-        assertNull(DateUtil.parseNatural("todar"));
-        assertNotNull(DateUtil.parseNatural("today"));
-        assertEquals(DateUtil.floorDate(LocalDateTime.now()), DateUtil.floorDate(DateUtil.parseNatural("today")));
-    }
     
     //@@author A0139922Y	
     @Test
@@ -201,32 +193,73 @@ public class DateUtilTest {
     }
     
     //@@author A0139922Y
-    public void testCheckIfDateExist_true() {
+    @Test
+    public void testCheckIfDateExist_with_year_diff_true() {
         LocalDateTime currentDate = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfDateExist(currentDate));
-        //only year is diff
+        // Only year is different
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusYears(1)));
-        //only month is diff
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckIfDateExist_with_month_diff_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
+        // Only month is different
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(1)));
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusMonths(12)));
-        //only day is diff
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckifDateExist_with_day_diff_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
+        // Only day is different
         assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(1)));
-        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365))); 
-               
-        //day and month are diff
+        assertTrue(DateUtil.checkIfDateExist(currentDate.plusDays(365)));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckifDateExist_with_day_month_diff_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));  
+        // Day and Month are different
         currentDate = currentDate.plusDays(1);
         currentDate = currentDate.plusMonths(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
-        
-        //day and year diff
-        currentDate = currentDate.minusMonths(1);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckifDateExist_with_day_year_diff_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));  
+        // Day and Month are different
+        currentDate = currentDate.plusDays(1);
         currentDate = currentDate.plusYears(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
-        
-        //month and year diff
-        currentDate = currentDate.minusDays(1);
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckifDateExist_with_month_year_diff_true() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));  
+        // Day and Month are different
         currentDate = currentDate.plusMonths(1);
+        currentDate = currentDate.plusYears(1);
         assertTrue(DateUtil.checkIfDateExist(currentDate));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void testCheckifDateExist_false() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        assertNotNull(DateUtil.checkIfDateExist(currentDate));
+        assertEquals(DateUtil.checkIfDateExist(currentDate), false);
     }
     
     //@@author A0139922Y
