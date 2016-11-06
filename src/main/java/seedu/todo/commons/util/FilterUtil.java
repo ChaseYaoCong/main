@@ -6,16 +6,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.CalendarItem;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
 /**
- * Helper function to help in filtering results
- * 
  * @@author A0139922Y
- *
+ * Helper function to help in filtering results
  */
 
 public class FilterUtil {
@@ -46,24 +43,30 @@ public class FilterUtil {
      *             Provided list for filtering
      * @param namelist
      *             Search and filter based on the name list
+     * @return filteredTasks
+     *              List containing only Task that filtered by the item name
      */
     public static List<Task> filterTaskByNames(List<Task> tasks, HashSet<String> nameList) {
-        //if search list size is 0 , user not searching based on name
+        // If search list size is 0 , user not searching based on name
         List<Task> filteredTasks = new ArrayList<Task>();
         if (nameList.size() == 0) {
             return filteredTasks;
         }
         
+        // Loop through all the tasks
         for (int i = 0; i < tasks.size(); i ++) {
             Task task = tasks.get(i);
+            
+            // For every task, loop through all the name list
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
                 String matchingName = nameListIterator.next();
                 if (matchWithFullName(task, matchingName) || matchWithSubName(task, matchingName)) {
-                    filteredTasks.add(task);
+                    filteredTasks.add(task); // Once found, add and break 
                     break;
                 }
             }
+            // Reset the name list for other task
             nameListIterator = nameList.iterator();
         }
         return filteredTasks;
@@ -75,22 +78,28 @@ public class FilterUtil {
      *             Provided list for filtering
      * @param namelist
      *             Search and filter based on the name list
+     * @return filteredTasks
+     *              List containing only Task that filtered by the tag names 
      */
     public static List<Task> filterTaskByTags(List<Task> tasks, HashSet<String> nameList) {
-        //if no search list is provided, user not searching based on tags
+        // If no search list is provided, user not searching based on tags
         List<Task> filteredTasks = new ArrayList<Task>();
         if (nameList.size() == 0) {
             return filteredTasks;
         }
         
+        // Lopp through all the tasks
         for (int i = 0; i < tasks.size(); i ++) {
+            // Get the task tag list
             Task task = tasks.get(i);
             ArrayList<String> taskTagList = task.getTagList();
+            
+            // Loop through the tag names list
             Iterator<String> nameListIterator = nameList.iterator();
             while (nameListIterator.hasNext()) {
                 String currentMatchingName = nameListIterator.next();
                 if (taskTagList.contains(currentMatchingName)) {
-                    filteredTasks.add(task);
+                    filteredTasks.add(task); // Once found a matching tag, add and break;
                     break;
                 }
             }
@@ -104,18 +113,23 @@ public class FilterUtil {
      * @param tasks 
      *             Provided list for filtering
      * @param taskStatus
-     *             True if searching for is completed, false if search for not completed!            
+     *             True if searching for is completed, false if search for incomplete.
+     * @return filteredTasks
+     *             List containing only Task that filtered by status (e.g. complete or incomplete)
      */
     public static List<Task> filterTasksByStatus(List<Task> tasks, boolean taskStatus) {
+        // If tasks is empty, return immediately
         if (tasks.size() == 0) {
             return tasks;
         }
         
         List<Task> filteredTasks = new ArrayList<Task>();
+        // Loop through all the tasks
         for (int i = 0; i < tasks.size(); i ++) {
             Task task = tasks.get(i);
+            // Check if it is the same as the required task status
             if (task.isCompleted() == taskStatus) {
-                filteredTasks.add(task);
+                filteredTasks.add(task); //Add any task has the same task status
             }
         }
         return filteredTasks;
@@ -127,21 +141,27 @@ public class FilterUtil {
      *             Provided list for filtering
      * @param date            
      *             Search based on this date
+     * @return filteredTasks
+     *              List containing only Task that filtered by a single date
      */
     public static List<Task> filterTaskBySingleDate(List<Task> tasks, LocalDateTime date) {
+        // If tasks is empty, return immediately
         if (tasks.size() == 0) {
             return tasks;
         }
         
         ArrayList<Task> filteredTasks = new ArrayList<Task>();
+        // Loop through all the tasks
         Iterator<Task> iterator = tasks.iterator();
         while (iterator.hasNext()) {
             Task task = iterator.next();
-            assert date != null;
+            // Searched date should not be null, break out if it is.
+            assert date != null; 
+            // Check if task start date is the same as the searched date
             date = DateUtil.floorDate(date);
             LocalDateTime taskDate = DateUtil.floorDate(task.getCalendarDateTime());
             
-            //May have floating tasks
+            // May have floating tasks, skip floating tasks 
             if (taskDate != null && taskDate.equals(date)) {
                 filteredTasks.add(task);
             }
@@ -157,33 +177,42 @@ public class FilterUtil {
      *             Search based on this as starting date
      * @param endDate            
      *             Search based on this as ending date
+     * @return filteredTasks
+     *              List containing only Task that filtered by a range of two dates
      */
     public static List<Task> filterTaskWithDateRange(List<Task> tasks, LocalDateTime startDate, LocalDateTime endDate) {
+        // If tasks is empty, return immediately
         if (tasks.size() == 0) {
             return tasks;
         }
     
+        // If start date is null, set it to MIN dateTime, user could searched by "from today"
         if (startDate == null) {
             startDate = LocalDateTime.MIN;
         }
         
+        // If end date is null, set it to MAX dateTime, user could searched by "to today"
         if (endDate == null) {
             endDate = LocalDateTime.MAX;
         }
         
         ArrayList<Task> filteredTasks = new ArrayList<Task>();
+        // Loop through all the tasks
         Iterator<Task> iterator = tasks.iterator();
         while (iterator.hasNext()) {
             Task task = iterator.next();
             LocalDateTime taskDate = DateUtil.floorDate(task.getDueDate());
+            // May have floating task, set the date to MIN dateTime, to avoid been filtered 
             if (taskDate == null) {
-                taskDate = DateUtil.floorDate(LocalDateTime.MIN);
+                taskDate = LocalDateTime.MIN;
             }
             
+            // Set the searched date to its min and max value
             startDate = DateUtil.floorDate(startDate);
             endDate = DateUtil.ceilDate(endDate);
+            // Compare if the task date is within the range of start and end date
             if (taskDate.compareTo(startDate) >= 0 && taskDate.compareTo(endDate) <= 0) {
-                filteredTasks.add(task);
+                filteredTasks.add(task); // Add if it is within the range
             }
         }
         return filteredTasks;
