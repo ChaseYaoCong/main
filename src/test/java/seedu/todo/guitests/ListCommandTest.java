@@ -1,241 +1,227 @@
 package seedu.todo.guitests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import seedu.todo.guitests.guihandles.TaskListDateItemHandle;
-import seedu.todo.guitests.guihandles.TaskListEventItemHandle;
-import seedu.todo.guitests.guihandles.TaskListTaskItemHandle;
-import seedu.todo.models.CalendarItem;
+import seedu.todo.commons.util.DateUtil;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
-//@@author A0139922Y
+/*
+ * @@author A0139922Y
+ */
 public class ListCommandTest extends GuiTest {
-
-//    // Variables to be use by Test Cases
-//    private static final String TODAY = "today";
-//    private static final LocalDateTime TODAY_DATE = LocalDateTime.now();
-//    private static final String TOMORROW = "tomorrow";
-//    private static final LocalDateTime TOMORROW_DATE = LocalDateTime.now().plusDays(1);
-//    private static final String ADD = "add";
-//    //private final List<CalendarItem> calendarItems = getCalendarItems();
-//    private static final int TASK_INDEX = 0;
-//    private static final int EVENT_INDEX = 1;
-//    
-//    private static final String LIST_TASK_SYNTAX = "list task \"complete/incomplete\"";
-//    private static final String LIST_EVENT_SYNTAX = "list event \"over/current\"";
-//    private static final String LIST_DATE_SYNTAX = "list \"date\" [or from \"date\" to \"date\"]";
-//    private static final String LIST_COMMAND_SYNTAX = "list \"task complete/incomplete\" or \"event over/ongoing\""
-//            + "[on date] or [from date to date]";
+    // Date variables to be use to initialise DB
+    private static final LocalDateTime TODAY = LocalDateTime.now();
+    private static final String TODAY_STRING = DateUtil.formatDate(TODAY);
+    private static final String TODAY_ISO_STRING = DateUtil.formatIsoDate(TODAY);
+    private static final LocalDateTime TOMORROW = LocalDateTime.now().plusDays(1);
+    private static final String TOMORROW_STRING = DateUtil.formatDate(TOMORROW);
+    private static final String TOMORROW_ISO_STRING = DateUtil.formatIsoDate(TOMORROW);
+    private static final LocalDateTime THE_DAY_AFTER_TOMORROW_ = LocalDateTime.now().plusDays(2);
+    private static final String THE_DAY_AFTER_TOMORROW_STRING = DateUtil.formatDate(THE_DAY_AFTER_TOMORROW_);
+    private static final String THE_DAY_AFTER_TOMORROW__ISO_STRING = DateUtil.formatIsoDate(THE_DAY_AFTER_TOMORROW_);
     
-//    @Test
-//    public void listAllTaskAndEvent() {
-//        String command = "list";
-//        assertListSuccess(command);
-//    }
-//    
-//    @Test
-//    public void listAllTask() {
-//        String command = "list task";
-//        // There is only 1 task by Today Date
-//        assertListByDate(command, TODAY_DATE);
-//    }
-//
-//    @Test
-//    public void listAllEvent() {
-//        String command = "list event";
-//        // There is only 1 event by Tomorrow Date
-//        assertListByDate(command, TOMORROW_DATE); 
-//    }
-//    
-//    @Test 
-//    public void listCurrentEvent() {
-//        String command = "list current";
-//        // There is only 1 event by Tomorrow Date
-//        assertListByDate(command, TOMORROW_DATE); 
-//    }
-//    
-//    @Test 
-//    public void listOverEvent() {
-//        String command = "list over";
-//        // There are no events that are over
-//        assertListSuccess(command);
-//    }
-//
-//    @Test
-//    public void listCompleteTasks() {
-//        String command = "list complete";
-//        // There are no task that is completed
-//        assertListSuccess(command);
-//    }
-//    
-//    @Test
-//    public void listIncompleteTasks() {
-//        String command = "list incomplete";
-//        // There is only 1 task by today date
-//        assertListByDate(command, TODAY_DATE);
-//    }
-//    
-//    @Test
-//    public void listByDate() {
-//        String command = "list by today";
-//        assertListByDate(command, TODAY_DATE);
-//        command = "list today";
-//        assertListByDate(command, TODAY_DATE);
-//    }
-//    
-//    @Test
-//    public void listWithInvalidDateSyntax() {
-//        String command = "list by todar";
-//        assertListFailed(command, LIST_DATE_SYNTAX);
-//        command = "list today over";
-//        assertListFailed(command, LIST_DATE_SYNTAX);
-//        command = "list todar";
-//        assertListFailed(command, LIST_DATE_SYNTAX);
-//    }
-//    
-//    @Test
-//    public void listWithTaskSyntaxError() {
-//        String command = "list task over";
-//        assertListFailed(command, LIST_TASK_SYNTAX);
-//        command = "list task current";
-//        assertListFailed(command, LIST_TASK_SYNTAX);        
-//    }
-//    
-//    @Test
-//    public void listWithEventSyntaxError() {
-//        String command = "list event complete";
-//        assertListFailed(command, LIST_EVENT_SYNTAX);
-//        command = "list event incomplete";
-//        assertListFailed(command, LIST_EVENT_SYNTAX);
-//    }
-//    
-//    @Test
-//    public void listWithCommandSyntaxError() {
-//        String command = "list task event";
-//        assertListFailed(command, LIST_COMMAND_SYNTAX);
-//        command = "list event task";
-//        assertListFailed(command, LIST_COMMAND_SYNTAX);
-//    }
-//    
-//    /*========================================== Initalise DB Methods ==============================*/
-//    
-//    /*
-//     * Use to generate data for Test DB
-//     * 
-//     */
-//    private List<CalendarItem> getCalendarItems() {
-//        Event event = new Event();
-//        event.setName("Presentation in the Future");
-//        event.setStartDate(TOMORROW_DATE);
-//        event.setEndDate(TOMORROW_DATE);
-//        Task task = new Task();
-//        task.setName("Buy Milk");
-//        task.setCalendarDateTime(TODAY_DATE);
-//        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
-//        calendarItems.add(task);
-//        calendarItems.add(event);
-//        return calendarItems;
-//    }
-//    
-//    /*
-//     * Use to initialise Test DB for all different test cases
-//     * 
-//     */
-//    private void initialiseTestDB() {
-//        String addCommand = "";
-//        for (int i = 0; i < calendarItems.size(); i ++) {
-//            CalendarItem calendarItem = calendarItems.get(i);
-//            if (calendarItems.get(i) instanceof Task) {
-//                addCommand = formatAddTaskCommand((Task) calendarItem);
-//            }
-//            else if (calendarItems.get(i) instanceof Event) {
-//                addCommand = formatAddEventCommand((Event) calendarItem);
-//            }
-//            console.runCommand(addCommand);
-//        }
-//    }
-//    
-//    /*
-//     * Formatting to the correct add Event command
-//     * 
-//     */
-//    private String formatAddEventCommand(Event event) {
-//        String dateFrom = "from";
-//        String dateTo = "to";
-//        String eventType = "event";
-//        return String.format("%s %s %s %s %s %s %s", ADD, eventType, event.getName(), dateFrom, TOMORROW, dateTo, TOMORROW);
-//    }
-//    
-//    /*
-//     * Formatting to the correct add Task command
-//     * 
-//     */
-//    private String formatAddTaskCommand(Task task) {
-//        String dateBy = "by";
-//        return String.format("%s %s %s %s", ADD, task.getName(), dateBy, TODAY);
-//    }
-//    
-//    /*================================= Assert Helper Methods =============================*/
-//    
-//    /**
-//     * Method for testing if task and events to be listed into the GUI.
-//     * This runs a command and checks if all item have been listed
-//     */
-//    private void assertListSuccess(String command) {
-//        // Run the command in the console.
-//        initialiseTestDB();
-//        console.runCommand(command);
-//        
-//        //To check for both dates
-//        LocalDate date = TODAY_DATE.toLocalDate();
-//        TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(date);
-//        TaskListTaskItemHandle taskItem = dateItem.getTaskListTaskItem(calendarItems.get(TASK_INDEX).getName());
-//        assertEquals(taskItem.getName(), calendarItems.get(TASK_INDEX).getName());
-//        date = TOMORROW_DATE.toLocalDate();
-//        dateItem = taskList.getTaskListDateItem(date);
-//        TaskListEventItemHandle eventItem = dateItem.getTaskListEventItem(calendarItems.get(EVENT_INDEX).getName());
-//        assertEquals(eventItem.getName(), calendarItems.get(EVENT_INDEX).getName());
-//        console.runCommand("clear");
-//    }
-//    
-//    /**
-//     * Method for testing if task and events to be listed into the GUI by date.
-//     * This runs a command and checks if right item is been listed by date.
-//     */
-//    private void assertListByDate(String command, LocalDateTime date) {
-//        // Run the command in the console.
-//        initialiseTestDB();
-//        console.runCommand(command);
-//        
-//        if (TODAY_DATE.equals(date)) {
-//            LocalDate localDate = date.toLocalDate();
-//            TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(localDate);
-//            TaskListTaskItemHandle taskItem = dateItem.getTaskListTaskItem(calendarItems.get(TASK_INDEX).getName());
-//            assertEquals(taskItem.getName(), calendarItems.get(TASK_INDEX).getName());
-//        } else if (TOMORROW_DATE.equals(date)){
-//            LocalDate localDate = date.toLocalDate();
-//            TaskListDateItemHandle dateItem = taskList.getTaskListDateItem(localDate);
-//            TaskListEventItemHandle eventItem = dateItem.getTaskListEventItem(calendarItems.get(EVENT_INDEX).getName());
-//            assertEquals(eventItem.getName(), calendarItems.get(EVENT_INDEX).getName());
-//        }
-//        console.runCommand("clear");
-//    }
-//    
-//    /**
-//     * Method for testing if task and events have failed to list.
-//     * This runs a command and checks if the consoleInputTextField matches with the expect error message.
-//     */
-//    public void assertListFailed(String command, String expectedDisambiguation) {
-//        console.runCommand(command);
-//        assertEquals(console.getConsoleInputText(), expectedDisambiguation); 
-//    }
+    // Command to be use to initialise DB
+    private String commandAdd1 = String.format("add task Buy Coco by \"%s 8pm\"", TODAY_STRING);
+    private Task task1 = new Task();
+    private String commandAdd2 = String.format("add task Buy Milk by \"%s 9pm\"", TOMORROW_STRING);
+    private Task task2 = new Task();
+    private String commandAdd3 = String.format("add event CS2103 V0.5 Demo from \"%s 4pm\" to \"%s 5pm\"",
+            TOMORROW_STRING, TOMORROW_STRING);
+    private Event event3 = new Event();
+    private String commandAdd4 = String.format("add event buying workshop from \"%s 8pm\" to \"%s 9pm\"",
+            THE_DAY_AFTER_TOMORROW_STRING, THE_DAY_AFTER_TOMORROW_STRING);
+    private Event event4 = new Event();
     
+    // Set up DB
+    public ListCommandTest() {
+        task1.setName("Buy Coco");
+        task1.setCalendarDateTime(DateUtil.parseDateTime(
+                String.format("%s 20:00:00", TODAY_ISO_STRING)));
+        task1.setCompleted();
+        
+        task2.setName("Buy Milk");
+        task2.setDueDate(DateUtil.parseDateTime(
+                String.format("%s 21:00:00", TOMORROW_ISO_STRING)));
+        
+        event3.setName("CS2103 V0.5 Demo");
+        event3.setStartDate(DateUtil.parseDateTime(
+                String.format("%s 16:00:00", TOMORROW_ISO_STRING)));
+        event3.setEndDate(DateUtil.parseDateTime(
+                String.format("%s 17:00:00", TOMORROW_ISO_STRING)));
+        
+        event4.setName("buying workshop");
+        event4.setStartDate(DateUtil.parseDateTime(
+                String.format("%s 20:00:00", THE_DAY_AFTER_TOMORROW__ISO_STRING)));
+        event4.setEndDate(DateUtil.parseDateTime(
+                String.format("%s 21:00:00", THE_DAY_AFTER_TOMORROW__ISO_STRING)));
+    }
+    
+    // Re-use
+    @Before
+    public void initFixtures() {
+        console.runCommand("clear");
+        assertTaskVisibleAfterCmd(commandAdd1, task1);
+        assertTaskVisibleAfterCmd(commandAdd2, task2);
+        assertEventVisibleAfterCmd(commandAdd3, event3);
+        assertEventVisibleAfterCmd(commandAdd4, event4);
+    }
+    
+    // Re-use
+    @Test
+    public void fixtures_test() {
+        console.runCommand("clear");
+        assertTaskNotVisibleAfterCmd("list", task1);
+        assertTaskNotVisibleAfterCmd("list", task2);
+        assertEventNotVisibleAfterCmd("list", event3);
+        assertEventNotVisibleAfterCmd("list", event4);
+    }
+    
+    @Test
+    public void list_all() {
+        String command = "liast";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_tasks() {
+        String command = "list tasks";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_completed_tasks() {
+        console.runCommand("complete 1");
+        String command = "list complete";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test 
+    public void list_incomplete_tasks() {
+        String command = "list incomplete";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_events() {
+        String command = "list events";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    
+    @Test
+    public void list_over_events() {
+        String command = "list over";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_current_events() {
+        String command = "list current";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_by_single_date() {
+        String command = "list today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_by_date_range() {
+        String command = "list from today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_tasks_by_single_date() {
+        String command = "list tasks on today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test 
+    public void list_tasks_by_date_range() {
+        String command = "list tasks from today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_events_by_single_date() {
+        String command = "list events on tomorrow";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_events_by_date_range() {
+        String command = "list events from today";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_invalidTaskSyntax_disambiguate() {
+        String command = "list task over";
+        console.runCommand(command);
+        String expectedDisambiguation = "list task \"complete/incomplete\"";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+    }
+    
+    @Test
+    public void list_invalidEventSyntax_disambiguate() {
+        String command = "list event complete";
+        console.runCommand(command);
+        String expectedDisambiguation = "list event \"over/current\"";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+    }
+    
+    @Test
+    public void list_invalidDateSyntax_disambiguate() {
+        String command = "list today on tomorrow";
+        console.runCommand(command);
+        String expectedDisambiguation = "list \"date\" [or from \"date\" to \"date\"]";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+    }
 }
