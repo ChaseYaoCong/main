@@ -22,8 +22,7 @@ import seedu.todo.models.TodoListDB;
 
 /**
  * @@author A0139922Y
- * Controller to list CalendarItems.
- *
+ * Controller to list CalendarItems
  */
 public class ListController implements Controller {
     
@@ -55,7 +54,6 @@ public class ListController implements Controller {
     private static final int DATE_ON_INDEX = 1;
     private static final int DATE_FROM_INDEX = 2;
     private static final int DATE_TO_INDEX = 3;
-    
     
     private static CommandDefinition commandDefinition =
             new CommandDefinition(NAME, DESCRIPTION, COMMAND_SYNTAX); 
@@ -169,8 +167,7 @@ public class ListController implements Controller {
     private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
         // Get dates from input
         List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
-        String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        LocalDateTime [] validDates = parsingDates(parsedResult);
         List<Task> filteredTasks = tasks;
         List<Event> filteredEvents = events;
         if (validDates == null) {
@@ -282,7 +279,8 @@ public class ListController implements Controller {
      * 
      * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult) {
+        String[] parsedDates = ParseUtil.parseDates(parsedResult);
         
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, Tokenizer.DEFAULT_TOKEN);
