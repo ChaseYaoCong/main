@@ -818,7 +818,6 @@ Use case ends.
 > Moreover, its ease of use and its integration with other services are its true strength. It can integrate with the latest technologies such as Trello and Amazon Echo to keep every to-do item in a single place.
 
 > However, one flaw with Todoist is that it does not possess any capabilities of having subproject hierarchy. Hence, it would make complex projects' task to be split among the team in an orderly fashion.
-
 <!-- @@author -->
 
 **{TODO: Add a summary of competing products}**
