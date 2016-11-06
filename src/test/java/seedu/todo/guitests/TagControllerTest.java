@@ -71,7 +71,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_EXCEED_TAG_SIZE);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_TAG_NAME_EXIST);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -88,7 +88,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_TAG_NAME_EXIST);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_EXCEED_TAG_SIZE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -149,7 +149,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_INDEX_OUT_OF_RANGE);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_TAG_NAME_NOT_FOUND);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
