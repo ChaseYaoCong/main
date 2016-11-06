@@ -96,8 +96,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_task_by_name() {
-        String command = "find name buy task";
+    public void find_tasks_by_name() {
+        String command = "find name buy tasks";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -105,8 +105,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_event_by_name() {
-        String command = "find name buy event";
+    public void find_events_by_name() {
+        String command = "find name buy events";
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -132,8 +132,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_task_by_tag() {
-        String command = "find tagName personal task";
+    public void find_tasks_by_tag() {
+        String command = "find tagName personal tasks";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -141,8 +141,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_event_by_tag() {
-        String command = "find tagName buy event";
+    public void find_events_by_tag() {
+        String command = "find tagName buy events";
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -168,8 +168,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_task_by_keyword() {
-        String command = "find buy task";
+    public void find_tasks_by_keyword() {
+        String command = "find buy tasks";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -177,8 +177,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_event_by_keyword() {
-        String command = "find buy event";
+    public void find_events_by_keyword() {
+        String command = "find buy events";
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -195,7 +195,7 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_by_task_complete_status() {
+    public void find_by_tasks_complete_status() {
         console.runCommand("complete 1");
         String command = "find buy complete";
         assertTaskVisibleAfterCmd(command, task1);
@@ -205,7 +205,7 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_by_task_incomplete_status() {
+    public void find_by_tassk_incomplete_status() {
         String command = "find buy incomplete";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
@@ -214,7 +214,7 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_by_event_current_status() {
+    public void find_by_events_current_status() {
         String command = "find buy current";
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
@@ -223,7 +223,7 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_by_event_over_status() {
+    public void find_by_events_over_status() {
         String command = "find buy over";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
@@ -250,8 +250,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_task_by_single_date() {
-        String command = "find buy task on today";
+    public void find_tasks_by_single_date() {
+        String command = "find buy tasks on today";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -259,8 +259,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test 
-    public void find_task_by_date_range() {
-        String command = "find buy task from today";
+    public void find_tasks_by_date_range() {
+        String command = "find buy tasks from today";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -268,8 +268,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_event_by_single_date() {
-        String command = "find CS2103 event on tomorrow";
+    public void find_events_by_single_date() {
+        String command = "find CS2103 events on tomorrow";
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
@@ -277,8 +277,8 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_event_by_date_range() {
-        String command = "find buy event from today";
+    public void find_events_by_date_range() {
+        String command = "find buy events from today";
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
