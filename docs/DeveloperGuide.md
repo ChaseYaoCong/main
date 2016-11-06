@@ -361,78 +361,80 @@ Priority | As a ... | I want to ... | So that I can...
 #### Use case: UC01 - Usage Instructions
 **MSS**
 
-1. User want to view all the available commands in the application.
-2. Application show a list of available commands and instructions for all commands.  
+1. User wants to view all the available commands in the application.
+2. Application shows a list of available commands and instructions for all commands. 
 Use Case ends
 
 #### Use case : UC02 - Add task
 
 **MSS**
 
-1. User request to add new tasks with its details.
-2. Application add the task with specified details.  
-3. Application display successful message.  
+1. User requests to add new tasks with its details.
+2. Application adds the task with specified details.
+3. Application displays successful message.
 Use case ends.  
 
 **Extensions**  
-1a. User specify with start date and end date.
+1a. User specifies to add without any date.
 
-> 1a1. User specify invalid date format.
+> 1a1. User specifies an invalid command syntax.  
 Application shows an error message.  
 Use case ends.
 
-1b. User specify with deadline.  
+1b. User specifies a deadline.
 
-> 1b1. User specify invalid date deadline format.
+> 1b1. User specifies an invalid date deadline format.  
 Application shows an error message.  
 Use case ends.
+
 
 <!--@@author A0139922Y -->
 #### Use case : UC03 - Add Event
 
 **MSS**
 
-1. User request to add new events with its details.
-2. Application add the events with specified details.  
-3. Application display successful message.  
+1. User requests to add new events with its details.
+2. Application adds the events with specified details.  
+3. Application displays successful message.  
 Use case ends.  
 
 **Extensions**  
-1a. User specify with start date and end date.
+1a. User specifies a start date and end date.
 
-> 1a1. User specify invalid date format.
+> 1a1. User specifies an invalid date format.  
 Application shows an error message.  
-Use case ends.
+Use case ends.  
 
-1b. User specify with a single date. 
+1b. User specifies a deadline.
 
->   Application shows an error message.  
+> 1b1. User specifies an invalid date deadline format.  
+Application shows an error message.
 Use case ends.
 
 #### Use case : UC04 - Find with specific keyword
 
 **MSS**
 
-1. User request to find task with specific keyword.
-2. Application show the list of task that its names & tag containing the specific keyword.  
+1. User requests to find tasks with specific keyword/specific keywords.
+2. Application shows the list of tasks contains the specific keyword in its name or tag.  
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
-> 2a1. Application show an error message.  
+> 2a1. Application shows an error message.  
 Use case ends.
 
 2b. User did not provided any keyword
-> 2b1. Application show an error message.  
+> 2b1. Application shows an error message.  
 Use case ends.
 
-2c. User specify with start date and end date
-> 2c1. User specify invalid date format for either start or end date.
+2c. User specifies a start date and end date
+> 2c1. User specifies an invalid date format for either start or end date.
 Application shows an error message.  
 Use case ends.
 
-2d. User specify with a single date
-> 2d1. User specify invalid date format.
+2d. User specifies a single date
+> 2d1. User specifies invalid date format.
 Application shows an error message.  
 Use case ends.
 
@@ -442,18 +444,18 @@ Use case ends.
 
 <!-- @@author -->
 
-#### Use case : UC05 - List all task and events
+#### Use case : UC05 - List all tasks and events
 
 **MSS**
 
-1. User request to list all the tasks and events.
-2. Application show the list of task and events with respective details.    
+1. User requests to list all the tasks and events.
+2. Application shows the list of tasks and events with respective details.    
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
 
-> 2a1. Application show error message.  
+> 2a1. Application shows error message.  
 Use case ends.
 
 <!-- @@author A0139922Y -->
@@ -462,45 +464,45 @@ Use case ends.
 
 **MSS**
 
-1. User request to list all the tasks and events by date.
-2. Application show the list of task and events by the date with respective details.  
+1. User requests to list all the tasks and events by date.
+2. Application shows the list of tasks and events by the date with respective details.  
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
 
-> 2a1. Application show error message.  
+> 2a1. Application shows error message.  
 Use case ends.
 
 2b. User did not provide any date.
 > Use case ends.
 
-2c. User provide a single date.
-> 2c1. User specify invalid date format.
-> Application show error message.  
-> User case ends.
+2c. User provides a single date.
+> 2c1. User specifies an invalid date format.
+> Application shows error message.  
+> Use case ends.
 
-2d. User provide a start date and date.
-> 2c1. User specify invalid date format for either start or end date.
-> Application show error message.  
-User case ends.
+2d. User provide a start date and end date.
+> 2c1. User specifies invalid date format for either start or end date.
+> Application shows error message.  
+Use case ends.
 
 #### Use case : UC07 - List by status
 
 **MSS**
 
-1. User request to list all the tasks and events by status.
-2. Application show the list of task or events by status with respective details.  
+1. User requests to list all the tasks and events by status.
+2. Application shows the list of tasks or events by status with respective details.  
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
 
-> 2a1. Application show error message.  
+> 2a1. Application shows error message.  
 Use case ends.
 
-2b. User specify status
->2b1. User specify invalid task/event status.  
+2b. User specifies status
+>2b1. User specifies an invalid task/event status.  
 Use case ends.
 
 #### Use case: UC08 - Delete task/event
@@ -510,7 +512,7 @@ Use case ends.
 1. Application shows a list of tasks and events.
 2. User requests to delete a specific task or event in the list by its respective index.
 3. Application deletes the task or event.  
-4. Application show a updated list of task and events.  
+4. Application shows a updated list of task and events.  
 Use case ends.  
 
 **Extensions**  
@@ -528,7 +530,7 @@ Use case ends.
 
 1. Application shows a list of tasks and events.
 2. User requests to update a specific task in the list by respective index.
-3. Application edit the task.  
+3. Application edits the task.  
 4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
@@ -580,8 +582,8 @@ Use case ends.
 
 **MSS**  
 
-1. User request to undo command by a specific number.
-2. Application undo the command repeatedly based on the given number  
+1. User requests to undo command by a specific number.
+2. Application undo the command repeatedly based on the given number.  
 Use case ends.
 
 **Extensions**
@@ -593,7 +595,7 @@ Use case ends.
 
 **MSS**  
 
-1. User request to redo command by a specific number.
+1. User requests to redo command by a specific number.
 2. Application redo the command repeatedly based on the given number.  
 Use case ends.
 
@@ -744,31 +746,31 @@ Use case ends.
 
 **MSS**
 
-1. User request to set alias for specific command.
-2. Application set the Alias for the command.  
+1. User requests to set alias for specific command.
+2. Application sets the Alias for the command.  
 Use case ends.
 
 **Extensions**
 
 1a. The given alias is already set.
-> 1a1. Application will show an error message.  
+> 1a1. Application shows an error message.  
 Use case ends.
 
 1b. The given command is invalid.
->1b1. Application will show an error message.  
+>1b1. Application shows an error message.  
 Use case ends.
 
 #### Use Case: UC20 - Remove Alias
 
 **MSS**
 
-1. User request for a list of alias that is currently set.
-2. Application show a list of alias and its respective command.
-3. User request to remove alias from the specific command.
-4. Application remove the alias of the specific command.  
+1. User requests for a list of alias that is currently set.
+2. Application shows a list of alias and its respective command.
+3. User requests to remove alias from the specific command.
+4. Application removes the alias of the specific command.  
 Use case ends.
 
-**Extensions**
+**Extensions**  
 1a. The list is empty.  
 > Use case ends.
 
@@ -795,10 +797,6 @@ Use case ends.
 ##### Mainstream OS
 
 > Windows, Linux, Unix, OS-X
-
-**##### Private contact detail**
-
-> A contact detail that is not meant to be shared with others
 
 ## Appendix E : Product Survey
 
