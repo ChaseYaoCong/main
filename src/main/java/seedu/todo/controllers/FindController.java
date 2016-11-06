@@ -34,19 +34,19 @@ public class FindController implements Controller {
     private static final String COMMAND_WORD = "find";
     
     // Syntax correction to console input
-    private static final String COMMAND_SYNTAX = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
-    private static final String FIND_TASK_SYNTAX = "find \"name\" task \"complete/incomplete\"";
-    private static final String FIND_EVENT_SYNTAX = "find \"name\" event \"over/ongoing\"";
+    public static final String COMMAND_SYNTAX = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
+    public static final String FIND_TASK_SYNTAX = "find \"name\" task \"complete/incomplete\"";
+    public static final String FIND_EVENT_SYNTAX = "find \"name\" event \"over/ongoing\"";
     
     // Message output to console text area
-    private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
-    private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
-    private static final String MESSAGE_NO_KEYWORD_FOUND = "No keyword found!";
-    private static final String MESSAGE_DATE_CONFLICT = "Unable to find!\nMore than 1 date criteria is provided!";
-    private static final String MESSAGE_NO_DATE_DETECTED = "Unable to find!\nThe natural date entered is not supported.";
-    private static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with complete or incomplete";
-    private static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with over or current";
-    private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
+    public static final String MESSAGE_RESULT_FOUND_FORMAT = "A total of %s found!";
+    public static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
+    public static final String MESSAGE_NO_KEYWORD_FOUND = "No keyword found!";
+    public static final String MESSAGE_DATE_CONFLICT = "Unable to find!\nMore than 1 date criteria is provided!";
+    public static final String MESSAGE_NO_DATE_DETECTED = "Unable to find!\nThe natural date entered is not supported.";
+    public static final String MESSAGE_INVALID_TASK_STATUS = "Unable to find!\nTry searching with complete or incomplete";
+    public static final String MESSAGE_INVALID_EVENT_STATUS = "Unable to find!\nTry searching with over or current";
+    public static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
     
     private static final int COMMAND_INPUT_INDEX = 0;
     //use to access parsing of dates
@@ -160,7 +160,7 @@ public class FindController implements Controller {
             return;
         }
         
-        String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
+        String consoleMessage = String.format(MESSAGE_RESULT_FOUND_FORMAT, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
         Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
     }
