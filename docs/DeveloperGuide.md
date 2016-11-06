@@ -427,7 +427,7 @@ Use case ends.
 > 2a1. Application shows an error message.  
 Use case ends.
 
-2b. User did not provided any keyword
+2b. User did not provide any keyword
 > 2b1. Application shows an error message.  
 Use case ends.
 
