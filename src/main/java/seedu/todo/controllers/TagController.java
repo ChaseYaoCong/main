@@ -15,7 +15,6 @@ import seedu.todo.models.TodoListDB;
 /**
  * @@author A0139922Y
  * Controller to Tag a CalendarItem.
- *
  */
 public class TagController implements Controller {
     
@@ -69,7 +68,7 @@ public class TagController implements Controller {
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
         String param = parsedResult.get(Tokenizer.DEFAULT_TOKEN)[TOKENIZER_DEFAULT_INDEX];
         
-        if (param.length() <= 0) {
+        if (param == null) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
             return;
         }
@@ -150,9 +149,8 @@ public class TagController implements Controller {
      * @return true if all tags have been added successfully, false if one of the tags is not added successfully                     
      */
     private boolean addingTagNames(String[] parsedTagNames, CalendarItem calendarItem) {
-        assert parsedTagNames != null;
         
-        //if tag names parsed exceed the maximum tag list limit
+        // If tag names parsed exceed the maximum tag list limit
         if (calendarItem.getTagList().size() + parsedTagNames.length > calendarItem.getTagListLimit()) {
             return false;
         }

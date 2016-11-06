@@ -29,7 +29,7 @@ public class UntagController implements Controller {
     private static final String MESSAGE_INDEX_OUT_OF_RANGE = "Could not untag task/event: Invalid index provided!";
     private static final String MESSAGE_MISSING_INDEX_AND_TAG_NAME = "Please specify the index of the item and the tag name to untag.";
     private static final String MESSAGE_INDEX_NOT_NUMBER = "Index has to be a number!";
-    private static final String MESSAGE_TAG_NAME_NOT_FOUND = "Could not untag task/event: Tag name not found!";
+    private static final String MESSAGE_TAG_NAME_NOT_FOUND = "Could not untag task/event: Tag name not provided!";
     private static final String MESSAGE_TAG_NAME_DOES_NOT_EXIST = "Could not untag task/event: Tag name does not exist!";
     private static final String MESSAGE_TAG_NAME_EXIST = "Could not untag task/event : Tag name does not exist or Duplicate Tag name detected!";
     
@@ -46,7 +46,6 @@ public class UntagController implements Controller {
 
     @Override
     public float inputConfidence(String input) {
-        // TODO
         return (StringUtil.splitStringBySpace(input.toLowerCase())[COMMAND_INPUT_INDEX]).equals(COMMAND_WORD) ? 1 : 0;
     }
     
@@ -71,12 +70,10 @@ public class UntagController implements Controller {
         
         String param = parsedResult.get(Tokenizer.DEFAULT_TOKEN)[TOKENIZER_DEFAULT_INDEX];
         
-        if (param.length() <= 0) {
+        if (param == null) {
             Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_MISSING_INDEX_AND_TAG_NAME);
             return;
         }
-        
-        assert param.length() > 0;
         
         String[] parameters = StringUtil.splitStringBySpace(param);
         
