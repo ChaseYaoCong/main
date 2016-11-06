@@ -61,7 +61,7 @@ public class FindController implements Controller {
     public static CommandDefinition getCommandDefinition() {
         return commandDefinition;
     }
-
+    
     @Override
     public float inputConfidence(String input) {
         String command = StringUtil.splitStringBySpace(input.toLowerCase())[COMMAND_INPUT_INDEX];
@@ -306,7 +306,6 @@ public class FindController implements Controller {
      */
     private void updateHashList(Map<String, String[]> parsedResult, HashSet<String> hashList, 
             String token) {
-      
         String result = ParseUtil.getTokenResult(parsedResult, token);
         // If found any matching , update list
         if (result != null) {
@@ -338,7 +337,6 @@ public class FindController implements Controller {
                 Renderer.renderDisambiguation(FIND_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
                 return true;
             }
-            
             if (!isTask && isTaskStatusProvided) {
                 Renderer.renderDisambiguation(FIND_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
                 return true;
