@@ -175,8 +175,17 @@ public class ListCommandTest extends GuiTest {
     }
     
     @Test 
-    public void list_tasks_by_date_range() {
+    public void list_tasks_by_date_range_with_single_date() {
         String command = "list tasks from today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test 
+    public void list_tasks_by_date_range() {
+        String command = "list tasks from today to tmr";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
@@ -193,8 +202,17 @@ public class ListCommandTest extends GuiTest {
     }
     
     @Test
-    public void list_events_by_date_range() {
+    public void list_events_by_date_range_with_single_date() {
         String command = "list events from today";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void list_events_by_date_range() {
+        String command = "list events from today to " + THE_DAY_AFTER_TOMORROW_STRING;
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
@@ -218,8 +236,24 @@ public class ListCommandTest extends GuiTest {
     }
     
     @Test
-    public void list_invalidDateSyntax_disambiguate() {
-        String command = "list today on tomorrow";
+    public void list_invalidDateSyntax_disambiguate_with_date_range() {
+        String command = "list by today to tml";
+        console.runCommand(command);
+        String expectedDisambiguation = "list \"date\" [or from \"date\" to \"date\"]";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+    }
+    
+    @Test
+    public void list_invalidDateSyntax_disambiguate_with_single_date_by_keyword() {
+        String command = "list by todar";
+        console.runCommand(command);
+        String expectedDisambiguation = "list \"date\" [or from \"date\" to \"date\"]";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+    }
+    
+    @Test
+    public void list_invalidDateSyntax_disambiguate_with_single_date() {
+        String command = "list todar";
         console.runCommand(command);
         String expectedDisambiguation = "list \"date\" [or from \"date\" to \"date\"]";
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);

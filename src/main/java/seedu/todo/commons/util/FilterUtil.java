@@ -360,7 +360,7 @@ public class FilterUtil {
         return filteredEvents;
     }
     
-    /*==================== Methods to Check Command Conflict ===================================*/
+    /*==================== Helper Methods to Check Command Conflict ===================================*/
     
     /*
      * To be use to check if there are more than 1 event type entered by user 

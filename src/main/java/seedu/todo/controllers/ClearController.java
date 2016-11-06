@@ -15,24 +15,26 @@ import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.DateParser;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.controllers.concerns.Tokenizer;
+import seedu.todo.models.CalendarItem;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
 
 /**
- * Controller to clear task/event by type or status
- * 
- * @@author A0139922Y
- *
+ *  @@author A0139922Y
+ * Controller to clear task/event by Type
  */
 public class ClearController implements Controller {
     
     private static final String NAME = "Clear";
     private static final String DESCRIPTION = "Clear all tasks/events or by specify date.";
-    private static final String COMMAND_SYNTAX = "clear \"task/event\" on \"date\"";
-    private static final String CLEAR_DATE_SYNTAX = "clear \"date\" [or from \"date\" to \"date\"]";
     private static final String COMMAND_WORD = "clear";
     
+    // Syntax correction to console input
+    private static final String COMMAND_SYNTAX = "clear \"task/event\" on \"date\"";
+    private static final String CLEAR_DATE_SYNTAX = "clear \"date\" [or from \"date\" to \"date\"]";
+    
+    // Message output to console text area
     private static final String MESSAGE_CLEAR_SELECTED_SUCCESS = "A total of %s deleted!";
     private static final String MESSAGE_CLEAR_NO_ITEM_FOUND = "No item found!";
     private static final String MESSAGE_CLEAR_ALL_SUCCESS = "All tasks and events have been deleted!\n" + "To undo, type \"undo\".";
@@ -41,7 +43,7 @@ public class ClearController implements Controller {
     private static final String MESSAGE_NO_DATE_DETECTED = "Unable to clear!\nThe natural date entered is not supported.";
     private static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to clear!\nMore than 1 item type is provided!";
     
-    //use to access parsing of dates
+    // Use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
     private static final int COMMAND_INPUT_INDEX = 0;
     private static final int DATE_CRITERIA_INDEX = 0;
@@ -84,7 +86,6 @@ public class ClearController implements Controller {
     public void process(String input) throws ParseException {
         Map<String, String[]> parsedResult;
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
-        
         TodoListDB db = TodoListDB.getInstance();
         
         if (input.trim().equals(COMMAND_WORD)) {
@@ -106,27 +107,55 @@ public class ClearController implements Controller {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
         }
         
-        String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        LocalDateTime [] validDates = parsingDates(parsedResult);
         if (validDates == null) {
             return; // Break out when date conflict found
         }
         
-        LocalDateTime dateCriteria = validDates[DATE_CRITERIA_INDEX];
-        LocalDateTime dateOn = validDates[DATE_ON_INDEX];
-        LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
-        LocalDateTime dateTo = validDates[DATE_TO_INDEX];
+        // Setting up view
+        List<Task> tasks; //default
+        List<Event> events; //default
+        List<CalendarItem> calendarItems;
+        // Filter Task and Event by Type
+        if (!isItemTypeProvided) {
+            tasks = db.getAllTasks();
+            events = db.getAllEvents();
+        } else {
+            if (isTask) {
+                events = new ArrayList<Event>();
+                tasks = db.getAllTasks();
+            } else {
+                tasks = new ArrayList<Task>();
+                events = db.getAllEvents();
+            }
+        }
         
-        deleteSelectedTasksAndEvents(db, isItemTypeProvided, isTask, dateCriteria, dateOn, dateFrom, dateTo);
+        // Filter Task and Event by date
+        calendarItems = filterTasksAndEventsByDate(tasks, events, parsedResult);
+        if (calendarItems == null) {
+            return; // Date conflict detected
+        }
+        tasks = FilterUtil.filterOutTask(calendarItems);
+        events = FilterUtil.filterOutEvent(calendarItems);
+        
+        // Show message if no items had been found
+        if (tasks.size() == 0 && events.size() == 0) {
+            Renderer.renderIndex(db, MESSAGE_CLEAR_NO_ITEM_FOUND);
+            return;
+        }
+        
+        deleteSelectedTasksAndEvents(tasks, events, db);
     }
+    
+    /*====================== Helper Methods to check for Error/Syntax Command ===================*/
     
     /*
      * To be used to parsed dates and check for any dates conflict
      * 
      * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
-        
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult) {
+        String[] parsedDates = ParseUtil.parseDates(parsedResult);
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, Tokenizer.DEFAULT_TOKEN);
         
@@ -190,44 +219,76 @@ public class ClearController implements Controller {
         return false;
     }
     
+    /* =================== Helper methods to filter out Task and Events ==================*/
+    
     /*
-     * Delete the selected Tasks and Events based on the date criteria the user has input
+     * Filter out the selected tasks and events based on the dates
+     * and update tasks and events accordingly
      * 
+     * @param tasks
+     *            List of Task items
+     * @param events           
+     *            List of Event items
+     * @param parsedResult
+     *            parsedResult by Tokenizer
+     * @return        
+     *            tasks and events in a list form by date or null when date conflict found
      */
-    private void deleteSelectedTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTask,
-            LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        List<Task> tasks = db.getAllTasks(); 
-        List<Event> events = db.getAllEvents();
-
-        if (isItemTypeProvided) {
-            if (isTask) {
-                events = new ArrayList<Event>();
-            } else if (!isTask) {
-                tasks = new ArrayList<Task>();
-            }
-        } 
+    private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, 
+            String[]> parsedResult) {
+        // Get dates from input
+        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
+        LocalDateTime [] validDates = parsingDates(parsedResult);
+        List<Task> filteredTasks = tasks;
+        List<Event> filteredEvents = events;
+        if (validDates == null) {
+            return null; // Break out when date conflict found
+        }
+        
+        // Set dates that are found, if not found value will be null
+        LocalDateTime dateCriteria = validDates[DATE_CRITERIA_INDEX];
+        LocalDateTime dateOn = validDates[DATE_ON_INDEX];
+        LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
+        LocalDateTime dateTo = validDates[DATE_TO_INDEX];
+        
         if (dateCriteria != null) {
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateCriteria);
-            events = FilterUtil.filterEventBySingleDate(events, dateCriteria);
+            // Filter by single date
+            assert dateOn == null;
+            assert dateFrom == null;
+            assert dateTo == null;
+            filteredTasks = FilterUtil.filterTaskBySingleDate(tasks, dateCriteria);
+            filteredEvents = FilterUtil.filterEventBySingleDate(events, dateCriteria);
         }
         
         if (dateOn != null) {
-            //filter by single date
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
-            events = FilterUtil.filterEventBySingleDate(events, dateOn);
-        } else {
-            //filter by range
-            tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
-            events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+            // Filter by single date
+            filteredTasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
+            filteredEvents = FilterUtil.filterEventBySingleDate(events, dateOn);
+        } else if (dateFrom != null || dateTo != null) {
+            // Filter by range
+            filteredTasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
+            filteredEvents =FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
         }
         
-        if (tasks.size() == 0 && events.size() == 0) {
-            Renderer.renderIndex(db, MESSAGE_CLEAR_NO_ITEM_FOUND);
-            return;
-        } else {
-            db.destroyAllTaskAndEventsByList(tasks, events);
-        }
-        
+        calendarItems.addAll(filteredTasks);
+        calendarItems.addAll(filteredEvents);
+        return calendarItems;
+    }    
+    
+    /* =============== Helper Methods to delete selected Tasks and Events ============*/
+    
+    /*
+     * Delete the selected Tasks and Events , filtered out by helper methods
+     * 
+     * @param tasks
+     *             A list of Task that already been filtered for deletion
+     * @param events
+     *             A list of Event that already been filtered for deletion
+     * @param db
+     *             The same instance of db used to filtered out both tasks and events                        
+     */
+    private void deleteSelectedTasksAndEvents(List<Task> tasks, List<Event> events, TodoListDB db) {
+        db.destroyAllTaskAndEventsByList(tasks, events);
         String consoleMessage = String.format(MESSAGE_CLEAR_SELECTED_SUCCESS, 
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
         Renderer.renderIndex(db, consoleMessage);
