@@ -25,10 +25,7 @@ public class TagControllerTest extends GuiTest {
     private String commandAdd = String.format("add task Buy Coco by \"%s 8pm\"", TODAY_STRING);
     private Task task = new Task();
     private Task taskWithoutTag = new Task();
-    
-    // To format console output text area
-    private String consoleOutputFormat = Renderer.MESSAGE_DISAMBIGUATE + "\n\n%s";
-    
+
     // Set up DB
     public TagControllerTest() {
         task.setName("Buy Coco");
@@ -75,8 +72,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
-                TagController.MESSAGE_EXCEED_TAG_SIZE);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_EXCEED_TAG_SIZE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -93,7 +89,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, TagController.MESSAGE_TAG_NAME_EXIST);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_TAG_NAME_EXIST);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -108,8 +104,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
-                TagController.MESSAGE_MISSING_INDEX_AND_TAG_NAME);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_MISSING_INDEX_AND_TAG_NAME);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -125,8 +120,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
-                TagController.MESSAGE_INDEX_OUT_OF_RANGE);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_INDEX_OUT_OF_RANGE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -141,8 +135,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
-                TagController.MESSAGE_INDEX_NOT_NUMBER);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_INDEX_NOT_NUMBER);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -157,8 +150,7 @@ public class TagControllerTest extends GuiTest {
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
-                TagController.MESSAGE_INDEX_OUT_OF_RANGE);
+        String expectedDisambiguationForConsoleTextArea = formatConsoleOutputTextArea(TagController.MESSAGE_INDEX_OUT_OF_RANGE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     

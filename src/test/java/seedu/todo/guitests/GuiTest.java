@@ -22,6 +22,7 @@ import seedu.todo.commons.core.EventsCenter;
 import seedu.todo.commons.events.BaseEvent;
 import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.StringUtil;
+import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.guitests.guihandles.ConsoleHandle;
 import seedu.todo.guitests.guihandles.MainGuiHandle;
 import seedu.todo.guitests.guihandles.SideBarHandle;
@@ -316,5 +317,15 @@ public abstract class GuiTest {
         String tagName = StringUtil.splitStringBySpace(command)[tagName_index];
         assert tagName != null;
         return tagName;
+    }
+    
+    /*
+     * @@author A0139922Y 
+     * To format disambiguate message at console output text area
+     * 
+     * @return formatted output
+     */
+    protected String formatConsoleOutputTextArea(String expectedDisambiguateMessage) {
+        return String.format(Renderer.MESSAGE_DISAMBIGUATE + "\n\n%s", expectedDisambiguateMessage);
     }
 }
