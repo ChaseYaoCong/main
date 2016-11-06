@@ -429,17 +429,17 @@ Use case ends.
 Use case ends.
 
 2c. User specifies a start date and end date
-> 2c1. User specifies an invalid date format for either start or end date.
+> 2c1. User specifies an invalid date format for either start or end date.  
 Application shows an error message.  
 Use case ends.
 
 2d. User specifies a single date
-> 2d1. User specifies invalid date format.
+> 2d1. User specifies invalid date format.  
 Application shows an error message.  
 Use case ends.
 
 2e. User did not follow command syntax
-> 2e1. .Application shows an error message.  
+> 2e1. Application shows an error message.  
 Use case ends.
 
 <!-- @@author -->
