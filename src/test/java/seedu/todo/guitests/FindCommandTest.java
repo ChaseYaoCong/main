@@ -16,28 +16,30 @@ import seedu.todo.models.Task;
  */
 public class FindCommandTest extends GuiTest {
     // Date variables to be use to initialise DB
-    private final LocalDateTime TODAY = LocalDateTime.now();
-    private final String TODAY_STRING = DateUtil.formatDate(TODAY);
-    private final String TODAY_ISO_STRING = DateUtil.formatIsoDate(TODAY);
-    private final LocalDateTime TOMORROW = LocalDateTime.now().plusDays(1);
-    private final String TOMORROW_STRING = DateUtil.formatDate(TOMORROW);
-    private final String TOMORROW_ISO_STRING = DateUtil.formatIsoDate(TOMORROW);
-    private final LocalDateTime NEXTDAY = LocalDateTime.now().plusDays(2);
-    private final String NEXTDAY_STRING = DateUtil.formatDate(NEXTDAY);
-    private final String NEXTDAY_ISO_STRING = DateUtil.formatIsoDate(NEXTDAY);
+    private static final LocalDateTime TODAY = LocalDateTime.now();
+    private static final String TODAY_STRING = DateUtil.formatDate(TODAY);
+    private static final String TODAY_ISO_STRING = DateUtil.formatIsoDate(TODAY);
+    private static final LocalDateTime TOMORROW = LocalDateTime.now().plusDays(1);
+    private static final String TOMORROW_STRING = DateUtil.formatDate(TOMORROW);
+    private static final String TOMORROW_ISO_STRING = DateUtil.formatIsoDate(TOMORROW);
+    private static final LocalDateTime NEXTDAY = LocalDateTime.now().plusDays(2);
+    private static final String NEXTDAY_STRING = DateUtil.formatDate(NEXTDAY);
+    private static final String NEXTDAY_ISO_STRING = DateUtil.formatIsoDate(NEXTDAY);
     
-    String commandAdd1 = String.format("add task Buy Coco by \"%s 8pm\" tag personal", TODAY_STRING);
+    // Command to be use to initialise DB
+    private String commandAdd1 = String.format("add task Buy Coco by \"%s 8pm\" tag personal", TODAY_STRING);
     Task task1 = new Task();
-    String commandAdd2 = String.format("add task Buy Milk by \"%s 9pm\" tag personal", TOMORROW_STRING);
+    private String commandAdd2 = String.format("add task Buy Milk by \"%s 9pm\" tag personal", TOMORROW_STRING);
     Task task2 = new Task();
     
-    String commandAdd3 = String.format("add event CS2103 V0.5 Demo from \"%s 4pm\" to \"%s 5pm\" tag event",
+    private String commandAdd3 = String.format("add event CS2103 V0.5 Demo from \"%s 4pm\" to \"%s 5pm\" tag event",
             TOMORROW_STRING, TOMORROW_STRING);
     Event event3 = new Event();
-    String commandAdd4 = String.format("add event buying workshop from \"%s 8pm\" to \"%s 9pm\" tag buy",
+    private String commandAdd4 = String.format("add event buying workshop from \"%s 8pm\" to \"%s 9pm\" tag buy",
             NEXTDAY_STRING, NEXTDAY_STRING);
     Event event4 = new Event();
     
+    // Set up DB
     public FindCommandTest() {
         task1.setName("Buy Coco");
         task1.setCalendarDateTime(DateUtil.parseDateTime(
