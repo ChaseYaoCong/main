@@ -362,7 +362,7 @@ Priority | As a ... | I want to ... | So that I can...
 **MSS**
 
 1. User want to view all the available commands in the application.
-2. Application show a list of available commands and instructions for all commands.
+2. Application show a list of available commands and instructions for all commands.  
 Use Case ends
 
 #### Use case : UC02 - Add task
@@ -371,20 +371,20 @@ Use Case ends
 
 1. User request to add new tasks with its details.
 2. Application add the task with specified details.  
-3. Application display successful message.
+3. Application display successful message.  
 Use case ends.  
 
 **Extensions**  
 1a. User specify with start date and end date.
 
 > 1a1. User specify invalid date format.
-Application shows an error message.
+Application shows an error message.  
 Use case ends.
 
 1b. User specify with deadline.  
 
 > 1b1. User specify invalid date deadline format.
-Application shows an error message.
+Application shows an error message.  
 Use case ends.
 
 <!--@@author A0139922Y -->
@@ -394,19 +394,19 @@ Use case ends.
 
 1. User request to add new events with its details.
 2. Application add the events with specified details.  
-3. Application display successful message.
+3. Application display successful message.  
 Use case ends.  
 
 **Extensions**  
 1a. User specify with start date and end date.
 
 > 1a1. User specify invalid date format.
-Application shows an error message.
+Application shows an error message.  
 Use case ends.
 
 1b. User specify with a single date. 
 
->   Application shows an error message.
+>   Application shows an error message.  
 Use case ends.
 
 #### Use case : UC04 - Find with specific keyword
@@ -414,30 +414,30 @@ Use case ends.
 **MSS**
 
 1. User request to find task with specific keyword.
-2. Application show the list of task that its names & tag containing the specific keyword.
+2. Application show the list of task that its names & tag containing the specific keyword.  
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
-> 2a1. Application show an error message.
+> 2a1. Application show an error message.  
 Use case ends.
 
 2b. User did not provided any keyword
-> 2b1. Application show an error message.
+> 2b1. Application show an error message.  
 Use case ends.
 
 2c. User specify with start date and end date
 > 2c1. User specify invalid date format for either start or end date.
-Application shows an error message.
+Application shows an error message.  
 Use case ends.
 
 2d. User specify with a single date
 > 2d1. User specify invalid date format.
-Application shows an error message.
+Application shows an error message.  
 Use case ends.
 
 2e. User did not follow command syntax
-> 2e1. .Application shows an error message.
+> 2e1. .Application shows an error message.  
 Use case ends.
 
 <!-- @@author -->
@@ -447,13 +447,13 @@ Use case ends.
 **MSS**
 
 1. User request to list all the tasks and events.
-2. Application show the list of task and events with respective details.  
+2. Application show the list of task and events with respective details.    
 Use case ends.  
 
 **Extensions**  
 2a. The list is empty.
 
-> 2a1. Application show error message.
+> 2a1. Application show error message.  
 Use case ends.
 
 <!-- @@author A0139922Y -->
@@ -469,7 +469,7 @@ Use case ends.
 **Extensions**  
 2a. The list is empty.
 
-> 2a1. Application show error message.
+> 2a1. Application show error message.  
 Use case ends.
 
 2b. User did not provide any date.
@@ -477,13 +477,13 @@ Use case ends.
 
 2c. User provide a single date.
 > 2c1. User specify invalid date format.
-> Application show error message.
+> Application show error message.  
 > User case ends.
 
 2d. User provide a start date and date.
 > 2c1. User specify invalid date format for either start or end date.
-> Application show error message.
-> User case ends.
+> Application show error message.  
+User case ends.
 
 #### Use case : UC07 - List by status
 
@@ -496,11 +496,11 @@ Use case ends.
 **Extensions**  
 2a. The list is empty.
 
-> 2a1. Application show error message.
+> 2a1. Application show error message.  
 Use case ends.
 
 2b. User specify status
->2b1. User specify invalid task/event status.
+>2b1. User specify invalid task/event status.  
 Use case ends.
 
 #### Use case: UC08 - Delete task/event
@@ -510,13 +510,13 @@ Use case ends.
 1. Application shows a list of tasks and events.
 2. User requests to delete a specific task or event in the list by its respective index.
 3. Application deletes the task or event.  
-4. Application show a updated list of task and events.
+4. Application show a updated list of task and events.  
 Use case ends.  
 
 **Extensions**  
 
-2a. The list is empty.
-> Use case ends.
+2a. The list is empty.  
+Use case ends.
 
 3a. The given index is invalid.
 > 3a1. Application shows an error message.  
@@ -529,13 +529,13 @@ Use case ends.
 1. Application shows a list of tasks and events.
 2. User requests to update a specific task in the list by respective index.
 3. Application edit the task.  
-4. Application shows a updated list of tasks and events.
+4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
 **Extensions**  
 
-2a. The list is empty.
-> Use case ends.
+2a. The list is empty.  
+Use case ends.
 
 3a. The given index is invalid.
 > 3a1. Application shows an error message.  
@@ -543,11 +543,11 @@ Use case ends.
 
 3b. The given details are invalid.
 > 3b1. User specify invalid date format.
-> Application shows an error message.
+> Application shows an error message.  
 Use case ends.
 
 > 3b2. User specify more than one date.
-> Application shows an error message.
+> Application shows an error message.  
 Use case ends.
 
 #### Use case: UC11 - Update Events
@@ -557,13 +557,13 @@ Use case ends.
 1. Application shows a list of tasks and events.
 2. User requests to update a specific event in the list by respective index.
 3. Application edit the event.  
-4. Application shows a updated list of tasks and events.
+4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
 **Extensions**  
 
-2a. The list is empty.
-> Use case ends.
+2a. The list is empty.  
+Use case ends.
 
 3a. The given index is invalid.
 > 3a1. Application shows an error message.  
@@ -571,7 +571,7 @@ Use case ends.
 
 3b. The given details are invalid.
 > 3b1. User specify invalid date format.
-> Application shows an error message.
+> Application shows an error message.  
 Use case ends.
 
 <!--@@author-->
@@ -581,12 +581,12 @@ Use case ends.
 **MSS**  
 
 1. User request to undo command by a specific number.
-2. Application undo the command repeatedly based on the given number
+2. Application undo the command repeatedly based on the given number  
 Use case ends.
 
 **Extensions**
 1a. The given number exceed the total number of tasks.
-> Application will show an error message.
+> Application will show an error message.  
 Use case ends.
 
 #### Use case : UC13 - Redo command
@@ -594,12 +594,12 @@ Use case ends.
 **MSS**  
 
 1. User request to redo command by a specific number.
-2. Application redo the command repeatedly based on the given number.
+2. Application redo the command repeatedly based on the given number.  
 Use case ends.
 
 **Extensions**
 1a. The given number exceed the total number of undo commands.
-> Application will show an error message.
+> Application will show an error message.  
 Use case ends.
 
 <!-- @@author A0139922Y -->
@@ -611,7 +611,7 @@ Use case ends.
 1. Application shows a list of tasks and events.
 2. User requests to complete a specific task in the list by respective index.
 3. Application complete the task. 
-4. Application shows a updated list of tasks and events.
+4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
 **Extensions**  
@@ -627,13 +627,13 @@ Use case ends.
 Use case ends. 
 
 >2a2. The given index belongs to an event.
-> Application shows an error message.
+> Application shows an error message.  
 Use case ends.
 
 2b. Index is not specified.
 
-> 3b1. Application shows an error message.
-> Use case ends.
+> 3b1. Application shows an error message.  
+Use case ends.
 
 #### Use case: UC15 - Uncomplete task
 
@@ -643,7 +643,7 @@ Use case ends.
 2. Application shows a list of completed tasks.
 3.  User requests to uncomplete a task by respective index.
 4. Application uncomplete the task.
-5. Application show the updated list of tasks and events.
+5. Application show the updated list of tasks and events.  
 Use case ends.  
 
 **Extensions**  
@@ -660,8 +660,8 @@ Use case ends.
 
 3b. Index is not specified.
 
-> 3b1. Application shows an error message.
-> Use case ends.
+> 3b1. Application shows an error message.  
+Use case ends.
 
 #### Use case: UC16 - Add tag to a task/event
 
@@ -670,7 +670,7 @@ Use case ends.
 1. Application shows a list of tasks and events.
 2. User requests to tag a specific task/event in the list by respective index.
 3. Application add the tag and associated it with the task/event.
-4. Application shows a updated list of tasks and events.
+4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
 **Extensions**  
@@ -695,12 +695,12 @@ Use case ends.
 > Application shows an error message.
 > Use case ends.
 
->2c2. Tag name specified is already associated to the task/event.
+> 2c2. Tag name specified is already associated to the task/event.
 > Application shows an error message.
 > Use case ends.
 
 2d. Tag list size is full
->2d1. Application shows an error message.
+> 2d1. Application shows an error message.
 > Use case ends.
 
 #### Use case: UC17 - Untag tag from a task/event
@@ -710,8 +710,8 @@ Use case ends.
 1. Application shows a list of tasks and events.
 2. User requests to untag the tag of a specific task/event in the list by respective index.
 3. Application deletes the tag that is associated to the task/event.
-Use case ends.  
-4. Application shows a updated list of tasks and events.
+4. Application shows a updated list of tasks and events.  
+Use case ends.
 
 **Extensions**  
 
@@ -732,12 +732,12 @@ Use case ends.
 
 2c. Invalid tag name
 > 2c1. Tag name is not specified
-> Application shows an error message.
-> Use case ends.
+> Application shows an error message.  
+Use case ends.
 
 >2c2. Tag name specified does not belong to the task/event.
-> Application shows and error message.
-> Use case ends.
+> Application shows and error message.  
+Use case ends.
 
 <!--@@author -->
 
@@ -749,17 +749,17 @@ Use case ends.
 **MSS**
 
 1. User request to set alias for specific command.
-2. Application set the Alias for the command.<br>
+2. Application set the Alias for the command.<br>  
 Use case ends.
 
 **Extensions**
 
 1a. The given alias is already set.
-> 1a1. Application will show an error message.
+> 1a1. Application will show an error message.  
 Use case ends.
 
 1b. The given command is invalid.
->1b1. Application will show an error message.
+>1b1. Application will show an error message.  
 Use case ends.
 
 #### Use Case: UC20 - Remove Alias
@@ -769,19 +769,19 @@ Use case ends.
 1. User request for a list of alias that is currently set.
 2. Application show a list of alias and its respective command.
 3. User request to remove alias from the specific command.
-4. Application remove the alias of the specific command.<br>
+4. Application remove the alias of the specific command.<br>  
 Use case ends.
 
 **Extensions**
-1a. The list is empty.
+1a. The list is empty.  
 > Use case ends.
 
 3a. The given index of the alias is invalid.
-> 3a1. Application will show an error message.
+> 3a1. Application will show an error message.  
 Use case ends.
 
 3b. The given command is invalid.
-> 3b1. Application will show an error message.
+> 3b1. Application will show an error message.  
 Use case ends.
 
 
