@@ -28,16 +28,16 @@ public class FindCommandTest extends GuiTest {
     
     // Command to be use to initialise DB
     private String commandAdd1 = String.format("add task Buy Coco by \"%s 8pm\" tag personal", TODAY_STRING);
-    Task task1 = new Task();
+    private Task task1 = new Task();
     private String commandAdd2 = String.format("add task Buy Milk by \"%s 9pm\" tag personal", TOMORROW_STRING);
-    Task task2 = new Task();
+    private Task task2 = new Task();
     
     private String commandAdd3 = String.format("add event CS2103 V0.5 Demo from \"%s 4pm\" to \"%s 5pm\" tag event",
             TOMORROW_STRING, TOMORROW_STRING);
-    Event event3 = new Event();
+    private Event event3 = new Event();
     private String commandAdd4 = String.format("add event buying workshop from \"%s 8pm\" to \"%s 9pm\" tag buy",
             THE_DAY_AFTER_TOMORROW_STRING, THE_DAY_AFTER_TOMORROW_STRING);
-    Event event4 = new Event();
+    private Event event4 = new Event();
     
     // Set up DB
     public FindCommandTest() {
