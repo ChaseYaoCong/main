@@ -172,12 +172,12 @@ public class UntagController implements Controller {
     private boolean tagNameDoesNotExist(String[] parsedTagNames, CalendarItem calendarItem) {
         HashSet<String> parsedTagNamesList = new HashSet<String>();
         for (int i = 0; i < parsedTagNames.length; i ++) {
-            //checking with overall tag list in db
+            // Checking with overall tag list in db
             if (!calendarItem.getTagList().contains(parsedTagNames[i].trim())) {
                 return true;
             }
             
-            //checking with the current array, if there are duplicate tags
+            // Checking with the current array, if there are any duplicate tag names
             parsedTagNamesList.add(parsedTagNames[i]);
         }
         return parsedTagNamesList.size() != parsedTagNames.length;

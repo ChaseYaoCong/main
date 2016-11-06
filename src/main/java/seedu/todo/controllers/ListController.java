@@ -15,6 +15,7 @@ import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.controllers.concerns.DateParser;
 import seedu.todo.controllers.concerns.Renderer;
+import seedu.todo.models.CalendarItem;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
@@ -28,13 +29,16 @@ public class ListController implements Controller {
     
     private static final String NAME = "List";
     private static final String DESCRIPTION = "List all tasks and events by type or status.";
-    private static final String COMMAND_SYNTAX = "list \"task complete/incomplete\" or \"event over/ongoing\""
-            + "[on date] or [from date to date]";
+    private static final String COMMAND_SYNTAX = "list \"task complete/incomplete\" or \"event over/ongoing\"" + 
+        "[on date] or [from date to date]";
     private static final String COMMAND_WORD = "list";
+    
+    // Syntax correction to console input
     private static final String LIST_TASK_SYNTAX = "list task \"complete/incomplete\"";
     private static final String LIST_EVENT_SYNTAX = "list event \"over/current\"";
     private static final String LIST_DATE_SYNTAX = "list \"date\" [or from \"date\" to \"date\"]";
     
+    // Message output to console text area
     private static final String MESSAGE_RESULT_FOUND = "A total of %s found!";
     private static final String MESSAGE_NO_RESULT_FOUND = "No task or event found!";
     private static final String MESSAGE_LIST_SUCCESS = "Listing Today's, incompleted tasks and ongoing events";
@@ -82,20 +86,21 @@ public class ListController implements Controller {
         
         Map<String, String[]> parsedResult;
         parsedResult = Tokenizer.tokenize(getTokenDefinitions(), input);
-        
         TodoListDB db = TodoListDB.getInstance();
         
+        // If input is just "list", invoke Renderer
         if (input.trim().equals(COMMAND_WORD)) {
             Renderer.renderIndex(db, MESSAGE_LIST_SUCCESS);
             return;
         }
         
+        // Check if input includes itemType and itemStatus
         boolean isItemTypeProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_TYPE_TOKEN);
         boolean isTaskStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.TASK_STATUS_TOKEN);
         boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_STATUS_TOKEN);
         
+        // Set item type
         boolean isTask = true; //default
-        
         if (isItemTypeProvided) {
             isTask = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_TYPE_TOKEN, "task");
         }
@@ -104,30 +109,172 @@ public class ListController implements Controller {
             return; // Break out if found error
         }
         
-        boolean isCompleted = false; //default 
-        boolean isOver = false; //default
-        if (isTaskStatusProvided) {
-            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
+        // Setting up view
+        List<Task> tasks; //default
+        List<Event> events; //default
+        List<CalendarItem> calendarItems;
+        // Filter Task and Event by Type
+        if (!isItemTypeProvided) {
+            tasks = db.getAllTasks();
+            events = db.getAllEvents();
+        } else {
+            if (isTask) {
+                events = new ArrayList<Event>();
+                tasks = db.getAllTasks();
+            } else {
+                tasks = new ArrayList<Task>();
+                events = db.getAllEvents();
+            }
         }
-        if (isEventStatusProvided) {
-            isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
+
+        // Filter Task and Event by Status
+        calendarItems = filterTasksAndEventsByStatus(parsedResult, isTaskStatusProvided, isEventStatusProvided, 
+                tasks, events);
+        tasks = FilterUtil.filterOutTask(calendarItems);
+        events = FilterUtil.filterOutEvent(calendarItems);
+        
+        // Filter Task and Event by date
+        calendarItems = filterTasksAndEventsByDate(tasks, events, parsedResult);
+        if (calendarItems == null) {
+            return; // Date conflict detected
+        }
+        tasks = FilterUtil.filterOutTask(calendarItems);
+        events = FilterUtil.filterOutEvent(calendarItems);
+        
+        // Show message if no items had been found
+        if (tasks.size() == 0 && events.size() == 0) {
+            Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
+            return;
         }
         
+        String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
+        Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
+    }
+    
+    /* ============================== Helper methods to filter out by criterias ================================*/
+    
+    /*
+     * Filter out the selected tasks and events based on the dates
+     * and update tasks and events accordingly
+     * 
+     * @param tasks
+     *            List of Task items
+     * @param events           
+     *            List of Event items
+     * @param parsedResult
+     *            Parsed result by Tokenizer, in order to filter out the dates   
+     * @return a List of CalendarItem that is been filtered by date(s)                   
+     */
+    private List<CalendarItem> filterTasksAndEventsByDate(List<Task> tasks, List<Event> events, Map<String, String[]> parsedResult) {
+        // Get dates from input
+        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
-        
-        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates, isEventStatusProvided);
+        LocalDateTime [] validDates = parsingDates(parsedResult, parsedDates);
+        List<Task> filteredTasks = tasks;
+        List<Event> filteredEvents = events;
         if (validDates == null) {
-            return; // Break out when date conflict found
+            return null; // Break out when date conflict found
         }
         
+        // Set dates that are found, if not found value will be null
         LocalDateTime dateCriteria = validDates[DATE_CRITERIA_INDEX];
         LocalDateTime dateOn = validDates[DATE_ON_INDEX];
         LocalDateTime dateFrom = validDates[DATE_FROM_INDEX];
         LocalDateTime dateTo = validDates[DATE_TO_INDEX];
         
-        //Setting up views
-        filterTasksAndEvents(db, isItemTypeProvided, isTaskStatusProvided, isEventStatusProvided, isTask, isCompleted,
-                isOver, dateCriteria, dateOn, dateFrom, dateTo);
+        if (dateCriteria != null) {
+            // Filter by single date
+            filteredTasks = FilterUtil.filterTaskBySingleDate(tasks, dateCriteria);
+            filteredEvents = FilterUtil.filterEventBySingleDate(events, dateCriteria);
+        }
+        
+        if (dateOn != null) {
+            // Filter by single date
+            filteredTasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
+            filteredEvents = FilterUtil.filterEventBySingleDate(events, dateOn);
+        } else if (dateFrom != null && dateTo != null){
+            // Filter by range
+            filteredTasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
+            filteredEvents =FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
+        }
+        
+        calendarItems.addAll(filteredTasks);
+        calendarItems.addAll(filteredEvents);
+        return calendarItems;
+    }  
+    
+    /*
+     * Filter out the selected tasks and events based on the status and update tasks and events accordingly
+     * 
+     * @param parsedResult
+     *            parsedResult by Tokenizer
+     * @param isTaskStatusProvided
+     *            true if complete or incomplete is found, else false
+     * @param isEventStatusProvided
+     *            true if over or current is found, else false                   
+     * @param tasks
+     *            List of Task items
+     * @param events           
+     *            List of Event items
+     * @return        
+     *            tasks and events in a list form by status
+     */
+    private List<CalendarItem> filterTasksAndEventsByStatus(Map<String, String[]> parsedResult, boolean isTaskStatusProvided,
+            boolean isEventStatusProvided, List<Task> tasks, List<Event> events) {
+        List<CalendarItem> calendarItems = new ArrayList<CalendarItem>();
+        List<Task> filteredTasks = tasks;
+        List<Event> filteredEvents = events;
+        
+        // Set item status
+        boolean isCompleted = false; //default 
+        boolean isOver = false; //default
+        
+        // Filter out by Task Status if provided
+        if (isTaskStatusProvided) {
+            isCompleted = !ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.TASK_STATUS_TOKEN, "incomplete");
+            filteredTasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
+            filteredEvents = new ArrayList<Event>();
+        }
+        
+        // Filter out by Event Status if provided
+        if (isEventStatusProvided) {
+            isOver = ParseUtil.doesTokenContainKeyword(parsedResult, Tokenizer.EVENT_STATUS_TOKEN, "over");
+            filteredEvents = FilterUtil.filterEventsByStatus(events, isOver);
+            filteredTasks = new ArrayList<Task>();
+        }
+        calendarItems.addAll(filteredTasks);
+        calendarItems.addAll(filteredEvents);
+        return calendarItems;
+    }
+    
+    /*====================== Helper Methods to check for Error/Syntax Command ===================*/
+    
+    /*
+     * To be use to check if there are any command syntax error
+     * 
+     * @return true, if there is an error in the command syntax, false if syntax is allowed
+     */
+    private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, 
+            boolean isTask, boolean isItemTypeProvided, String input) {
+        // Check if more than 1 item type is provided
+        if (FilterUtil.isItemTypeConflict(input)) {
+            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_ITEM_TYPE_CONFLICT);
+            return true;
+        }
+        if (isItemTypeProvided) {
+            // Task and Event Command Syntax detected
+            if (isTask && isEventStatusProvided) {
+                Renderer.renderDisambiguation(LIST_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
+                return true;
+            }
+            
+            if (!isTask && isTaskStatusProvided) {
+                Renderer.renderDisambiguation(LIST_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
+                return true;
+            }
+        }
+        return false;
     }
     
     /*
@@ -135,11 +282,12 @@ public class ListController implements Controller {
      * 
      * @return null if dates conflict detected, else return { dateCriteria, dateOn, dateFrom, dateTo }
      */
-    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates, boolean isEventStatusProvided) {
+    private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult, String[] parsedDates) {
         
         //date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, Tokenizer.DEFAULT_TOKEN);
         
+        // Check for more than 1 date
         if (date != null && parsedDates != null) {
             Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
             return null;
@@ -150,6 +298,7 @@ public class ListController implements Controller {
         LocalDateTime dateFrom = null;
         LocalDateTime dateTo = null;
         
+        // Setting of dates value
         if (date != null) {
             try {
                 dateCriteria = DateParser.parseNatural(date);
@@ -180,6 +329,8 @@ public class ListController implements Controller {
             }           
         }
         
+        boolean isEventStatusProvided = !ParseUtil.isTokenNull(parsedResult, Tokenizer.EVENT_STATUS_TOKEN);
+        // Checking of date conflict with status, for e.g. list by today over
         if ((parsedDates != null || dateCriteria != null) && isEventStatusProvided ) {
             //detect date conflict
             Renderer.renderDisambiguation(LIST_DATE_SYNTAX, MESSAGE_DATE_CONFLICT);
@@ -187,84 +338,5 @@ public class ListController implements Controller {
         }
         
         return new LocalDateTime[] { dateCriteria, dateOn, dateFrom, dateTo };
-    }
-    
-    /*
-     * To be use to check if there are any command syntax error
-     * 
-     * @return true, if there is error in command syntax, false if syntax is allowed
-     */
-    private boolean isErrorCommand(boolean isTaskStatusProvided, boolean isEventStatusProvided, 
-            boolean isTask, boolean isItemTypeProvided, String input) {
-        // Check if more than 1 item type is provided
-        if (FilterUtil.isItemTypeConflict(input)) {
-            Renderer.renderDisambiguation(COMMAND_SYNTAX, MESSAGE_ITEM_TYPE_CONFLICT);
-            return true;
-        }
-        if (isItemTypeProvided) {
-            // Task and Event Command Syntax detected
-            if (isTask && isEventStatusProvided) {
-                Renderer.renderDisambiguation(LIST_TASK_SYNTAX, MESSAGE_INVALID_TASK_STATUS);
-                return true;
-            }
-            
-            if (!isTask && isTaskStatusProvided) {
-                Renderer.renderDisambiguation(LIST_EVENT_SYNTAX, MESSAGE_INVALID_EVENT_STATUS);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /*
-     * Filter out the selected tasks and events based on the search criteria
-     * 
-     */
-    private void filterTasksAndEvents(TodoListDB db, boolean isItemTypeProvided, boolean isTaskStatusProvided,
-            boolean isEventStatusProvided, boolean isTask, boolean isCompleted, boolean isOver,
-            LocalDateTime dateCriteria, LocalDateTime dateOn, LocalDateTime dateFrom, LocalDateTime dateTo) {
-        List<Task> tasks = db.getAllTasks(); 
-        List<Event> events = db.getAllEvents();
-        if (isItemTypeProvided) {
-            if (isTask) {
-                events = new ArrayList<Event>();
-            } else if (!isTask) {
-                tasks = new ArrayList<Task>();
-            }
-        } 
-        
-        if (isTaskStatusProvided) {
-            tasks = FilterUtil.filterTasksByStatus(tasks, isCompleted);
-            events = new ArrayList<Event>();
-        }
-        
-        if (isEventStatusProvided) {
-            events = FilterUtil.filterEventsByStatus(events, isOver);
-            tasks = new ArrayList<Task>();
-        }
-        
-        if (dateCriteria != null) {
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateCriteria);
-            events = FilterUtil.filterEventBySingleDate(events, dateCriteria);
-        }
-        
-        if (dateOn != null) {
-            //filter by single date
-            tasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
-            events = FilterUtil.filterEventBySingleDate(events, dateOn);
-        } else {
-            //filter by range
-            tasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
-            events = FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
-        }
-        
-        if (tasks.size() == 0 && events.size() == 0) {
-            Renderer.renderIndex(db, MESSAGE_NO_RESULT_FOUND);
-            return;
-        }
-        
-        String consoleMessage = String.format(MESSAGE_RESULT_FOUND, 
-                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(tasks.size(), events.size()));
-        Renderer.renderSelectedIndex(db, consoleMessage, tasks, events);
     }
 }
