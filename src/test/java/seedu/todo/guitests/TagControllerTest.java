@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seedu.todo.commons.util.DateUtil;
+import seedu.todo.controllers.TagController;
 import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.models.Task;
 
@@ -24,6 +25,9 @@ public class TagControllerTest extends GuiTest {
     private String commandAdd = String.format("add task Buy Coco by \"%s 8pm\"", TODAY_STRING);
     private Task task = new Task();
     private Task taskWithoutTag = new Task();
+    
+    // To format console output text area
+    private String consoleOutputFormat = Renderer.MESSAGE_DISAMBIGUATE + "\n\n%s";
     
     // Set up DB
     public TagControllerTest() {
@@ -54,6 +58,7 @@ public class TagControllerTest extends GuiTest {
     public void tag_succcessfully() {
         String command = "tag 1 personal";
         assertTaskTagVisibleAfterCmd(command, task);
+        assertEquals(console.getConsoleTextArea(), TagController.MESSAGE_TAG_SUCCESS);
     }
     
     @Test
@@ -64,13 +69,14 @@ public class TagControllerTest extends GuiTest {
         assertTaskTagVisibleAfterCmd(command, task);
         console.runCommand(command);
         
-        // For console input 
-        String expectedDisambiguationForConsoleInput = "tag 1";
+        // For console input
+        int tag_index = 1;
+        String expectedDisambiguationForConsoleInput = String.format(TagController.TAG_FORMAT, tag_index);
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Could not tag task/event: Tag name already exist or Duplicate Tag Names!";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
+                TagController.MESSAGE_EXCEED_TAG_SIZE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -83,12 +89,11 @@ public class TagControllerTest extends GuiTest {
         assertTaskTagListFull(command, taskWithoutTag);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "tag <index> <tag name>";
+        String expectedDisambiguationForConsoleInput = TagController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Could not tag task/event : Tag size exceed";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, TagController.MESSAGE_TAG_NAME_EXIST);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -99,12 +104,12 @@ public class TagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "tag <index> <tag name>";
+        String expectedDisambiguationForConsoleInput = TagController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Please specify the index of the item and the tag name to tag.";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
+                TagController.MESSAGE_MISSING_INDEX_AND_TAG_NAME);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -115,12 +120,13 @@ public class TagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "tag 2";
+        int tag_index_out_of_range = 2;
+        String expectedDisambiguationForConsoleInput = String.format(TagController.TAG_FORMAT, tag_index_out_of_range);
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Could not tag task/event: Invalid index provided!";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
+                TagController.MESSAGE_INDEX_OUT_OF_RANGE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -131,12 +137,12 @@ public class TagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "tag <index> <tag name>";
+        String expectedDisambiguationForConsoleInput = TagController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Index has to be a number!";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
+                TagController.MESSAGE_INDEX_NOT_NUMBER);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
@@ -147,12 +153,12 @@ public class TagControllerTest extends GuiTest {
         console.runCommand(command);
         
         // For console input 
-        String expectedDisambiguationForConsoleInput = "tag <index> <tag name>";
+        String expectedDisambiguationForConsoleInput = TagController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguationForConsoleInput);
         
         // For console text area to check error message
-        String tag_controller_message = "Could not tag task/event: Tag name not provided!";
-        String expectedDisambiguationForConsoleTextArea = Renderer.MESSAGE_DISAMBIGUATE + "\n\n" + tag_controller_message;
+        String expectedDisambiguationForConsoleTextArea = String.format(consoleOutputFormat, 
+                TagController.MESSAGE_INDEX_OUT_OF_RANGE);
         assertEquals(console.getConsoleTextArea(), expectedDisambiguationForConsoleTextArea);
     }
     
