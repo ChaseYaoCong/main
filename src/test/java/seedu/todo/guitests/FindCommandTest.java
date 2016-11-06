@@ -326,4 +326,20 @@ public class FindCommandTest extends GuiTest {
         String expectedDisambiguation = "find \"name\" event \"over/ongoing\"";
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
     }
+    
+    @Test
+    public void find_with_invalid_single_date() {
+        String command = "find buy todar";
+        console.runCommand(command);
+        String expectedDisambiguation = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+    }
+    
+    @Test
+    public void find_with_invalid_date_range() {
+        String command = "find buy from today to tml";
+        console.runCommand(command);
+        String expectedDisambiguation = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+    }
 }
