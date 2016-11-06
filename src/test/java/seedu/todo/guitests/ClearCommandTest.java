@@ -247,6 +247,7 @@ public class ClearCommandTest extends GuiTest {
     }
     
     //@@author A0139922Y
+    @Test
     public void clear_with_date_conflict() {
         console.runCommand("clear by today to tmr");
         String expectedDisambiguation = ClearController.CLEAR_DATE_SYNTAX;
@@ -260,6 +261,7 @@ public class ClearCommandTest extends GuiTest {
     }
     
     //@@author A0139922Y
+    @Test
     public void clear_with_item_type_conflict() {
         console.runCommand("clear tasks events");
         String expectedDisambiguation = ClearController.COMMAND_SYNTAX;
@@ -299,6 +301,4 @@ public class ClearCommandTest extends GuiTest {
         assertEventVisibleAfterCmd("list", event3);
         assertEventVisibleAfterCmd("list", event4);
     }
-    
-    
 }
