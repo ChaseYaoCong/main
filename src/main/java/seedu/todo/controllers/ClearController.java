@@ -264,7 +264,7 @@ public class ClearController implements Controller {
             // Filter by single date
             filteredTasks = FilterUtil.filterTaskBySingleDate(tasks, dateOn);
             filteredEvents = FilterUtil.filterEventBySingleDate(events, dateOn);
-        } else if (dateFrom != null && dateTo != null) {
+        } else if (dateFrom != null || dateTo != null) {
             // Filter by range
             filteredTasks = FilterUtil.filterTaskWithDateRange(tasks, dateFrom, dateTo);
             filteredEvents =FilterUtil.filterEventWithDateRange(events, dateFrom, dateTo);
