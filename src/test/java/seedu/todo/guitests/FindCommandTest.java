@@ -31,7 +31,6 @@ public class FindCommandTest extends GuiTest {
     private Task task1 = new Task();
     private String commandAdd2 = String.format("add task Buy Milk by \"%s 9pm\" tag personal", TOMORROW_STRING);
     private Task task2 = new Task();
-    
     private String commandAdd3 = String.format("add event CS2103 V0.5 Demo from \"%s 4pm\" to \"%s 5pm\" tag event",
             TOMORROW_STRING, TOMORROW_STRING);
     private Event event3 = new Event();
