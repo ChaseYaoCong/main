@@ -17,7 +17,7 @@ public class SideBarHandle extends GuiHandle {
         super(guiRobot, primaryStage, stageTitle);
     }
     
-    /** CHANGE THIS
+    /** 
      * Returns a TaskListDateItemHandle that corresponds to the name specified.
      * If it doesn't exist, it returns null.
      */

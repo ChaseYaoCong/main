@@ -3,9 +3,9 @@ package seedu.todo.commons.util;
 import java.util.Map;
 
 /**
+ * @@author A0139922Y
  * Helper functions for parsing.
  * 
- * @@author A0139922Y
  */
 public class ParseUtil {
     private static final int TOKEN_INDEX = 0;
