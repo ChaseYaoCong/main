@@ -260,6 +260,15 @@ public class FindCommandTest extends GuiTest {
     
     @Test 
     public void find_tasks_by_date_range() {
+        String command = "find buy tasks from today to tmr";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void find_tasks_by_date_range_with_single_date() {
         String command = "find buy tasks from today";
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
@@ -277,12 +286,21 @@ public class FindCommandTest extends GuiTest {
     }
     
     @Test
-    public void find_events_by_date_range() {
+    public void find_events_by_date_range_with_single_date() {
         String command = "find buy events from today";
         assertTaskNotVisibleAfterCmd(command, task1);
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void find_events_by_date_range() {
+        String command = "find CS2103 events from today to tmr";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
     }
     
     @Test
