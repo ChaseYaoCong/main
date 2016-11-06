@@ -375,6 +375,7 @@ Use Case ends
 Use case ends.  
 
 **Extensions**  
+
 1a. User specifies to add without any date.
 
 > 1a1. User specifies an invalid command syntax.  
