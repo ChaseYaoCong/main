@@ -399,6 +399,7 @@ Use case ends.
 Use case ends.  
 
 **Extensions**  
+
 1a. User specifies a start date and end date.
 
 > 1a1. User specifies an invalid date format.  
@@ -420,6 +421,7 @@ Use case ends.
 Use case ends.  
 
 **Extensions**  
+
 2a. The list is empty.
 > 2a1. Application shows an error message.  
 Use case ends.
@@ -453,6 +455,7 @@ Use case ends.
 Use case ends.  
 
 **Extensions**  
+
 2a. The list is empty.
 
 > 2a1. Application shows error message.  
@@ -469,6 +472,7 @@ Use case ends.
 Use case ends.  
 
 **Extensions**  
+
 2a. The list is empty.
 
 > 2a1. Application shows error message.  
@@ -496,6 +500,7 @@ Use case ends.
 Use case ends.  
 
 **Extensions**  
+
 2a. The list is empty.
 
 > 2a1. Application shows error message.  
@@ -586,7 +591,8 @@ Use case ends.
 2. Application undo the command repeatedly based on the given number.  
 Use case ends.
 
-**Extensions**
+**Extensions**  
+
 1a. The given number exceed the total number of tasks.
 > Application will show an error message.  
 Use case ends.
@@ -599,7 +605,8 @@ Use case ends.
 2. Application redo the command repeatedly based on the given number.  
 Use case ends.
 
-**Extensions**
+**Extensions**  
+
 1a. The given number exceed the total number of undo commands.
 > Application will show an error message.  
 Use case ends.
@@ -771,6 +778,7 @@ Use case ends.
 Use case ends.
 
 **Extensions**  
+
 1a. The list is empty.  
 > Use case ends.
 
