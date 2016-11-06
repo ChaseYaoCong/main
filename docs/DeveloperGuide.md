@@ -745,7 +745,7 @@ Use case ends.
 **MSS**
 
 1. User request to set alias for specific command.
-2. Application set the Alias for the command.
+2. Application set the Alias for the command.  
 Use case ends.
 
 **Extensions**
@@ -765,7 +765,7 @@ Use case ends.
 1. User request for a list of alias that is currently set.
 2. Application show a list of alias and its respective command.
 3. User request to remove alias from the specific command.
-4. Application remove the alias of the specific command.
+4. Application remove the alias of the specific command.  
 Use case ends.
 
 **Extensions**
