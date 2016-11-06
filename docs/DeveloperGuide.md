@@ -620,7 +620,7 @@ Use case ends.
 
 1. Application shows a list of tasks and events.
 2. User requests to complete a specific task in the list by respective index.
-3. Application complete the task. 
+3. Application completes the task. 
 4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
@@ -631,11 +631,11 @@ Use case ends.
 
 2a. The given index is invalid.
 
-> 2a1. The given index is out of range.
+> 2a1. The given index is out of range.  
 > Application shows an error message.  
 Use case ends. 
 
->2a2. The given index belongs to an event.
+>2a2. The given index belongs to an event.  
 > Application shows an error message.  
 Use case ends.
 
@@ -650,9 +650,9 @@ Use case ends.
 
 1. User requests a list of completed tasks or find completed task with keyword.
 2. Application shows a list of completed tasks.
-3.  User requests to uncomplete a task by respective index.
-4. Application uncomplete the task.
-5. Application show the updated list of tasks and events.  
+3. User requests to uncomplete a task by respective index.
+4. Application uncompletes the task.
+5. Application shows the updated list of tasks and events.  
 Use case ends.  
 
 **Extensions**  
@@ -662,7 +662,7 @@ Use case ends.
 
 3a. The given index is invalid.
 
-> 3a1. The given index is out of range.
+> 3a1. The given index is out of range.  
 > Application shows an error message.  
 Use case ends. 
 
@@ -677,7 +677,7 @@ Use case ends.
 
 1. Application shows a list of tasks and events.
 2. User requests to tag a specific task/event in the list by respective index.
-3. Application add the tag and associated it with the task/event.
+3. Application adds the tag and associated it with the task/event.
 4. Application shows a updated list of tasks and events.  
 Use case ends.  
 
