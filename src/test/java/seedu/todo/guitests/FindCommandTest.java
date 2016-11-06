@@ -329,7 +329,7 @@ public class FindCommandTest extends GuiTest {
     
     @Test
     public void find_with_invalid_single_date() {
-        String command = "find buy todar";
+        String command = "find buy by todar";
         console.runCommand(command);
         String expectedDisambiguation = "find \"name\" tagName \"tag\" on \"date\" \"task/event\"";
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
