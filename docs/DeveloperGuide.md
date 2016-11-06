@@ -358,14 +358,14 @@ Priority | As a ... | I want to ... | So that I can...
 
 (For all use cases below, the **System** is the `Application` and the **Actor** is the `user`, unless specified otherwise)
 
-#### Use case: Usage Instructions
+#### Use case: UC01 - Usage Instructions
 **MSS**
 
 1. User want to view all the available commands in the application.
 2. Application show a list of available commands and instructions for all commands.
 Use Case ends
 
-#### Use case : Add task
+#### Use case : UC02 - Add task
 
 **MSS**
 
@@ -388,7 +388,7 @@ Application shows an error message.
 Use case ends.
 
 <!--@@author A0139922Y -->
-#### Use case : Add Event
+#### Use case : UC03 - Add Event
 
 **MSS**
 
@@ -409,7 +409,7 @@ Use case ends.
 >   Application shows an error message.
 Use case ends.
 
-#### Use case : Find with specific keyword
+#### Use case : UC04 - Find with specific keyword
 
 **MSS**
 
@@ -442,7 +442,7 @@ Use case ends.
 
 <!-- @@author -->
 
-#### Use case : List all task and events
+#### Use case : UC05 - List all task and events
 
 **MSS**
 
@@ -458,7 +458,7 @@ Use case ends.
 
 <!-- @@author A0139922Y -->
 
-#### Use case : List by date
+#### Use case : UC06 - List by date
 
 **MSS**
 
@@ -485,7 +485,7 @@ Use case ends.
 > Application show error message.
 > User case ends.
 
-#### Use case : List by status
+#### Use case : UC07 - List by status
 
 **MSS**
 
@@ -503,7 +503,7 @@ Use case ends.
 >2b1. User specify invalid task/event status.
 Use case ends.
 
-#### Use case: Delete task/event
+#### Use case: UC08 - Delete task/event
 
 **MSS**
 
@@ -522,7 +522,7 @@ Use case ends.
 > 3a1. Application shows an error message.  
 Use case ends.
 
-#### Use case: Update task
+#### Use case: UC10 - Update task
 
 **MSS**
 
@@ -550,7 +550,7 @@ Use case ends.
 > Application shows an error message.
 Use case ends.
 
-#### Use case: Update Events
+#### Use case: UC11 - Update Events
 
 **MSS**
 
@@ -576,7 +576,7 @@ Use case ends.
 
 <!--@@author-->
 
-#### Use case : Undo command
+#### Use case : UC12 - Undo command
 
 **MSS**  
 
@@ -589,7 +589,7 @@ Use case ends.
 > Application will show an error message.
 Use case ends.
 
-#### Use case : Redo command
+#### Use case : UC13 - Redo command
 
 **MSS**  
 
@@ -604,7 +604,7 @@ Use case ends.
 
 <!-- @@author A0139922Y -->
 
-#### Use case: Complete task
+#### Use case: UC14 - Complete task
 
 **MSS**
 
@@ -635,7 +635,7 @@ Use case ends.
 > 3b1. Application shows an error message.
 > Use case ends.
 
-#### Use case: Uncomplete task
+#### Use case: UC15 - Uncomplete task
 
 **MSS**
 
@@ -663,7 +663,7 @@ Use case ends.
 > 3b1. Application shows an error message.
 > Use case ends.
 
-#### Use case: Add tag to a task/event
+#### Use case: UC16 - Add tag to a task/event
 
 **MSS**
 
@@ -703,7 +703,7 @@ Use case ends.
 >2d1. Application shows an error message.
 > Use case ends.
 
-#### Use case: Untag tag from a task/event
+#### Use case: UC17 - Untag tag from a task/event
 
 **MSS**
 
@@ -741,10 +741,10 @@ Use case ends.
 
 <!--@@author -->
 
-#### Use case : Config
+#### Use case : UC18 - Config
 *To be filled*
 
-#### Use case : Alias
+#### Use case : UC19 - Alias
 
 **MSS**
 
@@ -762,7 +762,7 @@ Use case ends.
 >1b1. Application will show an error message.
 Use case ends.
 
-#### Use Case: Remove Alias
+#### Use Case: UC20 - Remove Alias
 
 **MSS**
 
