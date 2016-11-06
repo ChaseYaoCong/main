@@ -10,7 +10,6 @@ import org.junit.Test;
 import seedu.todo.commons.util.DateUtil;
 import seedu.todo.commons.util.StringUtil;
 import seedu.todo.controllers.FindController;
-import seedu.todo.controllers.ListController;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
@@ -185,7 +184,6 @@ public class FindCommandTest extends GuiTest {
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
         assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
-    
     @Test
     public void find_by_invalid_tag() {
         String command = "find tagName tester";
@@ -246,7 +244,6 @@ public class FindCommandTest extends GuiTest {
         assertEventVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
         assertEquals(console.getConsoleTextArea(), FindController.MESSAGE_NO_RESULT_FOUND);
-        
     }
     
     @Test

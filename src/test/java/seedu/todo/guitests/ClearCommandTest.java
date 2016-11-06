@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import seedu.todo.commons.util.DateUtil;
+import seedu.todo.commons.util.StringUtil;
+import seedu.todo.controllers.ClearController;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
@@ -33,6 +35,9 @@ public class ClearCommandTest extends GuiTest {
     String commandAdd4 = String.format("add event Another Event from \"%s 8pm\" to \"%s 9pm\"",
             twoDaysFromNowString, twoDaysFromNowString);
     Event event4 = new Event();
+    
+    private int expectedNumOfTasks;
+    private int expectedNumOfEvents;
     
     public ClearCommandTest() {
         task1.setName("Buy KOI");
@@ -96,6 +101,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_tasks_by_single_date() {
         console.runCommand("clear tasks on tmr");
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskNotVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventVisibleAfterCmd("list", event3);
@@ -106,6 +116,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_tasks_by_date_range() {
         console.runCommand("clear tasks from today to tmr");
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskNotVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventVisibleAfterCmd("list", event3);
@@ -116,6 +131,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_tasks_by_date_range_with_single_date() {
         console.runCommand("clear tasks from today");
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 0;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskNotVisibleAfterCmd("list", task1);
         assertTaskNotVisibleAfterCmd("list", task2);
         assertEventVisibleAfterCmd("list", event3);
@@ -126,6 +146,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_events_by_single_date() {
         console.runCommand("clear events on tmr");
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventNotVisibleAfterCmd("list", event3);
@@ -136,6 +161,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_events_by_date_range() {
         console.runCommand("clear events from today to tmr");
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventNotVisibleAfterCmd("list", event3);
@@ -146,6 +176,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_events_by_date_range_with_single_date() {
         console.runCommand("clear events from today");
+        expectedNumOfTasks = 0;
+        expectedNumOfEvents = 2;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventNotVisibleAfterCmd("list", event3);
@@ -156,6 +191,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_by_single_date() {
         console.runCommand("clear on tmr");
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskNotVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventNotVisibleAfterCmd("list", event3);
@@ -166,6 +206,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_by_date_range() {
         console.runCommand("clear from today to tmr");
+        expectedNumOfTasks = 1;
+        expectedNumOfEvents = 1;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskNotVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventNotVisibleAfterCmd("list", event3);
@@ -176,6 +221,11 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_by_date_range_with_single_date() {
         console.runCommand("clear from today");
+        expectedNumOfTasks = 2;
+        expectedNumOfEvents = 2;
+        String expectedOutputMessage = String.format(ClearController.MESSAGE_CLEAR_SUCCESS_FORMAT,
+                StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskNotVisibleAfterCmd("list", task1);
         assertTaskNotVisibleAfterCmd("list", task2);
         assertEventNotVisibleAfterCmd("list", event3);
@@ -186,8 +236,36 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_with_invalid_date_syntax() {
         console.runCommand("clear from todar");
-        String expectedDisambiguation = "clear \"date\" [or from \"date\" to \"date\"]";
+        String expectedDisambiguation = ClearController.CLEAR_DATE_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ClearController.MESSAGE_NO_DATE_DETECTED);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    public void clear_with_date_conflict() {
+        console.runCommand("clear by today to tmr");
+        String expectedDisambiguation = ClearController.CLEAR_DATE_SYNTAX;
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ClearController.MESSAGE_DATE_CONFLICT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
+        assertTaskVisibleAfterCmd("list", task1);
+        assertTaskVisibleAfterCmd("list", task2);
+        assertEventVisibleAfterCmd("list", event3);
+        assertEventVisibleAfterCmd("list", event4);
+    }
+    
+    //@@author A0139922Y
+    public void clear_with_item_type_conflict() {
+        console.runCommand("clear tasks events");
+        String expectedDisambiguation = ClearController.COMMAND_SYNTAX;
+        assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ClearController.MESSAGE_ITEM_TYPE_CONFLICT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventVisibleAfterCmd("list", event3);
@@ -198,8 +276,10 @@ public class ClearCommandTest extends GuiTest {
     @Test
     public void clear_with_invalid_command_syntax_by_event_status() {
         console.runCommand("clear current events");
-        String expectedDisambiguation = "clear \"task/event\" on \"date\"";
+        String expectedDisambiguation = ClearController.COMMAND_SYNTAX;
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ClearController.MESSAGE_CLEAR_UNABLE_TO_SUPPORT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventVisibleAfterCmd("list", event3);
@@ -212,6 +292,8 @@ public class ClearCommandTest extends GuiTest {
         console.runCommand("clear completed tasks");
         String expectedDisambiguation = "clear \"task/event\" on \"date\"";
         assertEquals(console.getConsoleInputText(), expectedDisambiguation);
+        String expectedOutputMessage = formatConsoleOutputTextArea(ClearController.MESSAGE_CLEAR_UNABLE_TO_SUPPORT);
+        assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
         assertTaskVisibleAfterCmd("list", task1);
         assertTaskVisibleAfterCmd("list", task2);
         assertEventVisibleAfterCmd("list", event3);
