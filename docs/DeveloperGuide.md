@@ -688,7 +688,7 @@ Use case ends.
 
 2a. The given index is invalid.
 
-> 2a1. The given index is out of range.
+> 2a1. The given index is out of range.  
 > Application shows an error message.  
 Use case ends. 
 
@@ -698,11 +698,11 @@ Use case ends.
 Use case ends.
 
 2c. Invalid tag name
-> 2c1. Tag name is not specified
+> 2c1. Tag name is not specified  
 > Application shows an error message.  
 Use case ends.
 
-> 2c2. Tag name specified is already associated to the task/event.
+> 2c2. Tag name specified is already associated to the task/event.  
 > Application shows an error message.  
 Use case ends.
 
@@ -727,7 +727,7 @@ Use case ends.
 
 2a. The given index is invalid.
 
-> 2a1. The given index is out of range.
+> 2a1. The given index is out of range.  
 > Application shows an error message.  
 Use case ends. 
 
@@ -737,11 +737,11 @@ Use case ends.
 Use case ends.
 
 2c. Invalid tag name
-> 2c1. Tag name is not specified
+> 2c1. Tag name is not specified.  
 > Application shows an error message.  
 Use case ends.
 
->2c2. Tag name specified does not belong to the task/event.
+>2c2. Tag name specified does not belong to the task/event.  
 > Application shows and error message.  
 Use case ends.
 
