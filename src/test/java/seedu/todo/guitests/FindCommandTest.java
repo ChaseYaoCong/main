@@ -22,9 +22,9 @@ public class FindCommandTest extends GuiTest {
     private static final LocalDateTime TOMORROW = LocalDateTime.now().plusDays(1);
     private static final String TOMORROW_STRING = DateUtil.formatDate(TOMORROW);
     private static final String TOMORROW_ISO_STRING = DateUtil.formatIsoDate(TOMORROW);
-    private static final LocalDateTime NEXTDAY = LocalDateTime.now().plusDays(2);
-    private static final String NEXTDAY_STRING = DateUtil.formatDate(NEXTDAY);
-    private static final String NEXTDAY_ISO_STRING = DateUtil.formatIsoDate(NEXTDAY);
+    private static final LocalDateTime THE_DAY_AFTER_TOMORROW_ = LocalDateTime.now().plusDays(2);
+    private static final String THE_DAY_AFTER_TOMORROW_STRING = DateUtil.formatDate(THE_DAY_AFTER_TOMORROW_);
+    private static final String THE_DAY_AFTER_TOMORROW__ISO_STRING = DateUtil.formatIsoDate(THE_DAY_AFTER_TOMORROW_);
     
     // Command to be use to initialise DB
     private String commandAdd1 = String.format("add task Buy Coco by \"%s 8pm\" tag personal", TODAY_STRING);
@@ -36,7 +36,7 @@ public class FindCommandTest extends GuiTest {
             TOMORROW_STRING, TOMORROW_STRING);
     Event event3 = new Event();
     private String commandAdd4 = String.format("add event buying workshop from \"%s 8pm\" to \"%s 9pm\" tag buy",
-            NEXTDAY_STRING, NEXTDAY_STRING);
+            THE_DAY_AFTER_TOMORROW_STRING, THE_DAY_AFTER_TOMORROW_STRING);
     Event event4 = new Event();
     
     // Set up DB
@@ -61,9 +61,9 @@ public class FindCommandTest extends GuiTest {
         
         event4.setName("buying workshop");
         event4.setStartDate(DateUtil.parseDateTime(
-                String.format("%s 20:00:00", NEXTDAY_ISO_STRING)));
+                String.format("%s 20:00:00", THE_DAY_AFTER_TOMORROW__ISO_STRING)));
         event4.setEndDate(DateUtil.parseDateTime(
-                String.format("%s 21:00:00", NEXTDAY_ISO_STRING)));
+                String.format("%s 21:00:00", THE_DAY_AFTER_TOMORROW__ISO_STRING)));
         event4.addTag("buy");
     }
     
@@ -229,6 +229,60 @@ public class FindCommandTest extends GuiTest {
         assertTaskVisibleAfterCmd(command, task1);
         assertTaskVisibleAfterCmd(command, task2);
         assertEventVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void find_by_single_date() {
+        String command = "find buy on today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void find_by_date_range() {
+        String command = "find buy from today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void find_task_by_single_date() {
+        String command = "find buy task on today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test 
+    public void find_task_by_date_range() {
+        String command = "find buy task from today";
+        assertTaskVisibleAfterCmd(command, task1);
+        assertTaskVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void find_event_by_single_date() {
+        String command = "find CS2103 event on tomorrow";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventVisibleAfterCmd(command, event3);
+        assertEventNotVisibleAfterCmd(command, event4);
+    }
+    
+    @Test
+    public void find_event_by_date_range() {
+        String command = "find buy event from today";
+        assertTaskNotVisibleAfterCmd(command, task1);
+        assertTaskNotVisibleAfterCmd(command, task2);
+        assertEventNotVisibleAfterCmd(command, event3);
         assertEventVisibleAfterCmd(command, event4);
     }
     
