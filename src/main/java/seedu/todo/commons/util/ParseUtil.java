@@ -2,10 +2,9 @@ package seedu.todo.commons.util;
 
 import java.util.Map;
 
+//@@author A0139922Y
 /**
- * @@author A0139922Y
  * Helper functions for parsing.
- * 
  */
 public class ParseUtil {
     private static final int TOKEN_INDEX = 0;
@@ -13,8 +12,7 @@ public class ParseUtil {
     
     /*
      * To be used to check if there exist an item tagged with the token
-     * 
-     * */
+     */
     public static boolean isTokenNull(Map<String, String[]> parsedResult, String token) {
         return parsedResult.get(token) == null || parsedResult.get(token)[TOKEN_INDEX] == null;
     }
@@ -34,7 +32,7 @@ public class ParseUtil {
      * To be used to get input from token
      * 
      * @return the parsed result from tokenizer
-     * */
+     */
     public static String getTokenResult(Map<String, String[]> parsedResult, String token) {
         if(!isTokenNull(parsedResult, token)) {
             return parsedResult.get(token)[TOKEN_RESULT_INDEX];

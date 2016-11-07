@@ -20,8 +20,8 @@ import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
 
+//@@author A0139922Y
 /**
- *  @@author A0139922Y
  * Controller to clear task/event by Type
  */
 public class ClearController implements Controller {

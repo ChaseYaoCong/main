@@ -11,9 +11,8 @@ import seedu.todo.controllers.concerns.Renderer;
 import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.CalendarItem;
 import seedu.todo.models.TodoListDB;
-
+//@@author A0139922Y
 /**
- * @@author A0139922Y
  * Controller to Tag a CalendarItem.
  */
 public class TagController implements Controller {
@@ -174,11 +173,11 @@ public class TagController implements Controller {
     private boolean checkDuplicateTagName(String[] parsedTagNames, CalendarItem calendarItem) {
         HashSet<String> parsedTagNamesList = new HashSet<String>();
         for (int i = 0; i < parsedTagNames.length; i ++) {
-            //checking with overall tag list in db
+            // Checking with overall tag list in db
             if (calendarItem.getTagList().contains(parsedTagNames[i].trim())) {
                 return true;
             }
-            //checking with the current array, if there are duplicate tags
+            // Checking with the current array, if there are duplicate tags
             parsedTagNamesList.add(parsedTagNames[i]);
         }
         

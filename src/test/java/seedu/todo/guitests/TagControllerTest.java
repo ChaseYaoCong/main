@@ -15,6 +15,7 @@ import seedu.todo.models.Task;
  * @@author A0139922Y
  */
 public class TagControllerTest extends GuiTest {
+    //@@author A0139922Y-reused
     // Date variables to be use to initialise DB
     private static final LocalDateTime TODAY = LocalDateTime.now();
     private static final String TODAY_STRING = DateUtil.formatDate(TODAY);
@@ -36,20 +37,21 @@ public class TagControllerTest extends GuiTest {
                 String.format("%s 20:00:00", TODAY_ISO_STRING)));
     }
     
-    // Re-use
+    //@@author A0139922Y-reused
     @Before
     public void initFixtures() {
         console.runCommand("clear");
         assertTaskVisibleAfterCmd(commandAdd, task);
     }
     
-    // Re-use
     @Test
     public void fixtures_test() {
         console.runCommand("clear");
         assertTaskNotVisibleAfterCmd("list", task);
     }
+    //@@author
     
+    //@@author A0139922Y
     @Test
     public void tag_succcessfully() {
         String command = "tag 1 personal";

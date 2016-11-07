@@ -79,8 +79,16 @@ public class DateUtilTest {
 	}
 	
 	//@@author A0139922Y
+	@Test
+    public void ceilDate_sameDate_equals() {
+        LocalDateTime today = LocalDateTime.now().toLocalDate().atTime(10,0);
+        LocalDateTime todayPlusAnHour = today.plusHours(1);
+        assertEquals(DateUtil.ceilDate(today), DateUtil.ceilDate(todayPlusAnHour));
+    }
+	
+	//@@author A0139922Y
     @Test
-    public void ceilDate_sameDate() {
+    public void ceilDate_sameDate_not_null() {
         LocalDateTime today = LocalDateTime.now().toLocalDate().atTime(10,0);
         LocalDateTime todayPlusAnHour = today.plusHours(1);
         assertNotNull(DateUtil.ceilDate(today));
@@ -90,7 +98,15 @@ public class DateUtilTest {
     
     //@@author A0139922Y
     @Test
-    public void ceilDate_differentDate() {
+    public void ceilDate_differentDate_not_equals() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime tmr = LocalDateTime.now().plusDays(1);
+        assertNotEquals(DateUtil.ceilDate(today), DateUtil.ceilDate(tmr));
+    }
+    
+    //@@author A0139922Y
+    @Test
+    public void ceilDate_differentDate_not_null() {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime tmr = LocalDateTime.now().plusDays(1);
         assertNotNull(DateUtil.ceilDate(today));
@@ -99,10 +115,11 @@ public class DateUtilTest {
     }
     
     //@@author A0139922Y
-    public void ceilDate_null_test() {
+    public void ceilDate_nullDate_null() {
         LocalDateTime nullDate = null;
         assertEquals(null, DateUtil.ceilDate(nullDate));
     }
+    //@@author
 	
     //@@author A0139812A
 	@Test
@@ -184,6 +201,7 @@ public class DateUtilTest {
 	    assertNull(DateUtil.formatTime(null));
 	    assertNotNull(DateUtil.formatTime(LocalDateTime.now()));
 	}
+	//@@author
 	
 	//@@author A0139812A
 	private static LocalDateTime fromEpoch(long epoch) {
@@ -262,10 +280,10 @@ public class DateUtilTest {
     
     //@@author A0139922Y
     @Test
-    public void testCheckifDateExist_false() {
+    public void testCheckifDateExist_equals_false() {
         LocalDateTime currentDate = LocalDateTime.now();
         assertNotNull(DateUtil.checkIfDateExist(currentDate));
-        assertEquals(DateUtil.checkIfDateExist(currentDate), false);
+        assertFalse(DateUtil.checkIfDateExist(currentDate));
     }
     
     //@@author A0139922Y

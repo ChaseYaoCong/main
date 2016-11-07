@@ -49,6 +49,7 @@ public class StringUtil {
         return (string == null || string.isEmpty()) ? replaceString : string;
     }
     
+    //@@author A0139922Y
     /*
      * Format the display message depending on the number of tasks and events 
      * 
@@ -90,6 +91,7 @@ public class StringUtil {
     public static String formatNumberOfTaskWithPuralizer (int numTasks) {
         return String.format("%d %s", numTasks, pluralizer(numTasks, "task", "tasks"));
     }
+    //@@author
     
     /**
      * Returns <code>string</code> with aliased keys replaced with their
@@ -122,8 +124,8 @@ public class StringUtil {
         return (list.size() == 0) ? "" : list.toString();
     }
     
+    //@@author A0139922Y
     /*
-     * @@author A0139922Y
      * Convert input into individual input by splitting with space  
      */
     public static String[] splitStringBySpace(String input) {

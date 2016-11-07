@@ -50,16 +50,16 @@ public interface CalendarItem {
      */
     public boolean isOver();
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Returns the current tag list that belong to the CalendarItem, mainly for displaying purpose
      * 
      * @return ArrayList<String> tags
      */
     public ArrayList<String> getTagList();
    
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Add a new tag in the list of tag of the calendar item. 
      * 
      * @param tagName <String>
@@ -67,8 +67,8 @@ public interface CalendarItem {
      */
     public boolean addTag(String tagName);
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Remove a existing tag in the tag list of tag of the calendar item. 
      * 
      * @param tagName <String>
@@ -76,8 +76,8 @@ public interface CalendarItem {
      */
     public boolean removeTag(String tagName);
 
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Get the limit of the tag that is allowed for calendar item
      * 
      * @return the limit of tag list

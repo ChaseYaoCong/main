@@ -9,11 +9,7 @@ import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-
-import com.joestelmach.natty.DateGroup;
-import com.joestelmach.natty.Parser;
 
 /**
  * A utility class for Dates and LocalDateTimes
@@ -59,8 +55,8 @@ public class DateUtil {
         return dateTime.toLocalDate().atTime(0, 0);
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Performs a "ceiling" operation on a LocalDateTime, and returns a new LocalDateTime
      * with time set to 23:59.
      * 
@@ -74,6 +70,7 @@ public class DateUtil {
         
         return dateTime.toLocalDate().atTime(23, 59);
     }
+    //@@author
 
     /**
      * @@author A0139812A
@@ -258,8 +255,8 @@ public class DateUtil {
         return LocalDateTime.parse(dateTimeString, formatter);
     }
     
+    //@@author A0139922Y
     /*
-     * @@author A0139922Y
      * Check a LocalDateTime if the time is the same as the current time
      * 
      * @param date
@@ -270,8 +267,8 @@ public class DateUtil {
         return currentTime.getHour() != date.getHour() || currentTime.getMinute() != date.getMinute();
     }
     
+    //@@author A0139922Y
     /*
-     * @@author A0139922Y
      * Check a LocalDateTime if the date is the same as the current date
      * 
      * @param date
@@ -283,8 +280,8 @@ public class DateUtil {
                 currentDate.getYear() != date.getYear();
     }
     
+    //@@author A0139922Y
     /* 
-     * @@author A0139922Y
      * To convert LocalDateTime to 00:00 or 23:59 if not specified
      * @param actualDate 
      *                  is the date that that is require for checking
@@ -315,5 +312,4 @@ public class DateUtil {
         }
         return actualDate;
     }
-
 }

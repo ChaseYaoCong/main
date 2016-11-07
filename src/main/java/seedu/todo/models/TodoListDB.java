@@ -56,9 +56,9 @@ public class TodoListDB {
         storage = storageToSet;
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
-     * add into the overall Tags in the DB.
+     * Add into the overall Tags in the DB.
      */
     public void addIntoTagList(String[] parsedTagNames) {
         assert parsedTagNames != null;
@@ -73,8 +73,8 @@ public class TodoListDB {
         }
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Remove from the overall Tags with a single tagName that exist in the DB.
      */
     public void updateTagList(String[] parsedTagNames) {
@@ -92,8 +92,8 @@ public class TodoListDB {
         }
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Remove from the overall Tags with a given List of CalendarItem that exist in the DB.
      * @param <E>listOfItem of type CalendarItem
      */
@@ -108,8 +108,8 @@ public class TodoListDB {
         updateTagList(selectedTagList.toArray(new String[0]));
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Get a list of Tags in the DB.
      * 
      * @return tagList
@@ -118,8 +118,8 @@ public class TodoListDB {
         return tagList;
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Count tags which are already inserted into the db
      * 
      * @return Number of tags
@@ -127,6 +127,7 @@ public class TodoListDB {
     public int countTagList() {
         return tagList.size();
     }
+    //@@author
     
     public Map<String, String> getAliases() {
         return aliases;
@@ -227,8 +228,8 @@ public class TodoListDB {
         return save();
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Destroys all Task and Events in the DB and persists the commit.
      * 
      * @return true if the save was successful, false otherwise
@@ -241,8 +242,8 @@ public class TodoListDB {
         return save();
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Destroys Task and Events based on list in the DB and persists the commit.
      * @taskLists 
      *            List of tasks to be destroyed
@@ -261,8 +262,8 @@ public class TodoListDB {
         return save();
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Destroys all Task in the DB and persists the commit.
      * 
      * @return true if the save was successful, false otherwise
@@ -271,6 +272,7 @@ public class TodoListDB {
         removeFromTagList(new ArrayList<Task>(tasks));
         tasks = new LinkedHashSet<Task>();
     }
+    //@@author
     
     /**
      * @@author A0093907W
@@ -301,15 +303,15 @@ public class TodoListDB {
         return save();
     }
     
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Destroys all Event in the DB and persists the commit.
-     * 
      */
     public void destroyAllEvent() {
         removeFromTagList(new ArrayList<Event>(events));
         events = new LinkedHashSet<Event>();
     }
+    //@@author
     
     /**
      * @@author A0093907W

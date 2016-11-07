@@ -18,10 +18,10 @@ public class FilterUtilTest {
     public static final LocalDateTime TODAY = LocalDateTime.now();
     public static final LocalDateTime TOMORROW = LocalDateTime.now().plusDays(1);
     public static final LocalDateTime YESTERDAY = LocalDateTime.now().minusDays(1);
-    Task firstTestTask = generateFirstTestTask();
-    Task secondTestTask = generateSecondTestTask();
-    List<Event> overdueEvents = generateOverdueEvents();
-    List<Event> currentEvents = generateCurrentEvents();
+    Task firstTestTask = getFirstTestTask();
+    Task secondTestTask = getSecondTestTask();
+    List<Event> overdueEvents = getOverdueEvents();
+    List<Event> currentEvents = getCurrentEvents();
     
     /* ======================== Test cases for Filtering Task Methods ========================== */
     
@@ -500,7 +500,7 @@ public class FilterUtilTest {
     
     /* ===================  Helper methods to be use to generate Task and Event for testing =============== */
     
-    private Task generateFirstTestTask() {
+    private Task getFirstTestTask() {
         Task task = new Task();
         task.setName("Buy Milk");
         task.setCalendarDateTime(TODAY);
@@ -509,7 +509,7 @@ public class FilterUtilTest {
         return task;
     }
     
-    private Task generateSecondTestTask() {
+    private Task getSecondTestTask() {
         Task task = new Task();
         task.setName("CS2103");
         task.setCalendarDateTime(TOMORROW);
@@ -525,7 +525,7 @@ public class FilterUtilTest {
         return new ArrayList<Event>();
     }
     
-    private List<Event> generateOverdueEvents() {
+    private List<Event> getOverdueEvents() {
         List<Event> events = new ArrayList<Event>();
         Event event = new Event();
         event.setStartDate(YESTERDAY);
@@ -540,7 +540,7 @@ public class FilterUtilTest {
         return events;
     }
     
-    private List<Event> generateCurrentEvents() {
+    private List<Event> getCurrentEvents() {
         List<Event> events = new ArrayList<Event>();
         Event event = new Event();
         event.setStartDate(TODAY);
@@ -553,6 +553,5 @@ public class FilterUtilTest {
         event.addTag("CS3217");
         events.add(event);
         return events;
-        
     }
 }
