@@ -41,6 +41,7 @@ We are a team based in the [School of Computing, National University of Singapor
 * *Documentation* -- In charge of the quality of various project documentation.
 * *Deliverables and deadlines* -- Ensure project deliverables are done on time and in the right format.
 * *Eclipse expert* -- Helps everyone when Eclipse crashes / builds the wrong thing / 110-character line goes poof.
+Code written: [functional code][test code][docs]
 
 ## Project Mentor
 
