@@ -66,7 +66,7 @@ public class ListCommandTest extends GuiTest {
                 String.format("%s 21:00:00", THE_DAY_AFTER_TOMORROW__ISO_STRING)));
     }
     
-    // Re-use
+    //@@author A0139922Y-reused
     @Before
     public void initFixtures() {
         console.runCommand("clear");
@@ -76,7 +76,7 @@ public class ListCommandTest extends GuiTest {
         assertEventVisibleAfterCmd(commandAdd4, event4);
     }
     
-    // Re-use
+    //@@author A0139922Y-reused
     @Test
     public void fixtures_test() {
         console.runCommand("clear");
@@ -85,7 +85,9 @@ public class ListCommandTest extends GuiTest {
         assertEventNotVisibleAfterCmd("list", event3);
         assertEventNotVisibleAfterCmd("list", event4);
     }
+    //@@author
     
+    //@@author A0139922Y
     @Test
     public void list_all() {
         String command = "list";
