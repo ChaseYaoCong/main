@@ -41,7 +41,9 @@ We are a team based in the [School of Computing, National University of Singapor
 * *Documentation* -- In charge of the quality of various project documentation.
 * *Deliverables and deadlines* -- Ensure project deliverables are done on time and in the right format.
 * *Eclipse expert* -- Helps everyone when Eclipse crashes / builds the wrong thing / 110-character line goes poof.
-Code written: [functional code][test code][docs]
+Code written: [functional code](https://github.com/ChaseYaoCong/main/blob/master/collated/main/A0139922Y.md)
+[test code](https://github.com/ChaseYaoCong/main/blob/master/collated/test/A0139922Y.md)
+[docs](https://github.com/ChaseYaoCong/main/blob/master/collated/docs/A0139922Y.md)
 
 ## Project Mentor
 
