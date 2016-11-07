@@ -20,8 +20,8 @@ import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
 
+//@@author A0139922Y
 /**
- * @@author A0139922Y
  * Controller to list CalendarItems
  */
 public class ListController implements Controller {
@@ -47,7 +47,7 @@ public class ListController implements Controller {
     public static final String MESSAGE_NO_DATE_DETECTED = "Unable to list!\nThe natural date entered is not supported.";
     public static final String MESSAGE_ITEM_TYPE_CONFLICT = "Unable to list!\nMore than 1 item type is provided!";
     
-    //use to access parsing of dates
+    // Use to access parsing of dates
     private static final int NUM_OF_DATES_FOUND_INDEX = 0;
     private static final int COMMAND_INPUT_INDEX = 0;
     private static final int DATE_CRITERIA_INDEX = 0;
@@ -285,7 +285,7 @@ public class ListController implements Controller {
     private LocalDateTime[] parsingDates(Map<String, String[]> parsedResult) {
         String[] parsedDates = ParseUtil.parseDates(parsedResult);
         
-        //date enter with COMMAND_WORD e.g list today
+        // Date enter with COMMAND_WORD e.g list today
         String date = ParseUtil.getTokenResult(parsedResult, Tokenizer.DEFAULT_TOKEN);
         
         // Check for more than 1 date

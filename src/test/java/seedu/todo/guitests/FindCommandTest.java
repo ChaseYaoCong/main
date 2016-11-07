@@ -207,6 +207,7 @@ public class FindCommandTest extends GuiTest {
                 StringUtil.displayNumberOfTaskAndEventFoundWithPuralizer(expectedNumOfTasks, expectedNumOfEvents));
         assertEquals(console.getConsoleTextArea(), expectedOutputMessage);
     }
+    
     @Test
     public void find_by_invalid_tag() {
         // To check if all tasks and events are still in the view

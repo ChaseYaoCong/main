@@ -10,8 +10,8 @@ import seedu.todo.models.CalendarItem;
 import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 
+//@@author A0139922Y
 /**
- * @@author A0139922Y
  * Helper function to help in filtering results
  */
 

@@ -12,10 +12,9 @@ import seedu.todo.controllers.concerns.Tokenizer;
 import seedu.todo.models.CalendarItem;
 import seedu.todo.models.TodoListDB;
 
+//@@author A0139922Y
 /**
- * @@author A0139922Y
  * Controller to untag a CalendarItem.
- *
  */
 public class UntagController implements Controller {
     

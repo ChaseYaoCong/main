@@ -21,10 +21,9 @@ import seedu.todo.models.Event;
 import seedu.todo.models.Task;
 import seedu.todo.models.TodoListDB;
 
+//@@author A0139922Y
 /**
- * @@author A0139922Y
  * Controller to find task/event by keyword
- * 
  */
 public class FindController implements Controller {
     

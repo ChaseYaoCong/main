@@ -128,6 +128,8 @@ public class ListCommandTest extends GuiTest {
         assertTaskNotVisibleAfterCmd(command, task2);
         assertEventNotVisibleAfterCmd(command, event3);
         assertEventNotVisibleAfterCmd(command, event4);
+        
+        // For console text area to check output message
         expectedNumOfTasks = 1;
         expectedNumOfEvents = 0;
         String expectedOutputMessage = String.format(ListController.MESSAGE_RESULT_FOUND_FORMAT,

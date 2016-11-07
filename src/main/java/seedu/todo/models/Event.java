@@ -81,18 +81,17 @@ public class Event implements CalendarItem {
         }
     }
 
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Return the tag list that belong to the calendar item
-     * 
      */
     @Override
     public ArrayList<String> getTagList() {
         return tagList;
     }
 
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Adding the tag into the tag list that belong to the calendar item
      * @param tagName
      *               name of the tag
@@ -109,8 +108,8 @@ public class Event implements CalendarItem {
         }
     }
 
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
      * Removing the tag from the tag list that belong to the calendar item
      * @param tagName
      *               name of the tag
@@ -176,10 +175,9 @@ public class Event implements CalendarItem {
         }
     }
 
+    //@@author A0139922Y
     /**
-     * @@author A0139922Y
-     * Returning the maximum tag list size that is allowed
-     *               
+     * Returning the maximum tag list size that is allowed     
      */
     @Override
     public int getTagListLimit() {
